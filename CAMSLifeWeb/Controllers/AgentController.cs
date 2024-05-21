@@ -218,8 +218,7 @@ namespace CaliphWeb.Controllers
             var addActivity = FormCollectionMapper.FormToModel<AddAgentRecruitActivityRequest>(formCollection);
             if (addActivity.ActivityPointId == (int)MasterDataEnum.ActivityPoint.ReferralsLead)
             {
-                var leadResponse = AddLead(formCollection);
-                return Json(leadResponse);
+                await AddLead(formCollection);
             }
             addActivity.CreatedBy = UserHelper.GetLoginUser();
             var response = await _caliphAPIHelper.PostAsync<AddAgentRecruitActivityRequest, ResponseData<int?>>(addActivity, "/api/v1/agent-activity/add");

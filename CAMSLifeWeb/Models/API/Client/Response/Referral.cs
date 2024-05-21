@@ -8,6 +8,8 @@ namespace CaliphWeb.ViewModel
 {
     public class Referral
     {
+        public long ClientLeadId { get; set; }
+        public long ClientDealActivityId { get; set; }
         public int ClientId { get; set; }
         public string ClientName { get; set; }
         public string ReferralName { get; set; }

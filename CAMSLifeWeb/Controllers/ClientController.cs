@@ -76,12 +76,15 @@ namespace CaliphWeb.Controllers
             var view = new AddClientViewModel();
             if (refLeadsid.HasValue&& refLeadsid.Value>0)
             {
-                var req = new GetLeadRequest { ClientLeadId = refLeadsid.Value };
-                var responseData = await _caliphAPIHelper.PostAsync<GetLeadRequest, ResponseData<ClientLead>>(req, "/api/v1/client-lead/get-by-filter");
+                var req = new GetLeadRequest { ClientLeadId = refLeadsid.Value, PageNumber = 1, PageSize = 10 };
+                var responseData = await _caliphAPIHelper.PostAsync<GetLeadRequest, ResponseData<List<ClientLead>>>(req, "/api/v1/client-lead/get-by-filter");
 
-                view.ClientName = responseData.Data.Name;
-                view.HP = responseData.Data.HP;
-                view.RefLeadsId = responseData.Data.ClientLeadId;
+                if (responseData != null && responseData.Data != null && responseData.Data.Count() > 0)
+                {
+                    view.ClientName = responseData.Data[0].Name;
+                    view.HP = responseData.Data[0].HP;
+                    view.RefLeadsId = refLeadsid.Value;
+                }
             }
             else  
                    if (agentRecruitId.HasValue && agentRecruitId.Value > 0)

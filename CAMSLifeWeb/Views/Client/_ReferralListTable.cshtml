@@ -19,33 +19,37 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Referral)
+        @if (Model.Referral != null)
         {
-            var bagdes = item.StatusId == 11 ? "badge badge-success" : "badge badge-primary";
-        <tr>
-            <td>@item.ClientName</td>
-            <td>@item.ReferralName</td>
-            <td>@item.HP</td>
-            <td>@item.Remark</td>
-            <td>@item.CreatedDate</td>
-            <td>@item.CreatedBy</td>
-
-            <td><span class="@bagdes">@item.StatusDesc</span></td>
-            @if (item.StatusId == (int)CaliphWeb.ViewModel.Data.MasterDataEnum.Status.Leads)
+            foreach (var item in Model.Referral)
             {
-            <td class="text-center">
-                <a href="@Url.Action("Add", "Client", new { ClientName = item.ClientId })" data-popup="tooltip" title="Convert to Client" data-placement="right" href="#" class="list-icons-item">
-                    <i class="icon-undo"></i>
-                </a>
-            </td>
+                var bagdes = item.StatusId == 11 ? "badge badge-success" : "badge badge-primary";
+                <tr>
+                    <td>@item.ClientName</td>
+                    <td>@item.ReferralName</td>
+                    <td>@item.HP</td>
+                    <td>@item.Remark</td>
+                    <td>@item.CreatedDate</td>
+                    <td>@item.CreatedBy</td>
+
+                    <td><span class="@bagdes">@item.StatusDesc</span></td>
+                    @if (item.StatusId == (int)CaliphWeb.ViewModel.Data.MasterDataEnum.Status.Leads)
+                    {
+                        <td class="text-center">
+                            <a href="@Url.Action("Add", "Client", new { refLeadsid = item.ClientLeadId })" data-popup="tooltip" title="Convert to Client" data-placement="right" href="#" class="list-icons-item">
+                                <i class="icon-undo"></i>
+                            </a>
+                        </td>
+                    }
+                    else
+                    {
+                        <td></td>
+
+                    }
+                </tr>
             }
-            else { 
-                <td></td>
-            
-            }
-        </tr>
         }
-    </tbody>
+        </tbody>
 </table>
 
 <div class="datatable-footer">

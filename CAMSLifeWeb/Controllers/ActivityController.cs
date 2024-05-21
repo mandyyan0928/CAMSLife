@@ -105,9 +105,9 @@ namespace CaliphWeb.Controllers
             }
             var addActivity = FormCollectionMapper.FormToModel<AddActivityRequest>(formCollection);
             if (addActivity.ActivityPointId == (int)MasterDataEnum.ActivityPoint.ReferralsLead)
-            { 
-                var leadResponse = AddLead(formCollection);
-                return Json(leadResponse);
+            {
+                await AddLead(formCollection);
+
             }
             addActivity.CreatedBy = UserHelper.GetLoginUser();
             addActivity.EventId = (!string.IsNullOrEmpty(eventId) ? eventId : null);
