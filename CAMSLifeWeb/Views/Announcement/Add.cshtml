@@ -1,0 +1,180 @@
+﻿@model CaliphWeb.Models.ViewModel.AddAnnouncementViewModel
+@{
+    ViewBag.Title = "Add";
+}
+
+<script src="~/global_assets/js/demo_pages/form_input_groups.js"></script>
+<script src="~/global_assets/js/demo_pages/picker_date.js"></script>
+<script src="~/global_assets/js/demo_pages/form_select2.js"></script>
+<script src="~/global_assets/js/demo_pages/form_validation.js"></script>
+	<script src="~/global_assets/js/demo_pages/editor_summernote.js"></script>
+	<!-- /theme JS files -->
+<!-- Page header -->
+<div class="page-header page-header-light">
+    <div class="page-header-content header-elements-lg-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-plus-circle2"></i> <span class="font-weight-semibold">Add Announcement</span></h4>
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+    </div>
+
+    <div class="breadcrumb-line breadcrumb-line-light header-elements-lg-inline">
+        <div class="d-flex">
+            <div class="breadcrumb">
+                <a class="breadcrumb-item"><i class="icon-home mr-2"></i>Announcement</a>
+                <a class="breadcrumb-item">Add Announcement</a>
+            </div>
+
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+    </div>
+</div>
+<!-- /page header -->
+<!-- Tabs with top line -->
+<div class="mb-3 mt-2">
+    <h6 class="mb-0 font-weight-semibold">
+    </h6>
+</div>
+
+<form id="add-announcement" class="form-announcement">
+    <div class="card h-100">
+        <div class="card-header">
+            <h5 class="card-title">Announcement Info</h5>
+        </div>
+
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-form-label col-lg-3">Title<span class="text-danger">*</span></label>
+                <div class="col-lg-8">
+                    <input type="text" required id="AnnouncementTitle" name="Title" class="form-control">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-lg-3">Description<span class="text-danger">*</span></label>
+                <div class="col-lg-8">
+                    <div class="summernote-height" id="description">
+                        </div>
+                    </div>
+                </div>
+
+            <div class="form-group row">
+                <label class="col-form-label col-lg-3">Start Date<span class="text-danger">*</span></label>
+                <div class="col-lg-8" id="date-select">
+                    <div class="input-group">
+                        <span class="input-group-prepend">
+                            <span class="input-group-text"><i class="icon-calendar5"></i></span>
+                        </span>
+                        <input type="text" id="PublishStartDate" name="PublishStartDate" class="form-control daterange-single rounded-right" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-form-label col-lg-3">End Date<span class="text-danger">*</span></label>
+                <div class="col-lg-8" id="date-select">
+                    <div class="input-group">
+                        <span class="input-group-prepend">
+                            <span class="input-group-text"><i class="icon-calendar5"></i></span>
+                        </span>
+                        <input type="text" id="PublishEndDate" name="PublishEndDate" class="form-control daterange-single rounded-right" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-form-label col-lg-3">Announcement Type<span class="text-danger">*</span></label>
+                <div class="col-lg-8">
+                    <select class="form-control select-search" data-placeholder="Type" name="AnnouncementTypeId" id="AnnouncementType" onchange="AnnouncementTypeChange()">
+                        <!--Announcement Type Option Here-->
+                        @foreach (var item in Model.AnnouncementTypeList)
+                        {
+                            <option value="@item.MasterDataId">@item.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group row" id="agent-list" style="display:none">
+                <label class="col-form-label col-lg-3">Agent<span class="text-danger">*</span></label>
+                <div class="col-lg-8">
+                    <select class="form-control select-search" data-placeholder="Agent" name="UserIdList" id="Agent">
+                        <!--Agent Option Here-->
+                        <option value="">Select</option>
+                        @foreach (var user in Model.AgentUsers)
+                        {
+                            var selected = user.Username == CaliphWeb.Helper.UserHelper.GetLoginUser() ? "selected" : "";
+                            <option value="@user.UserId" @selected>@user.Username - @user.Fullname</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="form-group row m-2">
+    <div class="col-lg-12">
+        <div class="text-right float-right">
+            <button type="button" onclick="AddAnnouncement()" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        var swalInit = swal.mixin({
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-light',
+                denyButton: 'btn btn-light',
+                input: 'form-control'
+            }
+        });
+
+        function AnnouncementTypeChange( ) {
+
+            var selectType = $('#AnnouncementType').val()
+            console.log(selectType);
+            if (selectType == '@( (int)CaliphWeb.ViewModel.Data.MasterDataEnum.AnnouncementType.All)') {
+                $('#agent-list').hide();
+            }
+            else {
+                $('#agent-list').show();
+            }
+
+
+        }
+
+        function AddAnnouncement() {
+            var form = $("#add-announcement");
+            form.validate();
+
+
+            if (form.valid()) {
+                var description = $('#description').summernote('code');
+                form.append('Remarks', description);
+                var formData = form.serialize();
+
+                formData += '&Remarks=' + description;
+
+
+               
+                $.ajax({
+                    url: '@Url.Action("Add", "Announcement")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        form.trigger('reset');
+                        swalInit.fire({
+                            title: 'Success!',
+                            text: 'Announcement added successfully!',
+                            icon: 'success'
+                        });
+                    }
+                });
+            }
+        }
+    </script>
+}

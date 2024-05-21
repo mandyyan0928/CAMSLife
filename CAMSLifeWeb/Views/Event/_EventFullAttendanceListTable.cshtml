@@ -1,0 +1,59 @@
+﻿@using CaliphWeb.Helper
+@model CaliphWeb.Models.ViewModel.EventAttendanceListDataViewModel
+
+@{ var pager = new Pager(pageSize: Model.Paging.PageSize, currentPage: Model.Paging.CurrentPage, totalItems: Model.Paging.ItemCount);}
+
+<table class="table datatable-basic">
+    <thead>
+        <tr>
+            <th>Agent Id</th>
+            <th>Agent Name</th>
+            <th>Join Date</th>
+            <th>Attendance</th>
+            <th>Quiz Score</th>
+            <th>CPD Point</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.EventAttendanceList)
+        {
+            <tr>
+                <td>@item.Username</td>
+                <td>@item.DisplayName</td>
+                <td>@item.CreatedDate</td>
+                <td>@item.AttendanceDesc</td>
+                <td>@item.QuizScoreDesc</td>
+                <td>@item.CPDPoint</td>
+                <td>
+                    <a href="#" data-toggle="modal" data-target="#modal_default" data-popup="tooltip" title="More Info"
+                       class="list-icons-item" onclick="OpenModal('@item.UserEventId', '@item.AttendanceId', '@item.QuizScoreId', '@item.DisplayName.Replace("'", "\'")', '@item.EventDateId', '@item.CPDPoint', '@item.Remarks');">
+                        <i class="note-icon-pencil"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="datatable-footer">
+    <div class="dataTables_info">
+        Showing @pager.StartIndex to @pager.EndIndex  of @pager.TotalItems entries
+    </div>
+    <div class="dataTables_paginate paging_simple_numbers">
+        @{ var prevPage = pager.CurrentPage - 1;
+            var disableClass = prevPage == 0 ? "disabled" : "";}
+        <a class="paginate_button previous @disableClass" onclick="SearchData(@prevPage )">←</a>
+
+        @foreach (var page in pager.Pages)
+        {
+            var current = page == pager.CurrentPage ? "current" : "";
+            <a class="paginate_button @current" onclick="SearchData(@page)">@page</a>}
+        @{ var nextPage = pager.CurrentPage + 1;
+            var isLastPage = nextPage > pager.EndPage;
+            var disableNextClass = isLastPage ? "disabled" : ""; }
+        <a class="paginate_button next @disableNextClass" @disableNextClass onclick="SearchData(@prevPage )">→</a>
+    </div>
+</div>
+
+

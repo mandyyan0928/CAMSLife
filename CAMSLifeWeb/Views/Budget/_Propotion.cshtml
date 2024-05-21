@@ -1,0 +1,218 @@
+﻿@using CaliphWeb.ViewModel.Data;
+@using CaliphWeb.Helper
+@model CaliphWeb.Models.API.Budget.BudgetModel
+@{ var m115 = Model.Monthly.BudgetMonthly.Where(p => p.MonthlyBudgetTypeId == 115);}
+@{ var m116 = Model.Monthly.BudgetMonthly.Where(p => p.MonthlyBudgetTypeId == 116);}
+@{ var actual = m115.Sum(p => p.AchieveValue) + m116.Sum(p => p.AchieveValue);}
+<form id="frmpropotion">
+    <div id="propotion">
+    
+        <div class="row d-block">
+            <div class="col-md-8">
+                <div class=" table-responsive">
+                    <table class="table table-bordered" id="tblpropotion">
+                        <thead>
+                            <tr>
+                                <th id="propotiontotalace"></th> @*Need get value from simulator total sum ace*@
+                                <th> %</th>
+                                <th> Budget</th>
+                                <th> Actual </th>
+                                <th> Variance </th>
+                                <th> Accumulated Shortfall</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+                            @{
+
+                                var months = new List<DateTime>();
+                                var startMonth = Model.Income.IncomeData.ProductStartMonth == 0 ? 1 : Model.Income.IncomeData.ProductStartMonth;
+                                var startYear = Model.Income.IncomeData.BudgetYear.HasValue ? Model.Income.IncomeData.BudgetYear.Value : DateTime.Now.Year;
+
+                                for (int i = 0; i <= 11; i++)
+                                {
+                                    var month = startMonth + i;
+                                    var year = startYear;
+                                    if (month > 12)
+                                    {
+                                        month = month - 12;
+                                        year = year + 1;
+                                    }
+
+                                    var date = new DateTime(year, month, 1);
+                                    months.Add(date);
+                                }
+                            }
+
+
+                            <tr  id="trpropotion1">
+
+
+                                <th>
+                                    @months[0].ToString("MMM yyyy")
+                                </th>
+                                <td><input data-monthid="@months[0].ToString("MM_yyyy")" type="number" class="form-control" value="@Math.Round(Model.Income.IncomeData.BudgetProportionPercentage1, 2)" name="BudgetProportionPercentage1" onchange="PropotionPercentChange(this)" /></td>
+                                <td id="propobudget1">@Model.Income.IncomeData.BudgetProportionAmt1</td>
+                                @{ var propotionActual = Model.Income.IncomeData.PropotionACEs.Where(x => x.Month == months[0].Month&& x.Year== months[0].Year).FirstOrDefault() ?? new CaliphWeb.Models.API.Budget.PropotionACE();}
+                                <td id="propoactual1">@propotionActual.ACE.ToString("n2")</td>
+                                <td id="propovariance1">-72.72</td>
+                                <td id="propaccfall1">-124,672.72</td>
+                            </tr>
+                            <tr id="trpropotion2">
+                                <th> @months[1].ToString("MMM yyyy")</th>
+                                <td><input data-monthid="@months[1].ToString("MM_yyyy")" type="number" class="form-control" value="@Math.Round(Model.Income.IncomeData.BudgetProportionPercentage2, 2)" name="BudgetProportionPercentage2" onchange="PropotionPercentChange(this)" /></td>
+                                <td id="propobudget2">@Model.Income.IncomeData.BudgetProportionAmt1</td>
+
+                                @{ propotionActual = Model.Income.IncomeData.PropotionACEs.Where(x => x.Month == months[1].Month && x.Year == months[1].Year).FirstOrDefault() ?? new CaliphWeb.Models.API.Budget.PropotionACE();}
+                                <td id="propoactual2">@propotionActual.ACE.ToString("n2")</td>
+
+                                <td id="propovariance2">-72.72</td>
+                                <td id="propaccfall2">-124,672.72</td>
+                            </tr>
+                            <tr id="trpropotion3">
+                                <th> @months[2].ToString("MMM yyyy")</th>
+                                <td><input data-monthid="@months[2].ToString("MM_yyyy")" type="number" class="form-control" value="@Math.Round(Model.Income.IncomeData.BudgetProportionPercentage3, 2)" name="BudgetProportionPercentage3" onchange="PropotionPercentChange(this)" /></td>
+                                <td id="propobudget3">@Model.Income.IncomeData.BudgetProportionAmt1</td>
+
+                                @{ propotionActual = Model.Income.IncomeData.PropotionACEs.Where(x => x.Month == months[2].Month && x.Year == months[2].Year).FirstOrDefault() ?? new CaliphWeb.Models.API.Budget.PropotionACE();}
+                                <td id="propoactual3">@propotionActual.ACE.ToString("n2")</td>
+                                <td id="propovariance3">-72.72</td>
+                                <td id="propaccfall3">-124,672.72</td>
+                            </tr>
+                           
+                            <tr id="trpropotion4">
+                                <th> @months[3].ToString("MMM yyyy")</th>
+                                <td><input data-monthid="@months[3].ToString("MM_yyyy")" type="number" class="form-control" value="@Math.Round(Model.Income.IncomeData.BudgetProportionPercentage4, 2)" name="BudgetProportionPercentage4" onchange="PropotionPercentChange(this)" /></td>
+                                <td id="propobudget4">@Model.Income.IncomeData.BudgetProportionAmt4</td>
+                                @{ propotionActual = Model.Income.IncomeData.PropotionACEs.Where(x => x.Month == months[3].Month && x.Year == months[3].Year).FirstOrDefault() ?? new CaliphWeb.Models.API.Budget.PropotionACE();}
+                                <td id="propoactual4">@propotionActual.ACE.ToString("n2")</td>
+                                <td id="propovariance4">-72.72</td>
+                                <td id="propaccfall4">-124,672.72</td>
+                            </tr>
+                            <tr id="trpropotion5">
+                                <th> @months[4].ToString("MMM yyyy")</th>
+                                <td><input data-monthid="@months[4].ToString("MM_yyyy")" type="number" class="form-control" value="@Math.Round(Model.Income.IncomeData.BudgetProportionPercentage5, 2)" name="BudgetProportionPercentage5" onchange="PropotionPercentChange(this)" /></td>
+                                <td id="propobudget5">@Model.Income.IncomeData.BudgetProportionAmt5</td>
+                                @{ propotionActual = Model.Income.IncomeData.PropotionACEs.Where(x => x.Month == months[4].Month && x.Year == months[4].Year).FirstOrDefault() ?? new CaliphWeb.Models.API.Budget.PropotionACE();}
+                                <td id="propoactual5">@propotionActual.ACE.ToString("n2")</td>
+                                <td id="propovariance5">-72.72</td>
+                                <td id="propaccfall5">-124,672.72</td>
+                            </tr>
+                            <tr id="trpropotion6">
+                                <th> @months[5].ToString("MMM yyyy")</th>
+                                <td><input data-monthid="@months[5].ToString("MM_yyyy")" type="number" class="form-control" value="@Math.Round(Model.Income.IncomeData.BudgetProportionPercentage6, 2)" name="BudgetProportionPercentage6" onchange="PropotionPercentChange(this)" /></td>
+                                <td id="propobudget6">@Model.Income.IncomeData.BudgetProportionAmt6</td>
+                                @{ propotionActual = Model.Income.IncomeData.PropotionACEs.Where(x => x.Month == months[5].Month && x.Year == months[5].Year).FirstOrDefault() ?? new CaliphWeb.Models.API.Budget.PropotionACE();}
+                                <td id="propoactual6">@propotionActual.ACE.ToString("n2")</td>
+                                <td id="propovariance6">-72.72</td>
+                                <td id="propaccfall6">-124,672.72</td>
+                            </tr>
+                           
+                            <tr id="trpropotion7">
+                                <th> @months[6].ToString("MMM yyyy")</th>
+                                <td><input data-monthid="@months[6].ToString("MM_yyyy")" type="number" class="form-control" value="@Math.Round(Model.Income.IncomeData.BudgetProportionPercentage7, 2)" name="BudgetProportionPercentage7" onchange="PropotionPercentChange(this)" /></td>
+                                <td id="propobudget7">@Model.Income.IncomeData.BudgetProportionAmt7</td>
+                                @{ propotionActual = Model.Income.IncomeData.PropotionACEs.Where(x => x.Month == months[6].Month && x.Year == months[6].Year).FirstOrDefault() ?? new CaliphWeb.Models.API.Budget.PropotionACE();}
+                                <td id="propoactual7">@propotionActual.ACE.ToString("n2")</td>
+                                <td id="propovariance7">-72.72</td>
+                                <td id="propaccfall7">-124,672.72</td>
+                            </tr>
+                            <tr id="trpropotion8">
+                                <th> @months[7].ToString("MMM yyyy")</th>
+                                <td><input data-monthid="@months[7].ToString("MM_yyyy")" type="number" class="form-control" value="@Math.Round(Model.Income.IncomeData.BudgetProportionPercentage8, 2)" name="BudgetProportionPercentage8" onchange="PropotionPercentChange(this)" /></td>
+                                <td id="propobudget8">@Model.Income.IncomeData.BudgetProportionAmt8</td>
+                                @{ propotionActual = Model.Income.IncomeData.PropotionACEs.Where(x => x.Month == months[7].Month && x.Year == months[7].Year).FirstOrDefault() ?? new CaliphWeb.Models.API.Budget.PropotionACE();}
+                                <td id="propoactual8">@propotionActual.ACE.ToString("n2")</td>
+                                <td id="propovariance8">-72.72</td>
+                                <td id="propaccfall8">-124,672.72</td>
+                            </tr>
+                            <tr id="trpropotion9">
+                                <th> @months[8].ToString("MMM yyyy")</th>
+                                <td><input data-monthid="@months[8].ToString("MM_yyyy")" type="number" class="form-control" value="@Math.Round(Model.Income.IncomeData.BudgetProportionPercentage9, 2)" name="BudgetProportionPercentage9" onchange="PropotionPercentChange(this)" /></td>
+                                <td id="propobudget9">@Model.Income.IncomeData.BudgetProportionAmt9</td>
+                                @{ propotionActual = Model.Income.IncomeData.PropotionACEs.Where(x => x.Month == months[8].Month && x.Year == months[8].Year).FirstOrDefault() ?? new CaliphWeb.Models.API.Budget.PropotionACE();}
+                                <td id="propoactual9">@propotionActual.ACE.ToString("n2")</td>
+                                <td id="propovariance9">-72.72</td>
+                                <td id="propaccfall9">-124,672.72</td>
+                            </tr>
+                            <tr id="trpropotion10">
+                                <th> @months[9].ToString("MMM yyyy")</th>
+                                <td><input data-monthid="@months[9].ToString("MM_yyyy")" type="number" class="form-control" value="@Math.Round(Model.Income.IncomeData.BudgetProportionPercentage10, 2)" name="BudgetProportionPercentage10" onchange="PropotionPercentChange(this)" /></td>
+                                <td id="propobudget10">@Model.Income.IncomeData.BudgetProportionAmt10</td>
+                                @{ propotionActual = Model.Income.IncomeData.PropotionACEs.Where(x => x.Month == months[9].Month && x.Year == months[9].Year).FirstOrDefault() ?? new CaliphWeb.Models.API.Budget.PropotionACE();}
+                                <td id="propoactual10">@propotionActual.ACE.ToString("n2")</td>
+                                <td id="propovariance10">-72.72</td>
+                                <td id="propaccfall10">-124,672.72</td>
+                            </tr>
+                            <tr id="trpropotion11">
+                                <th> @months[10].ToString("MMM yyyy")</th>
+                                <td><input data-monthid="@months[10].ToString("MM_yyyy")" type="number" class="form-control" value="@Math.Round(Model.Income.IncomeData.BudgetProportionPercentage11, 2)" name="BudgetProportionPercentage11" onchange="PropotionPercentChange(this)" /></td>
+                                <td id="propobudget11">@Model.Income.IncomeData.BudgetProportionAmt11</td>
+                                @{ propotionActual = Model.Income.IncomeData.PropotionACEs.Where(x => x.Month == months[10].Month && x.Year == months[10].Year).FirstOrDefault() ?? new CaliphWeb.Models.API.Budget.PropotionACE();}
+                                <td id="propoactual11">@propotionActual.ACE.ToString("n2")</td>
+                                <td id="propovariance11">-72.72</td>
+                                <td id="propaccfall11">-124,672.72</td>
+                            </tr>
+                            <tr id="trpropotion12">
+                                <th> @months[11].ToString("MMM yyyy")</th>
+                                <td><input data-monthid="@months[11].ToString("MM_yyyy")" type="number" class="form-control" value="@Math.Round(Model.Income.IncomeData.BudgetProportionPercentage12, 2)" name="BudgetProportionPercentage12" onchange="PropotionPercentChange(this)" /></td>
+                                <td id="propobudget12">@Model.Income.IncomeData.BudgetProportionAmt12</td>
+                                @{ propotionActual = Model.Income.IncomeData.PropotionACEs.Where(x => x.Month == months[11].Month && x.Year == months[11].Year).FirstOrDefault() ?? new CaliphWeb.Models.API.Budget.PropotionACE();}
+                                <td id="propoactual12">@propotionActual.ACE.ToString("n2")</td>
+                                <td id="propovariance12">-72.72</td>
+                                <td id="propaccfall12">-124,672.72</td>
+                            </tr>
+
+
+
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Total</th>
+                                <td id="total_propobudget_percent"></td>
+                                <td id="total_propobudget_budget"></td>
+                                <td id="total_propobudget_actual"></td>
+                                <td id="total_propobudget_variant"></td>
+                                <td id="total_propobudget_accshortfall"></td>
+                            </tr>
+
+                        </tfoot>
+
+                    </table>
+                </div>
+                <input type="hidden" name="BudgetProportionAmt1" id="hdnpropotion1" value="@Model.Income.IncomeData.BudgetProportionAmt1" />
+                <input type="hidden" name="BudgetProportionAmt2" id="hdnpropotion2" value="@Model.Income.IncomeData.BudgetProportionAmt2" />
+                <input type="hidden" name="BudgetProportionAmt3" id="hdnpropotion3" value="@Model.Income.IncomeData.BudgetProportionAmt3" />
+                <input type="hidden" name="BudgetProportionAmt4" id="hdnpropotion4" value="@Model.Income.IncomeData.BudgetProportionAmt4" />
+                <input type="hidden" name="BudgetProportionAmt5" id="hdnpropotion5" value="@Model.Income.IncomeData.BudgetProportionAmt5" />
+                <input type="hidden" name="BudgetProportionAmt6" id="hdnpropotion6" value="@Model.Income.IncomeData.BudgetProportionAmt6" />
+                <input type="hidden" name="BudgetProportionAmt7" id="hdnpropotion7" value="@Model.Income.IncomeData.BudgetProportionAmt7" />
+                <input type="hidden" name="BudgetProportionAmt8" id="hdnpropotion8" value="@Model.Income.IncomeData.BudgetProportionAmt8" />
+                <input type="hidden" name="BudgetProportionAmt9" id="hdnpropotion9" value="@Model.Income.IncomeData.BudgetProportionAmt9" />
+                <input type="hidden" name="BudgetProportionAmt10" id="hdnpropotion10" value="@Model.Income.IncomeData.BudgetProportionAmt10" />
+                <input type="hidden" name="BudgetProportionAmt11" id="hdnpropotion11" value="@Model.Income.IncomeData.BudgetProportionAmt11" />
+                <input type="hidden" name="BudgetProportionAmt12" id="hdnpropotion12" value="@Model.Income.IncomeData.BudgetProportionAmt12" />
+                <input type="hidden" name="BudgetId" id="BudgetId" value="@Model.Income.IncomeData.BudgetId" />
+            </div>
+
+
+
+        </div>
+        <div class="form-group row">
+            <div class="col-md-8 text-right mt-3 mb-3">
+                <button type="button" class="btn btn-primary" onclick="UpdatePropotion()">Update <i class="icon-paperplane ml-2"></i></button>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="table table-responsive">
+                <div id="main" style="width: 800px;height:400px;"></div>
+            </div>
+        </div>
+        <div class="col-md-12 mt-5">
+            <div class="table table-responsive">
+                <div id="shortfall-chart" style="width: 800px; height: 400px;"></div>
+            </div>
+        </div>
+    </div>
+</form>

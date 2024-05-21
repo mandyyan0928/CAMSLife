@@ -1,0 +1,174 @@
+﻿@model CaliphWeb.Models.ViewModel.EditAnnouncementViewModel
+@{
+    ViewBag.Title = "Edit";
+}
+
+
+<script src="~/global_assets/js/demo_pages/form_input_groups.js"></script>
+<script src="~/global_assets/js/demo_pages/picker_date.js"></script>
+<script src="~/global_assets/js/demo_pages/form_select2.js"></script>
+<script src="~/global_assets/js/demo_pages/form_validation.js"></script>
+<script src="~/global_assets/js/demo_pages/editor_summernote.js"></script>
+<!-- Page header -->
+<div class="page-header page-header-light">
+    <div class="page-header-content header-elements-lg-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-plus-circle2"></i> <span class="font-weight-semibold">Edit Announcement</span></h4>
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+    </div>
+
+    <div class="breadcrumb-line breadcrumb-line-light header-elements-lg-inline">
+        <div class="d-flex">
+            <div class="breadcrumb">
+                <a class="breadcrumb-item"><i class="icon-home mr-2"></i> Event</a>
+                <a href="@Url.Action("List","Announcement")" class="breadcrumb-item">Announcement List</a>
+                <a class="breadcrumb-item">Edit Announcement</a>
+            </div>
+
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+    </div>
+</div>
+<!-- /page header -->
+<!-- Tabs with top line -->
+<div class="mb-3 mt-2">
+    <h6 class="mb-0 font-weight-semibold">
+    </h6>
+</div>
+
+<form id="edit-announcement" class="form-validate-jquery">
+    <div class="card h-100">
+        <div class="card-header">
+            <h5 class="card-title">Announcement Info</h5>
+        </div>
+
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-form-label col-lg-3">Title<span class="text-danger">*</span></label>
+                <div class="col-lg-8">
+                    <input type="hidden" id="AnnouncementId" name="AnnouncementId" value="@Model.Announcement.AnnouncementId">
+                    <input type="text" required id="AnnouncementTitle" name="Title" class="form-control" value="@Model.Announcement.Title">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-lg-3">Description<span class="text-danger">*</span></label>
+                <div class="col-lg-8">
+                    <textarea required id="AnnouncementDesc" name="Remarks" class="summernote-height">@Model.Announcement.Remarks</textarea>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-form-label col-lg-3">Start Date<span class="text-danger">*</span></label>
+                <div class="col-lg-8" id="date-select">
+                    <div class="input-group">
+                        <span class="input-group-prepend">
+                            <span class="input-group-text"><i class="icon-calendar5"></i></span>
+                        </span>
+                        <input type="text" id="PublishStartDate" name="PublishStartDate" value="@Model.Announcement.PublishStartDate" class="form-control daterange-single rounded-right" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-form-label col-lg-3">End Date<span class="text-danger">*</span></label>
+                <div class="col-lg-8" id="date-select">
+                    <div class="input-group">
+                        <span class="input-group-prepend">
+                            <span class="input-group-text"><i class="icon-calendar5"></i></span>
+                        </span>
+                        <input type="text" id="PublishEndDate" name="PublishEndDate" value="@Model.Announcement.PublishEndDate" class="form-control daterange-single rounded-right" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row" style="">
+                <label class="col-form-label col-lg-3">Announcement Type<span class="text-danger">*</span></label>
+                <div class="col-lg-8">
+                        <!--Announcement Type Option Here-->
+ <input  type="hidden" name="AnnouncementTypeId" value="@Model.Announcement.AnnouncementTypeId"/>
+                        @foreach (var item in Model.AnnouncementTypeList)
+                        {
+                            if (item.MasterDataId == Model.Announcement.AnnouncementTypeId)
+                            {
+                                @item.Name
+                            }
+
+                        }
+                </div>
+            </div>
+
+
+            @if (Model.Announcement.AnnouncementTypeId == (int)CaliphWeb.ViewModel.Data.MasterDataEnum.AnnouncementType.Specific)
+            {
+            <div class="form-group row">
+                <label class="col-form-label col-lg-3">Agent<span class="text-danger">*</span></label>
+                <div class="col-lg-8">
+
+                    <!--Agent Option Here-->
+                    @foreach (var user in Model.Announcement.UserList)
+                    {
+                        var agent = Model.AgentUsers.Where(x => x.Username == user.Username);
+                        <input type="hidden" name="UserId" value="@user.UserId" />
+
+                        @(user.Username+ "-"+ (agent==null? "":agent.FirstOrDefault().Fullname))
+                    }
+
+                    @*<option value="user.UserId"> user.Username - @user.Fullname
+        <option>*@
+
+
+                </div>
+            </div>
+            }
+
+            <div class="form-group row">
+                <div class="col-12">
+                    <div class="text-left float-left">
+                        <button type="button" class="btn btn-primary" onclick="window.location.href = '@Url.Action("List","Announcement")'"><i class="icon-arrow-left12"></i>Back</button>
+                    </div>
+                    <div class="text-right float-right">
+                        <button type="button" onclick="EditAnnouncement()" class="btn btn-primary">Edit<i class="icon-paperplane ml-2"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <script type="text/javascript">
+        var swalInit = swal.mixin({
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-light',
+                denyButton: 'btn btn-light',
+                input: 'form-control'
+            }
+        });
+
+        function EditAnnouncement() {
+            var form = $("#edit-announcement");
+            form.validate();
+            if (form.valid()) {
+                var formData = $('#edit-announcement').serialize();
+                $.ajax({
+                    url: '@Url.Action("Edit", "Announcement")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+
+                        swalInit.fire({
+                            title: 'Success!',
+                            text: 'Announcement updated successfully!',
+                            icon: 'success'
+                        });
+                    }
+                });
+            }
+        }
+         
+    </script>
+}

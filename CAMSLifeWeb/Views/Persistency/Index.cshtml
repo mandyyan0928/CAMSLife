@@ -1,0 +1,560 @@
+﻿
+@model CaliphWeb.ViewModel.PersistencyCalculatorViewModel
+@using CaliphWeb.ViewModel
+
+<script src="~/global_assets/js/demo_pages/components_collapsible.js"></script>
+<script src="~/global_assets/js/demo_pages/picker_date.js"></script>
+
+
+<script src="~/global_assets/js/plugins/tables/datatables/extensions/pdfmake/pdfmake.min.js"></script>
+<script src="~/global_assets/js/plugins/tables/datatables/extensions/pdfmake/vfs_fonts.min.js"></script>
+<script src="~/global_assets/js/plugins/tables/datatables/extensions/buttons.min.js"></script>
+<script src="~/global_assets/js/demo_pages/datatables_extension_buttons_html5.js"></script>
+ 
+<!-- Basic datatable -->
+<div class="card" id="search">
+    <div class="card-header">
+    </div>
+    <div class="card-body">
+        @{ var loginUser = CaliphWeb.Helper.UserHelper.GetLoginUserViewModel();}
+
+        <div class=" table-responsive">
+            <div class="row">
+                <div class="col-md-12 d-flex align-content-between">
+                    <label class="m-1">
+                        <span>Type:</span><br />
+                        @{ var d0BtnClass = Model.StartDate.Year == DateTime.Now.Year ? "btn btn-primary" : "btn btn-outline-primary";
+                            var d1BtnClass = Model.StartDate.Year == DateTime.Now.Year - 1 ? "btn btn-primary" : "btn btn-outline-primary";
+                            var d2BtnClass = Model.StartDate.Year == DateTime.Now.Year - 2 ? "btn btn-primary" : "btn btn-outline-primary";}
+                        <a id="d0" href="#" class="@d0BtnClass" onclick="ChangeType(0)">D0</a>
+                        <a id="d1" href="#" class="@d1BtnClass" style="margin-top:2px" onclick="ChangeType(1)">D1</a>
+                        <a id="d2" href="#" class="@d2BtnClass" style="margin-top:2px" onclick="ChangeType(2)">D2</a>
+                    </label>
+                    <div class="col-md-5 m-1">
+                        <span> Date:</span>
+                        <div class="input-group">
+                            <span class="input-group-prepend">
+                                <span class="input-group-text"><i class="icon-calendar22"></i></span>
+                            </span>
+                            <input type="text" disabled id="CreatedDate" class="form-control daterange-basic">
+                        </div>
+                    </div>
+                    <div class="col-md-5 m-1">
+                        <span>Persistency Date:</span>
+                        <div class="input-group">
+                            <span class="input-group-prepend">
+                                <span class="input-group-text"><i class="icon-calendar22"></i></span>
+                            </span>
+                            <input type="text" id="PersistencyDate" class="form-control daterange-single" value="@Model.PersistencyDate">
+                        </div>
+                    </div>
+                    <label class="m-1">
+                        <br />
+                        <button type="button" onclick="SearchSummaryData()" class="btn btn-primary d-inline" id="bootbox_form"> <i class="icon-search4"></i> </button>
+                    </label>
+                </div>
+            </div>
+
+            <div class="table datatable-header">
+                <div class="row">
+                </div>
+                <h2>Whole Group</h2>
+                <table class="table datatable-button-html5-basic">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>ACE</th>
+                            <th>PP</th>
+                            <th>%</th>
+                            <th>Target %</th>
+                            <th>PP After Fix</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                                <a href="#" onclick="DisplayCalculator('@loginUser.Username', 'w', '@Json.Encode(@loginUser.Fullname)')">
+                                    @Html.Raw(loginUser.Username + "(" + loginUser.RoleName + ") <br/> " + loginUser.Fullname)
+
+                                </a>
+                            </td>
+                            <td id="ace_whole_@loginUser.Username">
+                                @Model.ACE.ToString("n2")
+                            </td>
+                            <td id="pp_whole_@loginUser.Username">
+                                @Model.PersistencyPremium.ToString("n2")
+
+                            </td>
+                            <td>
+
+                                @Model.Ratio.ToString("n2")
+                                %
+                            </td>
+                            <td id="whole_new_pp_ratio_@loginUser.Username">
+                                @Model.Ratio.ToString("n2")
+                                %
+                            </td>
+                            <td id="whole_new_pp_@loginUser.Username">
+                                @Model.PersistencyPremium.ToString("n2")
+
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+                @foreach (var generationGroup in Model.HierarchyPolicies)
+                {
+                    <h2>@generationGroup.GenerationName</h2>
+                    <table class="table datatable-nested">
+                        <thead>
+                            <tr>
+                                <th>
+
+                                </th>
+                                <th>
+
+                                </th>
+                                <th>ACE</th>
+                                <th>PP</th>
+                                <th>%</th>
+                                <th>Target %</th>
+                                <th>PP After Fix</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td></td>
+                                <td></td>
+
+                                <td id="ace_group_@generationGroup.Generation" class="exclude">
+                                    @{var groupace = generationGroup.AgentHierarchyPolicies.Sum(x => x.ACE);}
+                                    @generationGroup.AgentHierarchyPolicies.Sum(x => x.ACE).ToString("n2")
+
+
+                                </td>
+                                <td id="pp_group_@generationGroup.Generation">
+                                    @{ var pp = generationGroup.AgentHierarchyPolicies.Sum(x => x.PersistencyPremium);}
+                                    @pp.ToString("n2")
+
+
+                                </td>
+                                <td>
+                                    @{ var ratio = groupace == 0 ? 0 : ((pp / groupace) * 100);}
+                                    @ratio.ToString("n2") %
+                                </td>
+                                <td id="group_new_pp_ratio_@generationGroup.Generation">
+                                    @ratio.ToString("n2")  %
+                                </td>
+                                <td id="group_new_pp_@generationGroup.Generation">
+
+                                    @pp.ToString("n2")
+                                </td>
+
+                            </tr>
+
+                            @foreach (var agentHierarchyPolicy in generationGroup.AgentHierarchyPolicies)
+                            {
+                                var user = agentHierarchyPolicy.Agent;
+
+                                <tr>
+                                    <td class="expand-control" data-agent-id="@user.agent_id" data-generation="@generationGroup.Generation">
+                                        @if (user.role == "leader")
+                                        {
+                                            <a  style="font-size:18px; font-weight:800;cursor:pointer">
+                                                +
+                                            </a>
+                                            <input type="hidden" id="expand_@user.agent_id" value="0" />
+                                        }
+                                    </td>
+                                    <td>
+                                        <a href="#" onclick="DisplayCalculator('@user.agent_id', 'g', '@Json.Encode(@user.agent_name)')">
+
+
+                                            @user.agent_id (  @user.role )<br />
+                                            @user.agent_name
+                                        </a>
+                                    </td>
+                                    <td id="ace_leader_@user.agent_id">
+
+                                        @agentHierarchyPolicy.ACE.ToString("n2")
+
+                                    </td>
+                                    <td id="pp_leader_@user.agent_id">
+
+                                        @agentHierarchyPolicy.PersistencyPremium.ToString("n2")
+
+
+                                    </td>
+                                    <td>
+
+                                        @agentHierarchyPolicy.Ratio.ToString("n2")
+
+                                        %
+                                    </td>
+                                    <td id="leder_new_pp_ratio_@user.agent_id">
+
+
+                                        @agentHierarchyPolicy.Ratio.ToString("n2")
+
+                                        %
+                                    </td>
+                                    <td id="leder_new_pp_@user.agent_id">
+
+                                        @agentHierarchyPolicy.PersistencyPremium.ToString("n2")
+                                    </td>
+                                </tr>
+                                @*<tr id="collapse_@user.agent_id" class="collapse exclude-export" >
+                                    <td colspan="8">
+                                        <div class="alert alert-primary border-0 alert-dismissible">
+                                            <span class="font-weight-semibold"> @user.agent_id</span>
+                                            <div id="agent-policy-table_@user.agent_id">
+                                                <table class="table table-border-dashed">
+                                                    <thead>
+                                                        <tr id="action">
+                                                            <td>
+                                                                Action
+                                                            </td>
+                                                            <td>Agent</td>
+                                                            <td>Relation</td>
+                                                            <td>ACE</td>
+                                                            <td>PP</td>
+                                                            <td>PP %</td>
+                                                            <td>New %</td>
+                                                            <td>New PP</td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td colspan="8"><i class="icon-spinner6 spinner mr-2"></i>Loading....</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>*@
+                            }
+
+                        </tbody>
+                    </table>
+                }
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- /basic datatable -->
+
+
+
+@section Scripts{
+    <script type="text/html" id="expand-agents">
+        <div class="alert alert-primary border-0 alert-dismissible">
+                                           <span class="font-weight-semibold"> {userid}</span>
+                                           <div id="agent-policy-table_{userid}">
+                                               <table class="table table-border-dashed">
+                                                   <thead>
+                                                       <tr id="action">
+                                                           <td>
+                                                               Action
+                                                           </td>
+                                                           <td>Agent</td>
+                                                           <td>Relation</td>
+                                                           <td>ACE</td>
+                                                           <td>PP</td>
+                                                           <td>PP %</td>
+                                                           <td>New %</td>
+                                                           <td>New PP</td>
+                                                       </tr>
+                                                   </thead>
+                                                   <tbody>
+                                                       <tr>
+                                                           <td colspan="8"><i class="icon-spinner6 spinner mr-2"></i>Loading....</td>
+                                                       </tr>
+                                                   </tbody>
+                                               </table>
+                                           </div>
+                                       </div>
+    </script>
+
+    <script type="text/javascript">
+        let startOfMonth = new Date('@Model.StartDate.ToString("yyyy-MM-dd")');
+        let endOfMonth =new Date('@Model.EndDate.ToString("yyyy-MM-dd")');
+        // Basic initialization
+        $('#CreatedDate').daterangepicker({
+            parentEl: '.content-inner',
+            startDate: startOfMonth,
+            endDate: endOfMonth,
+
+        });
+        $(document).ready(function () {
+
+            var table = $('.datatable-nested').DataTable({
+                buttons: {
+                    customizeData: function (data) {
+                        data.filename = generateFileName() + '.xlsx';
+                    },
+
+                    exportOptions: {
+                        rows: function (idx, data, node) {
+                            return !$(node).hasClass('exclude-export');
+                        },
+                        columns: ':not(.exclude)'
+                    },
+                    dom: {
+                        button: {
+                            className: 'btn btn-light'
+                        }
+                    },
+
+                    buttons: [
+                        'copyHtml5',
+                        'excelHtml5',
+                        'csvHtml5',
+                        'pdfHtml5'
+                    ]
+                }
+            });
+            $('.datatable-nested tbody').on('click', 'td.expand-control', function () {
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
+
+                if (row.child.isShown()) {
+                    // This row is already open, close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                } else {
+                    // Get the agent ID and generation from the row data attributes
+                    var agentId = $(this).data('agent-id');
+                    var generation = $(this).data('generation');
+
+                    console.log('agentId', agentId)
+                    console.log('generation', generation)
+
+                    const childRow = $('#expand-agents').html().replaceAll('{userid}', agentId)
+                    row.child(childRow).show();
+                    // Open this row with the nested table
+                    ExpandGroup(agentId, generation)
+                    tr.addClass('shown');
+                }
+            });
+        });
+
+         
+
+
+        function ExpandGroup(agent, generation) {
+            let html=''
+            var hasExpand = $('#expand_' + agent).val();
+
+            if (hasExpand == 1) {
+                return;
+            }
+        @{ var filter = new CaliphWeb.ViewModel.PersistencyCalculatorViewModel();}
+            var searchFilter = @Html.Raw(Json.Encode(filter));
+            searchFilter.StartDate = $('#CreatedDate').data().daterangepicker.startDate._d.toJSON();
+            searchFilter.EndDate = $('#CreatedDate').data().daterangepicker.endDate._d.toJSON();
+            searchFilter.PersistencyDate = $('#PersistencyDate').data().daterangepicker.startDate._d.toJSON();
+            searchFilter.AgentId = agent;
+            searchFilter.Generation = generation;
+            $.ajax({
+                url: '@Url.Action("SearchAgentPolicy", "Persistency")',
+                type: 'POST',
+                data: { req: searchFilter },
+                success: function (response) {
+                    $('#agent-policy-table_' + agent).html('');
+                    $('#agent-policy-table_' + agent).html(response);
+                    $('#expand_' + agent).val(1);
+
+
+                    console.log('getting data', response);
+                    html= response
+
+                }
+            });
+            
+
+            return html
+        }
+
+
+           function DisplayCalculator(agent, type, name) {
+        @{ var filterCalculator = new CaliphWeb.ViewModel.PersistencyCalculatorViewModel();}
+            var searchFilter = @Html.Raw(Json.Encode(filterCalculator));
+            searchFilter.StartDate = $('#CreatedDate').data().daterangepicker.startDate._d.toJSON();
+               searchFilter.EndDate = $('#CreatedDate').data().daterangepicker.endDate._d.toJSON();
+               searchFilter.PersistencyDate = $('#PersistencyDate').data().daterangepicker.startDate._d.toJSON();
+               searchFilter.AgentId = agent;
+               searchFilter.AgentName = name;
+               if (type == 'g') {
+                   searchFilter.TargetRatio = $('#leder_new_pp_ratio_' + agent).text().replaceAll(',', '').replaceAll(' ', '')
+                       .replaceAll(' ', '').replaceAll('\n', '').replaceAll('%', '');
+               }
+               else if (type == 'p') {
+                   searchFilter.TargetRatio = $('#new_ratio_' + agent).val().replaceAll(',', '');
+               } else if (type == 'w') {
+                   searchFilter.TargetRatio = $('#whole_new_pp_ratio_' + agent).text().replaceAll(',', '').replaceAll(' ', '')
+                       .replaceAll(' ', '').replaceAll('\n', '').replaceAll('%', '');
+               }
+               searchFilter.Type = type;
+            $.ajax({
+                url: '@Url.Action("Search", "Persistency")',
+                type: 'POST',
+                data: { req: searchFilter },
+                success: function (response) {
+                    window.open('/persistency/calculator?agentid=' + agent
+                        , '_blank');
+                }
+            });
+        }
+
+
+           function SearchSummaryData() {
+            @{ var filterSummary = new CaliphWeb.ViewModel.PersistencyCalculatorViewModel
+                {
+                   AgentId = Model.AgentId,
+                   AgentName= Model.AgentName
+                };
+}
+            var searchFilter = @Html.Raw(Json.Encode(filterSummary));
+            searchFilter.StartDate = $('#CreatedDate').data().daterangepicker.startDate._d.toJSON();
+            searchFilter.EndDate = $('#CreatedDate').data().daterangepicker.endDate._d.toJSON();
+               searchFilter.PersistencyDate = $('#PersistencyDate').data().daterangepicker.startDate._d.toJSON();
+
+               console.log($('#PersistencyDate').data().daterangepicker);
+            BlockUIHelper.blockUI('search')
+            //save to tempdata
+            // reload
+
+            // grab from tempdata when page load
+            $.ajax({
+                url: '@Url.Action("Search", "Persistency")',
+                type: 'POST',
+                data: { req: searchFilter},
+                success: function (response) {
+                    //$('#client-table').html(response);
+                    location.reload();
+                }
+            });
+
+        }
+
+
+        function PPRatioTextChange(agentid, leaderid, generation) {
+
+            var ratio = $('#new_ratio_' + agentid).val();
+
+            if (ratio > 100)
+                ratio = 100;
+
+            var calculateRatio = ratio / 100;
+
+            var currentRowAce = parseFloat($('#ace_' + agentid).text().replaceAll(',', ''));
+            var currentRowPP = parseFloat($('#pp_' + agentid).text().replaceAll(',', ''));
+            var currentRowPreviousCalculatedPP = parseFloat($('#agent_new_pp_' + agentid).text().replaceAll(',', ''));
+            var newpp = currentRowAce * calculateRatio;
+            $('#agent_new_pp_' + agentid).text(ReplaceNumberWithCommas(newpp.toFixed(2)));
+
+            var currentGroupPP = parseFloat($('#leder_new_pp_' + leaderid).text().replaceAll(',', ''));
+            var currentGroupAce = parseFloat($('#ace_leader_' + leaderid).text().replaceAll(',', ''));
+            var newGroupPP = currentGroupPP - currentRowPreviousCalculatedPP + parseFloat(newpp.toFixed(2));
+            $('#leder_new_pp_' + leaderid).text(ReplaceNumberWithCommas(newGroupPP.toFixed(2)));
+
+            var leaderRatio = (newGroupPP / currentGroupAce) * 100;
+            $('#leder_new_pp_ratio_' + leaderid).text(ReplaceNumberWithCommas(leaderRatio.toFixed(2)) + '%');
+
+
+            var loginAgent = '@CaliphWeb.Helper.UserHelper.GetLoginUser()';
+            //var currentGroupPP = parseFloat($('#leder_new_pp_' + loginAgent).text().replaceAll(',', ''));
+            //var currentGroupAce = parseFloat($('#ace_leader_' + loginAgent).text().replaceAll(',', ''));
+            //var newGroupPP = currentGroupPP - currentRowPreviousCalculatedPP + parseFloat(newpp.toFixed(2));
+            //$('#leder_new_pp_' + loginAgent).text(ReplaceNumberWithCommas(newGroupPP.toFixed(2)));
+
+            //var leaderRatio = (newGroupPP / currentGroupAce) * 100;
+            //$('#leder_new_pp_ratio_' + loginAgent).text(ReplaceNumberWithCommas(leaderRatio.toFixed(2)) + '%');
+
+            //whole group
+            var wholeGroupPP = parseFloat($('#whole_new_pp_' + loginAgent).text().replaceAll(',', ''));
+            var wholeGroupAce = parseFloat($('#ace_whole_' + loginAgent).text().replaceAll(',', ''));
+            var newWholeGroupPP = wholeGroupPP - currentRowPreviousCalculatedPP + parseFloat(newpp.toFixed(2));
+            $('#whole_new_pp_' + loginAgent).text(ReplaceNumberWithCommas(newWholeGroupPP.toFixed(2)));
+
+            var wholeRatio = (newWholeGroupPP / wholeGroupAce) * 100;
+            $('#whole_new_pp_ratio_' + loginAgent).text(ReplaceNumberWithCommas(wholeRatio.toFixed(2)) + '%');
+
+
+            //leader group
+            var groupPP = parseFloat($('#group_new_pp_' + generation).text().replaceAll(',', ''));
+            var groupAce = parseFloat($('#ace_group_' + generation).text().replaceAll(',', ''));
+            var newGroupPP = groupPP - currentRowPreviousCalculatedPP + parseFloat(newpp.toFixed(2));
+            $('#group_new_pp_' + generation).text(ReplaceNumberWithCommas(newGroupPP.toFixed(2)));
+
+            var groupRatio = groupAce == 0 ? 0 : ((newGroupPP / groupAce) * 100);
+            $('#group_new_pp_ratio_' + generation).text(ReplaceNumberWithCommas(groupRatio.toFixed(2)) + '%');
+        }
+        let startdate = moment().startOf('year');
+        let enddate = moment().endOf('year');
+        let persistencyDate = moment().startOf('month');
+
+        function ChangeType(type) {
+            $('#d0').removeClass();
+            $('#d1').removeClass();
+            $('#d2').removeClass();
+            if (type === 0) {
+                $('#d0').addClass('btn btn-primary');
+                $('#d1').addClass('btn btn-outline-primary');
+                $('#d2').addClass('btn btn-outline-primary');
+                @{ var date = DateTime.Now.AddMonths(-1);
+                    var days = DateTime.DaysInMonth(date.Year, date.Month);}
+                startdate = new Date('@( (new DateTime(DateTime.Now.Year,1,1)).ToString("yyyy-MM-dd"))');
+                enddate = new Date('@((new DateTime(DateTime.Now.Year,12,31)).ToString("yyyy-MM-dd"))');
+                persistencyDate = new Date('@((new DateTime(date.Year, date.Month, days)).ToString("yyyy-MM-dd"))');
+            }
+            else if (type === 1)
+            {
+                $('#d0').addClass('btn btn-outline-primary');
+                $('#d1').addClass('btn btn-primary');
+                $('#d2').addClass('btn btn-outline-primary');
+                  startdate = new Date('@( (new DateTime(DateTime.Now.Year-1,1,1)).ToString("yyyy-MM-dd"))');
+                enddate = new Date('@((new DateTime(DateTime.Now.Year-1,12,31)).ToString("yyyy-MM-dd"))');
+                persistencyDate = enddate;
+
+            }
+            else if (type === 2)
+            {
+                $('#d0').addClass('btn btn-outline-primary');
+                $('#d1').addClass('btn btn-outline-primary');
+                $('#d2').addClass('btn btn-primary');
+                  startdate = new Date('@( (new DateTime(DateTime.Now.Year-2,1,1)).ToString("yyyy-MM-dd"))');
+                enddate = new Date('@((new DateTime(DateTime.Now.Year-2,12,31)).ToString("yyyy-MM-dd"))');
+                persistencyDate = enddate;
+            }
+            //$('#CreatedDate').daterangepicker({
+            //    parentEl: '.content-inner',
+            //    startDate: startdate,
+            //    endDate: enddate,
+            //});
+            $("#CreatedDate").data('daterangepicker').setStartDate(startdate);
+            $("#CreatedDate").data('daterangepicker').setEndDate(enddate);
+            $("#PersistencyDate").data('daterangepicker').setStartDate(persistencyDate);
+        }
+
+
+        function ReplaceNumberWithCommas(yourNumber) {
+            //Seperates the components of the number
+            var n = yourNumber.toString().split(".");
+            //Comma-fies the first part
+            n[0] = n[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            //Combines the two sections
+            return n.join(".");
+        }
+    </script>
+}

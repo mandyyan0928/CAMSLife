@@ -1,0 +1,357 @@
+﻿@model CaliphWeb.Models.ViewModel.EditEventViewModel
+@using System.Globalization;
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<script src="~/global_assets/js/demo_pages/form_input_groups.js"></script>
+<script src="~/global_assets/js/demo_pages/picker_date.js"></script>
+<script src="~/global_assets/js/demo_pages/form_select2.js"></script>
+<script src="~/global_assets/js/demo_pages/form_validation.js"></script>
+<!-- Page header -->
+<div class="page-header page-header-light">
+    <div class="page-header-content header-elements-lg-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-plus-circle2"></i> <span class="font-weight-semibold">Edit Training/Event</span></h4>
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+    </div>
+
+    <div class="breadcrumb-line breadcrumb-line-light header-elements-lg-inline">
+        <div class="d-flex">
+            <div class="breadcrumb">
+                <a class="breadcrumb-item"><i class="icon-home mr-2"></i> Training/Event</a>
+                <a href="@Url.Action("List","Event")" class="breadcrumb-item">Training/Event List</a>
+                <a class="breadcrumb-item">Edit Training/Event</a>
+            </div>
+
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+    </div>
+</div>
+<!-- /page header -->
+<!-- Tabs with top line -->
+<div class="mb-3 mt-2">
+    <h6 class="mb-0 font-weight-semibold">
+    </h6>
+</div>
+
+<form id="edit-event" class="form-validate-jquery">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title">Event Info</h5>
+                </div>
+
+                <div class="card-body">
+                    <input type="hidden" name="EventId" value="@Model.EventId" />
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Name<span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <input type="text" required id="EventName" name="EventName" class="form-control" value="@Model.EventName">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Type<span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <select required data-placeholder="Event Type" name="EventTypeId" id="EventTypeId" class="form-control select-search" data-fouc>
+                                <option value="">Select</option>
+                                @foreach (var item in Model.EventTypeList)
+                                {
+                                    var typeSelected = item.MasterDataId == Model.EventTypeId ? "selected" : "";
+                                    <option value="@item.MasterDataId" @typeSelected>@item.Name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Host<span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <select required data-placeholder="Event Host" name="EventHostId" id="EventHostId" class="form-control select-search" data-fouc>
+                                <option value="">Select</option>
+                                @foreach (var item in Model.EventHostList)
+                                {
+                                    var hostSelected = item.MasterDataId == Model.EventHostId ? "selected" : "";
+                                    <option value="@item.MasterDataId" @hostSelected>@item.Name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Channel<span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <select required data-placeholder="Event Channel" name="EventChannelId" id="EventChannelId" class="form-control select-search" data-fouc>
+                                <option value="">Select</option>
+                                @foreach (var item in Model.EventChannelList)
+                                {
+                                    var channelSelected = item.MasterDataId == Model.EventChannelId ? "selected" : "";
+                                    <option value="@item.MasterDataId" @channelSelected>@item.Name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Channel Location<span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <input type="text" required id="EventChannelLocation" name="EventChannelLocation" class="form-control" value="@Model.EventChannelLocation">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Event Fees<span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <input type="number" min="0.00" max="10000.00" step="0.01" required id="EventFees" name="EventFees" value="@Model.EventFees.ToString("f2")" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Date &amp; Time<span class="text-danger">*</span></label>
+                        <div class="col-lg-8" id="date-select">
+                            @foreach (var item in Model.EventDates)
+                            {
+                                var stylePadding = Model.EventDates.IndexOf(item) > 0 ? "padding-top:10px;" : "";
+                                var eventDate = item.EventDateFrom.ToString("g", CultureInfo.GetCultureInfo("en-US")) + " - " + item.EventDateTo.ToString("g", CultureInfo.GetCultureInfo("en-US"));
+                                var regDate = item.RegClosingDate.ToString("MM/dd/yyyy");
+                                <div class="date-group" style="@stylePadding">
+                                    <input hidden id="EventDateId" name="EventDateId" value="@item.EventDateId" />
+                                    <div class="input-group mt-1">
+                                        <span class="input-group-prepend">
+                                            <span class="input-group-text"><i class="icon-calendar5"></i></span>
+                                        </span>
+                                        <input type="text" id="FromDate" name="FromDate" class="form-control daterange-time rounded-right" value="@eventDate" />
+                                    </div>
+                                    <div class="input-group" style="padding-top:5px;">
+                                        <span class="input-group-prepend">
+                                            <span class="input-group-text">Reg Closed Date</span>
+                                        </span>
+                                        <input type="text" id="RegCloseDate" name="RegCloseDate" class="form-control daterange-single rounded-right" value="@regDate" />
+                                        @if (Model.EventDates.IndexOf(item) > 0)
+                                        {
+                                            <a class="remove"><i class="icon-bin"></i></a>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                            <a href="#" id="addDate" class="pt-1 d-block w-50 m-auto"><i class="icon-plus-circle2"></i> <span class="font-weight-semibold">Add Multiple Date</span></a>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Remarks<span class="text-danger"></span></label>
+                        <div class="col-lg-8">
+                            <textarea id="notes" name="Remarks" class="form-control" value="@Model.Remarks"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row m-2">
+                    <div class="col-lg-12">
+                        <div class="text-left float-left">
+                            <a class="btn btn-primary" href="~/Event/List"><i class="icon-arrow-left12"></i>Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title">Attendant Info</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Pax Limit<span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <input type="number" required id="PaxLimit" name="PaxLimit" class="form-control" value="@Model.PaxLimit">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">CPD Point<span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <input type="number" required id="CPDPoint" name="CPDPoint" class="form-control" value="@Model.CPDPoint">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Type<span class="text-danger">*</span></label>
+                        <div class="col-form-label col-lg-8">
+                            @foreach (var item in Model.AttendantTypeList)
+                            {
+                                var isCheck = item.MasterDataId == Model.AttendantTypeId ? "checked" : "";
+                                <label class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input" name="AttendantTypeId" value="@item.MasterDataId" @isCheck>
+                                    <span class="custom-control-label">@item.Name</span>
+                                </label>
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Access<span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <div class="border p-3 rounded">
+
+                                <div class="form-check form-check-inline">
+                                    @{ var check = Model.EventRoleList.Where(x => x.RoleId == 2).FirstOrDefault()==null? "" :"checked";}
+                                    <input type="checkbox" class="form-check-input event-roles" id="agent_check" value="2" @check name="EventRoleId" required>
+                                    <label class="form-check-label" for="agent_check">Agents</label>
+                                </div>
+
+                                <div class="form-check form-check-inline">
+                                    @{   check = Model.EventRoleList.Where(x => x.RoleId == 3).FirstOrDefault() == null ? "" :"checked";}
+                                    <input type="checkbox" class="form-check-input event-roles" id="leader_check" @check value="3" name="EventRoleId" required>
+                                    <label class="form-check-label" for="leader_check">Leaders</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    @{ check = Model.EventRoleList.Where(x => x.RoleId == 4).FirstOrDefault() == null ? "" : "checked";}
+                                    <input type="checkbox" class="form-check-input event-roles" id="potential_agent_check" @check value="4" name="EventRoleId" required>
+                                    <label class="form-check-label" for="potential_agent_check">Potential Agents</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-header">
+                    <h5 class="card-title">Attachment</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Upload Attachment</label>
+                        <div class="col-lg-8">
+                            <label class="custom-file">
+                                <input type="file" class="custom-file-input" name="fileUpload" multiple accept=".pdf,.jpg,.jpeg">
+                                <span class="custom-file-label">Choose file</span>
+                            </label>
+                            <span class="form-text text-muted">Accepted formats: jpg, jpeg, pdf. Max file size 20Mb</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="attachment-list">
+                    @Html.Partial("_EventAttachment", Model.EventAttachments);
+                </div>
+                <div class="form-group row m-2">
+                    <div class="col-lg-12">
+
+                        <div class="text-right float-right">
+                            <button type="button" onclick="EditEvent()" class="btn btn-primary">Edit<i class="icon-paperplane ml-2"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<style>
+    .remove {
+        position: absolute;
+        top: 4px;
+        right: 5px;
+        z-index: 4;
+        padding: 6px;
+        cursor: pointer;
+    }
+
+        .remove i {
+            color: red;
+        }
+</style>
+
+@section Scripts{
+    <script>
+        var swalInit = swal.mixin({
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-light',
+                denyButton: 'btn btn-light',
+                input: 'form-control'
+            }
+        });
+
+        $(document).ready(function () {
+            $('#addDate').click(function () {
+                $(this).before(`<div class="date-group" style="padding-top:10px;">
+                                <input hidden id="EventDateId" name="EventDateId" value="0" />
+                                <div class="input-group mt-1">
+                                <span class="input-group-prepend">
+                                <span class="input-group-text"><i class="icon-calendar5"></i></span>
+                                </span>
+                                <input type="text" id="FromDate" name="FromDate" class="form-control daterange-time rounded-right" />
+                                </div>
+                                <div class="input-group" style="padding-top:5px;">
+                                <span class="input-group-prepend">
+                                <span class="input-group-text">Reg Closed Date</span>
+                                </span>
+                                <input type="text" id="RegCloseDate" name="RegCloseDate" class="form-control daterange-single rounded-right" />
+                                <a class="remove"><i class="icon-bin"></i></a>
+                                </div>
+                                </div>`);
+                DateTimePickers.init();
+            });
+
+            $('#date-select').on('click', '.remove', function (e) {
+                e.preventDefault();
+                $(this).parent().parent().remove();
+            });
+        });
+
+        function EditEvent() {
+            var form = $("#edit-event");
+            form.validate();
+
+            if (form.valid()) {
+
+                var dateList = ListHelper.getList('date-group');
+                var eventroles = CheckBox.getCheckedIds('EventRoleId');
+                var formData = form.serialize();
+                formData += "&EventDates=" + JSON.stringify(dateList);
+                formData += "&EventRoleIds=" + JSON.stringify(eventroles);
+
+                $.ajax({
+                    url: '@Url.Action("UpdateEvent", "Event")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        swalInit.fire({
+                            title: 'Success!',
+                            text: 'Event updated successfully!',
+                            icon: 'success'
+                        });
+                    }
+                });
+            }
+        }
+
+              $('input[type="file"]').change(function (e) {
+            var files = e.target.files;
+            if (window.FormData !== undefined) {
+                var data = new FormData();
+                for (var x = 0; x < files.length; x++) {
+                    data.append("file" + x, files[x]);
+                }
+                $.ajax({
+                    url: '@Url.Action("UploadFile", "Event")',
+                    type: 'POST',
+                    data: data,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        $('#attachment-list').html(response);
+                    }
+                });
+            }
+        });
+
+        function DeleteAttachment(name) {
+            $.ajax({
+                url: '@Url.Action("DeleteAttachment", "Event")',
+                type: 'POST',
+                data: {name: name},
+                    success: function (response) {
+                        $('#attachment-list').html(response);
+                    }
+                });
+        }
+    </script>
+}

@@ -1,0 +1,71 @@
+﻿@using CaliphWeb.Helper
+@model  CaliphWeb.Models.ViewModel.ClientData
+@{ var pager = new Pager(pageSize: Model.Paging.PageSize, currentPage: Model.Paging.CurrentPage, totalItems: Model.Paging.ItemCount);}
+<table class="table datatable-basic">
+    <thead>
+        <tr>
+            <th> Name</th>
+            <th> Contact</th>
+            <th> Age</th>
+            <th>Occupation</th>
+            <th>Source</th>
+            <th>Status</th>
+            <th>Deal</th>
+            <th class="text-center">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var client in Model.Clients)
+        {
+            var bagdes = client.StatusId == 4 ? "badge badge-success" : "badge badge-primary";
+
+            <tr>
+                <td>@client.Name</td>
+                <td>@client.ContactNo</td>
+                <td>@client.AgeDesc</td>
+                <td>@client.OccupationDesc</td>
+                <td>@client.SourceDesc</td>
+                <td><span class="@bagdes">@client.StatusDesc</span></td>
+                <td class="text-center">
+                    <a href="@Url.Action("list", "deal", new { clientId= client.ClientId})" class="list-icons-item" data-popup="tooltip" title="Click to view">
+                        <span class="badge badge-warning badge-pill"> @client.TotalDeals</span>
+                    </a>
+                </td>
+                <td class="text-center">
+                    <a href="#" onclick="Archive(@client.ClientId,@pager.CurrentPage)" data-popup="tooltip" title="Archive Client" data-placement="right" class="list-icons-item">
+                        <i class="icon-archive"></i>
+                    </a>
+
+                    <a href="@Url.Action("Edit", "Client", new { id=client.ClientId})" data-popup="tooltip" title="Update" class="list-icons-item">
+                        <i class="icon-pencil"></i>
+                    </a>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<div class="datatable-footer">
+    <div class="dataTables_info">
+        Showing @pager.StartIndex to @pager.EndIndex  of @pager.TotalItems entries
+    </div>
+    <div class="dataTables_paginate paging_simple_numbers">
+        @{ var prevPage = pager.CurrentPage - 1;
+            var disableClass = prevPage == 0 ? "disabled" : "";}
+        <a class="paginate_button previous @disableClass" onclick="SearchData(@prevPage )">←</a>
+
+        @foreach (var page in pager.Pages)
+        {
+            var current = page == pager.CurrentPage ? "current" : "";
+            <a class="paginate_button @current" onclick="SearchData(@page)">@page</a>
+        }
+        @{ var nextPage = pager.CurrentPage + 1;
+            var isLastPage = nextPage > pager.EndPage;
+            var disableNextClass = isLastPage ? "disabled" : "";
+        }
+        <a class="paginate_button next @disableNextClass" @disableNextClass onclick="SearchData(@prevPage )">→</a>
+    </div>
+</div>
+

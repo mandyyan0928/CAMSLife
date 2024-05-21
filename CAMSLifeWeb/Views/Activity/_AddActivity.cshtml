@@ -1,0 +1,107 @@
+﻿
+<form id="add-activity" class="form-validate-jquery">
+    <fieldset class="mb-3">
+        <div class="form-group row">
+            <label class="col-form-label col-lg-3">Client<span class="text-danger">*</span></label>
+            <div class="col-lg-8">
+                <select required data-placeholder="Client Name" name="ClientId" id="ClientId" onchange="ShowContact(this);" class="form-control select-search" data-fouc>
+                    <option value="">Select</option>
+                    @foreach (var client in Model.Clients)
+                    {
+                        <option value="@client.ClientId" data-contact="@client.ContactNo">@client.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-lg-3">Deal<span class="text-danger">*</span></label>
+            <div class="col-lg-8">
+                <select required data-placeholder="Deal Title" name="ClientDealId" id="ClientDealId" class="form-control select-search" data-fouc>
+                    <option value="">Select</option>
+                    @foreach (var deal in Model.Deals)
+                    {
+                        <option value="@deal.ClientDealId"> @deal.DealTitleDesc - @deal.Name </option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-form-label col-lg-3">Activity<span class="text-danger">*</span></label>
+            <div class="col-lg-8">
+                @*<select required class="custom-select" name="ActivityPointId">*@
+                <select required data-placeholder="Please Select" class="form-control select-search" name="ActivityPointId" onchange="ShowDetail(this);">
+                    <option value="">Please Select</option>
+                    @foreach (var activity in Model.Activities)
+                    {
+                        <option value="@activity.ActivityPointId">@activity.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-form-label col-lg-3">Date<span class="text-danger">*</span></label>
+            <div class="col-lg-8">
+                <div class="input-group">
+                    <span class="input-group-prepend">
+                        <span class="input-group-text"><i class="icon-calendar5"></i></span>
+                    </span>
+                    <input type="text" id="Date" class="form-control pickadate rounded-right" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-form-label col-lg-3">Time<span class="text-danger">*</span></label>
+            <div class="col-lg-8 text-center">
+                <div class="input-group">
+                    <span class="input-group-prepend">
+                        <span class="input-group-text"><i class="icon-alarm"></i></span>
+                    </span>
+                    <input type="text" id="timefrom" onchange="ChangeTimeTo()" class="form-control rounded-right activity-time-from">
+                    <i class="icon-minus3 text-center  align-items-center" style="display:grid"></i>
+
+                    <span class="input-group-prepend">
+                        <span class="input-group-text"><i class="icon-alarm"></i></span>
+                    </span>
+                    <input type="text" id="timeto" class="form-control rounded-right activity-time-to">
+                </div>
+            </div>
+            <input type="hidden" name="ActivityStartDate" id="ActivityStartDate">
+            <input type="hidden" name="ActivityEndDate" id="ActivityEndDate">
+        </div>
+        @*<div class="form-group row">
+            <label class="col-form-label col-lg-3">Add To Google Calendar<span class="text-danger">*</span></label>
+            <div class="col-lg-8">
+                <select required data-placeholder="Please Select" class="form-control select" name="AddToGoogle">
+                    <option value="">Please Select</option>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+        </div>*@
+        <div id="detail" name="detail">
+            <div class="form-group row">
+                <label class="col-form-label col-lg-3">Name<span class="text-danger">*</span></label>
+                <div class="col-lg-8">
+                    <input type="text" id="refName" name="Name" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-form-label col-lg-3">Contact<span class="text-danger">*</span></label>
+                <div class="col-lg-8">
+                    <input type="text" id="refHp" name="HP" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-form-label col-lg-3">Notes</label>
+                <div class="col-lg-8">
+                    <textarea name="Remarks" class="form-control"></textarea>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</form>

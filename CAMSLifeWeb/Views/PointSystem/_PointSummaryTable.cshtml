@@ -1,0 +1,120 @@
+﻿@using CaliphWeb.Models.ViewModel;
+@model PointSummaryTable
+
+
+
+<table class="table table-bordered table-point-summary">
+    <thead>
+        <tr>
+            <th style="width:15%"> </th>
+            <th> </th>
+            <th colspan="2" class="text-center"> Mon </th>
+            <th colspan="2" class="text-center"> Tue </th>
+            <th colspan="2" class="text-center"> Wed </th>
+            <th colspan="2" class="text-center"> Thu </th>
+            <th colspan="2" class="text-center"> Fri </th>
+            <th colspan="2" class="text-center"> Sat </th>
+            <th colspan="2" class="text-center"> Sun </th>
+            <th class="text-center">  </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td></td>
+            <td></td>
+            @{ 
+                DateTime loopDate = Model.StartDate;
+                while (loopDate <= Model.EndDate)
+                {
+                    <td colspan="2" class="text-center">  @loopDate.Date.ToString("dd MMM") </td>
+                    loopDate = loopDate.AddDays(1);
+                }
+            }
+          
+            <td></td>
+        </tr>
+        <tr>
+            <td>Activities</td>
+            <td>Point</td>
+            <td>Actual</td>
+            <td>Total</td>
+            <td>Actual</td>
+            <td>Total</td>
+            <td>Actual</td>
+            <td>Total</td>
+            <td>Actual</td>
+            <td>Total</td>
+            <td>Actual</td>
+            <td>Total</td>
+            <td>Actual</td>
+            <td>Total</td>
+            <td>Actual</td>
+            <td>Total</td>
+            <td>Total</td>
+        </tr>
+        @foreach (var summary in Model.PointSummaryData.OrderBy(p=>p.Sorting))
+        {
+
+    <tr>
+        <td class="sales-activity">
+            @summary.ActivityPointDesc
+        </td>
+        <td class="PointSystem"> @summary.Point</td>
+
+        @foreach (var pointSummary in summary.PointSummaries)
+        {
+            var totalPoint = pointSummary.PointReceive * summary.Point;
+            var jsonPost = new CaliphWeb.Models.ViewModel.PointSummaryPostDetailsFilter { StartDate = pointSummary.Date, EndDate = pointSummary.Date.AddDays(1).AddMinutes(-1), ActivityId = summary.ActivityPointId };
+            var onclickElement = totalPoint > 0 ? "onclick=ViewDetails("+ Html.Raw(Json.Encode(jsonPost)) +") " : "";
+            var hrefValue = totalPoint > 0 ? "href=#" : "";
+            <td><a   @hrefValue  @onclickElement>@pointSummary.PointReceive</a></td>
+            <td><a   @hrefValue  @onclickElement >@totalPoint</a></td>
+        }
+        @{
+            var totalSummaryPoint = summary.PointSummaries.Where(p=> p.ClientDealActivityDesc !="ACE (API) (amount of premium)").Sum(x => x.PointReceive);
+            var summaryPointOnclickElement = totalSummaryPoint > 0 ? "onclick=ViewDetails(0) " : "";
+            var summaryPointhrefValue = totalSummaryPoint > 0 ? "href=#" : "";
+
+         }
+        <td><a >@totalSummaryPoint</a></td>
+
+    </tr>
+        }
+    <tr>
+        <td colspan="2" class="recruitment-activity">
+            Total
+        </td>
+        @{
+            loopDate = Model.StartDate;
+            var totalAll = 0;
+            while (loopDate <= Model.EndDate)
+            {
+                var totalPointReceive = 0;
+                var total = 0;
+                foreach (var pointSummary in Model.PointSummaryData)
+                {
+                    totalPointReceive += pointSummary.PointSummaries.Where(x => x.Date == loopDate).FirstOrDefault().PointReceive;
+                    total += pointSummary.PointSummaries.Where(x => x.Date == loopDate).FirstOrDefault().PointReceive * pointSummary.Point;
+                    totalAll += pointSummary.PointSummaries.Where(x => x.Date == loopDate).FirstOrDefault().PointReceive * pointSummary.Point;
+                }
+
+                var onclickElement = total > 0 ? "onclick=ViewDetails() " : "";
+                var hrefValue = total > 0 ? "href=#" : "";
+                <td><a >@totalPointReceive</a></td>
+                <td><a  >@total</a></td>
+                loopDate = loopDate.AddDays(1);
+            }
+            <td><a >@totalAll</a></td>
+        }
+
+
+
+
+
+
+
+    </tr>
+    </tbody>
+</table>
+
+

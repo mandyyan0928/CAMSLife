@@ -1,0 +1,70 @@
+﻿@using CaliphWeb.Helper
+@model  CaliphWeb.Models.ViewModel.ReferralData
+
+
+
+@{ var pager = new Pager(pageSize: Model.Paging.PageSize, currentPage: Model.Paging.CurrentPage, totalItems: Model.Paging.ItemCount);}
+
+<table class="table datatable-basic">
+    <thead>
+        <tr>
+            <th> Client Name</th>
+            <th> Referral Name</th>
+            <th> Phone Number</th>
+            <th> Notes</th>
+            <th> Date</th>
+            <th> Agent</th>
+            <th> Status</th>
+            <th class="text-center">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Referral)
+        {
+            var bagdes = item.StatusId == 11 ? "badge badge-success" : "badge badge-primary";
+        <tr>
+            <td>@item.ClientName</td>
+            <td>@item.ReferralName</td>
+            <td>@item.HP</td>
+            <td>@item.Remark</td>
+            <td>@item.CreatedDate</td>
+            <td>@item.CreatedBy</td>
+
+            <td><span class="@bagdes">@item.StatusDesc</span></td>
+            @if (item.StatusId == (int)CaliphWeb.ViewModel.Data.MasterDataEnum.Status.Leads)
+            {
+            <td class="text-center">
+                <a href="@Url.Action("Add", "Client", new { ClientName = item.ClientId })" data-popup="tooltip" title="Convert to Client" data-placement="right" href="#" class="list-icons-item">
+                    <i class="icon-undo"></i>
+                </a>
+            </td>
+            }
+            else { 
+                <td></td>
+            
+            }
+        </tr>
+        }
+    </tbody>
+</table>
+
+<div class="datatable-footer">
+    <div class="dataTables_info">
+        Showing @pager.StartIndex to @pager.EndIndex  of @pager.TotalItems entries
+    </div>
+    <div class="dataTables_paginate paging_simple_numbers">
+        @{ var prevPage = pager.CurrentPage - 1;
+            var disableClass = prevPage == 0 ? "disabled" : "";}
+        <a class="paginate_button previous @disableClass" onclick="SearchData(@prevPage )">←</a>
+
+        @foreach (var page in pager.Pages)
+        {
+            var current = page == pager.CurrentPage ? "current" : "";
+<a class="paginate_button @current" onclick="SearchData(@page)">@page</a>}
+        @{ var nextPage = pager.CurrentPage + 1;
+            var isLastPage = nextPage > pager.EndPage;
+            var disableNextClass = isLastPage ? "disabled" : ""; }
+        <a class="paginate_button next @disableNextClass" @disableNextClass onclick="SearchData(@prevPage )">→</a>
+    </div>
+</div>
+

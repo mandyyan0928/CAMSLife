@@ -1,0 +1,42 @@
+﻿@using CaliphWeb.ViewModel
+@model  GenerationGroupPolicy
+
+<table class="table table-border-dashed">
+    <thead>
+        <tr id="action">
+           
+            <td>Agent</td>
+            <td>ACE</td>
+            <td>PP</td>
+            <td>%</td>
+            <td>New %</td>
+            <td>New PP</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var agentHierarchyPolicy in Model.AgentHierarchyPolicies)
+        {
+            <tr>
+                <td>
+                    <a  href="#"  onclick="DisplayCalculator('@agentHierarchyPolicy.Agent.agent_id', 'p', '@agentHierarchyPolicy.Agent.agent_name')">
+                        @agentHierarchyPolicy.Agent.agent_id (  @agentHierarchyPolicy.Agent.role )<br />
+                        @agentHierarchyPolicy.Agent.agent_name
+                    </a>
+                </td>
+                <td id="ace_@agentHierarchyPolicy.Agent.agent_id">@agentHierarchyPolicy.ACE.ToString("n2")</td>
+                <td id="pp_@agentHierarchyPolicy.Agent.agent_id">@agentHierarchyPolicy.PersistencyPremium.ToString("n2")</td>
+                <td>
+
+                    @agentHierarchyPolicy.Ratio.ToString("n2") %
+                </td>
+                <td>
+                    <input type="number" class="form-control" id="new_ratio_@agentHierarchyPolicy.Agent.agent_id" min="@agentHierarchyPolicy.Ratio" value="@agentHierarchyPolicy.Ratio.ToString("n2")" onchange="PPRatioTextChange('@agentHierarchyPolicy.Agent.agent_id', '@Model.LeaderId', @Model.Generation)" />
+                </td>
+                <td id="agent_new_pp_@agentHierarchyPolicy.Agent.agent_id">
+
+                    @agentHierarchyPolicy.PersistencyPremium.ToString("n2")
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

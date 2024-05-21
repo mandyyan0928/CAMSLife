@@ -1,0 +1,159 @@
+﻿@using CaliphWeb.ViewModel.Data;
+@using CaliphWeb.Helper 
+@model CaliphWeb.Models.API.Budget.Income
+
+<div id="incomesimulator" onload="preLoad()">
+    <form id="frmincome">
+      
+
+        <div class="row form-group">
+            <div class="col-md-3">
+                Monthly Premium
+            </div>
+            <div class="col-md-2">
+                <input class="form-control" type="number" value="@Model.IncomeData.ProductPricePlan" id="price" name="PricePlan" onchange="CalIncome()" />
+                <input type="hidden" name="StimulatorBudgetId" value="@Model.IncomeData.BudgetId" />
+            </div>
+        </div>
+
+        <!--Income-->
+        <div class=" table-responsive" div="divincome">
+
+            <table class="table table-bordered" id="tblincome">
+                <thead>
+                    <tr id="tr1" class="trhead">
+                        <th> </th>
+                        <th class="month1 quarter1">1st Month</th>
+                        <th class="month2 quarter1">2nd Month </th>
+                        <th class="month3 quarter1">3rd Month </th>
+                        <th class="month4 quarter2">4th Month </th>
+                        <th class="month5 quarter2">5th Month </th>
+                        <th class="month6 quarter2">6th Month </th>
+                        <th class="month7 quarter3">7th Month </th>
+                        <th class="month8 quarter3">8th Month </th>
+                        <th class="month9 quarter3">9th Month </th>
+                        <th class="month10 quarter4">10th Month </th>
+                        <th class="month11 quarter4">11th Month </th>
+                        <th class="month12 quarter4">12th Month </th>
+                        <th> Total Cases</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr id="tr2">
+                        <th>Personal Producer</th>
+                        <td class="month1 quarter1"><input type="number" class="form-control inputproducer" value="@Model.IncomeData.ProductQtyMonth1" name="ProductQtyMonth1" onchange="CalIncome()" /></td>
+                        <td class="month2 quarter1"><input type="number" class="form-control inputproducer" value="@Model.IncomeData.ProductQtyMonth2" name="ProductQtyMonth2" onchange="CalIncome()" /></td>
+                        <td class="month3 quarter1"><input type="number" class="form-control inputproducer" value="@Model.IncomeData.ProductQtyMonth3" name="ProductQtyMonth3" onchange="CalIncome()" /></td>
+                        <td class="month4 quarter2"><input type="number" class="form-control inputproducer" value="@Model.IncomeData.ProductQtyMonth4" name="ProductQtyMonth4" onchange="CalIncome()" /></td>
+                        <td class="month5 quarter2"><input type="number" class="form-control inputproducer" value="@Model.IncomeData.ProductQtyMonth5" name="ProductQtyMonth5" onchange="CalIncome()" /></td>
+                        <td class="month6 quarter2"><input type="number" class="form-control inputproducer" value="@Model.IncomeData.ProductQtyMonth6" name="ProductQtyMonth6" onchange="CalIncome()" /></td>
+                        <td class="month7 quarter3"><input type="number" class="form-control inputproducer" value="@Model.IncomeData.ProductQtyMonth7" name="ProductQtyMonth7" onchange="CalIncome()" /></td>
+                        <td class="month8 quarter3"><input type="number" class="form-control inputproducer" value="@Model.IncomeData.ProductQtyMonth8" name="ProductQtyMonth8" onchange="CalIncome()" /></td>
+                        <td class="month9 quarter3"><input type="number" class="form-control inputproducer" value="@Model.IncomeData.ProductQtyMonth9" name="ProductQtyMonth9" onchange="CalIncome()" /></td>
+                        <td class="month10 quarter4"><input type="number" class="form-control inputproducer" value="@Model.IncomeData.ProductQtyMonth10" name="ProductQtyMonth10" onchange="CalIncome()" /></td>
+                        <td class="month11 quarter4"><input type="number" class="form-control inputproducer" value="@Model.IncomeData.ProductQtyMonth11" name="ProductQtyMonth11" onchange="CalIncome()" /></td>
+                        <td class="month12 quarter4"><input type="number" class="form-control inputproducer" value="@Model.IncomeData.ProductQtyMonth12" name="ProductQtyMonth12" onchange="CalIncome()" /></td>
+                        <td id="totalcase">0</td>
+                    </tr>
+                    <tr id="tr3">
+                        <th>Monthly Premium</th>
+                        <td class="month1 quarter1" id="incomePrice1"></td>
+                        <td class="month2 quarter1" id="incomePrice2"></td>
+                        <td class="month3 quarter1" id="incomePrice3"></td>
+                        <td class="month4 quarter2" id="incomePrice4"></td>
+                        <td class="month5 quarter2" id="incomePrice5"></td>
+                        <td class="month6 quarter2" id="incomePrice6"></td>
+                        <td class="month7 quarter3" id="incomePrice7"></td>
+                        <td class="month8 quarter3" id="incomePrice8"></td>
+                        <td class="month9 quarter3" id="incomePrice9"></td>
+                        <td class="month10 quarter4" id="incomePrice10"></td>
+                        <td class="month11 quarter4" id="incomePrice11"></td>
+                        <td class="month12 quarter4" id="incomePrice12"></td>
+                        <td></td>
+                    </tr>
+                    <tr id="tr4">
+                        <th>Monthly Commission</th>
+                        <td class="month1 quarter1" id="incomecomm1"></td>
+                        <td class="month2 quarter1" id="incomecomm2"></td>
+                        <td class="month3 quarter1" id="incomecomm3"></td>
+                        <td class="month4 quarter2" id="incomecomm4"></td>
+                        <td class="month5 quarter2" id="incomecomm5"></td>
+                        <td class="month6 quarter2" id="incomecomm6"></td>
+                        <td class="month7 quarter3" id="incomecomm7"></td>
+                        <td class="month8 quarter3" id="incomecomm8"></td>
+                        <td class="month9 quarter3" id="incomecomm9"></td>
+                        <td class="month10 quarter4" id="incomecomm10"></td>
+                        <td class="month11 quarter4" id="incomecomm11"></td>
+                        <td class="month12 quarter4" id="incomecomm12"></td>
+                        <td></td>
+                    </tr>
+                    <tr id="tr5">
+                        <th>Recruitment</th>
+                        <td class="month1 quarter1"><input type="number" class="form-control" value="@Model.IncomeData.RecruitmentCount1" name="RecruitmentCount1" /></td>
+                        <td class="month2 quarter1"><input type="number" class="form-control" value="@Model.IncomeData.RecruitmentCount2" name="RecruitmentCount2" /></td>
+                        <td class="month3 quarter1"><input type="number" class="form-control" value="@Model.IncomeData.RecruitmentCount3" name="RecruitmentCount3" /></td>
+                        <td class="month4 quarter2"><input type="number" class="form-control" value="@Model.IncomeData.RecruitmentCount4" name="RecruitmentCount4" /></td>
+                        <td class="month5 quarter2"><input type="number" class="form-control" value="@Model.IncomeData.RecruitmentCount5" name="RecruitmentCount5" /></td>
+                        <td class="month6 quarter2"><input type="number" class="form-control" value="@Model.IncomeData.RecruitmentCount6" name="RecruitmentCount6" /></td>
+                        <td class="month7 quarter3"><input type="number" class="form-control" value="@Model.IncomeData.RecruitmentCount7" name="RecruitmentCount" /></td>
+                        <td class="month8 quarter3"><input type="number" class="form-control" value="@Model.IncomeData.RecruitmentCount8" name="RecruitmentCount8" /></td>
+                        <td class="month9 quarter3"><input type="number" class="form-control" value="@Model.IncomeData.RecruitmentCount9" name="RecruitmentCount9" /></td>
+                        <td class="month10 quarter4"><input type="number" class="form-control" value="@Model.IncomeData.RecruitmentCount10" name="RecruitmentCount10" /></td>
+                        <td class="month11 quarter4"><input type="number" class="form-control" value="@Model.IncomeData.RecruitmentCount11" name="RecruitmentCount11" /></td>
+                        <td class="month12 quarter4"><input type="number" class="form-control" value="@Model.IncomeData.RecruitmentCount12" name="RecruitmentCount12" /></td>
+                        <td></td>
+                    </tr>
+                    <tr id="tr6">
+                        <th rowspan="2">ACE</th>
+                        <td class="month1 quarter1" id="incomeace1"></td>
+                        <td class="month2 quarter1" id="incomeace2"></td>
+                        <td class="month3 quarter1" id="incomeace3"></td>
+                        <td class="month4 quarter2" id="incomeace4"></td>
+                        <td class="month5 quarter2" id="incomeace5"></td>
+                        <td class="month6 quarter2" id="incomeace6"></td>
+                        <td class="month7 quarter3" id="incomeace7"></td>
+                        <td class="month8 quarter3" id="incomeace8"></td>
+                        <td class="month9 quarter3" id="incomeace9"></td>
+                        <td class="month10 quarter4" id="incomeace10"></td>
+                        <td class="month11 quarter4" id="incomeace11"></td>
+                        <td class="month12 quarter4" id="incomeace12"></td>
+                        <td id="acesumtotal" rowspan="2">
+                            0
+                        </td>
+                    </tr>
+                    <tr id="tr7">
+                        <td colspan="3" class="text-center quarter1" id="sumquarter3"></td>
+                        <td colspan="3" class="text-center quarter2" id="sumquarter6"></td>
+                        <td colspan="3" class="text-center quarter3" id="sumquarter9"></td>
+                        <td colspan="3" class="text-center quarter4" id="sumquarter12"></td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+
+        </div>
+        <div class="form-group row">
+            <div class="col-md-12 text-right mt-3 mb-3">
+                <button type="button" class="btn btn-primary" onclick="UpdateIncome(UpdateIncomeSuccessAction)">Update <i class="icon-paperplane ml-2"></i></button>
+            </div>
+        </div>
+    </form>
+
+    <!--Commission-->
+    <div class="table-responsive mt-5" id="commission-table">
+        @Html.Partial("_IncomeStimulatorCommissionTable", Model)
+
+
+
+    </div>
+
+
+    <div class="form-group row">
+        <div class="col-md-12 text-right mt-3 mb-3">
+            <button type="button" class="btn btn-primary" onclick="UpdateAllIncomeStimulator()">Update All<i class="icon-paperplane ml-2"></i></button>
+        </div>
+    </div>
+</div>

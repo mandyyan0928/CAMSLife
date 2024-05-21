@@ -1,0 +1,21 @@
+﻿@using System.Collections.Generic;
+@model  List<CaliphWeb.Models.ViewModel.EventAttachmentViewModel>
+
+<div class="form-group row">
+    @foreach (var item in Model)
+    {
+        if (!item.IsDeleted)
+        {
+            <div class="form-group col-lg-4" style="text-align:center;">
+                <div class="form-group">
+                    <a href="@item.EventAttachmentFullName" target="_blank">
+                        <img alt="@item.EventAttachmentName" src="@item.EventAttachmentFullName" width="150" height="150">
+                    </a>
+                </div>
+                <div class="form-group">
+                    <a class="btn btn-danger" onclick="DeleteAttachment('@item.EventAttachmentFullName')">Delete</a>
+                </div>
+            </div>
+        }
+    }
+</div>

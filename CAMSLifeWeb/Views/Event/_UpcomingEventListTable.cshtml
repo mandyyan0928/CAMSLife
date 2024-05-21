@@ -1,0 +1,102 @@
+﻿@using CaliphWeb.Helper
+@model  CaliphWeb.Models.ViewModel.EventListDataViewModel
+
+@{ var pager = new Pager(pageSize: Model.Paging.PageSize, currentPage: Model.Paging.CurrentPage, totalItems: Model.Paging.ItemCount);}
+
+<table class="table datatable-basic">
+    <thead>
+        <tr>
+            <th>Event Name</th>
+            <th>Event Type</th>
+            <th>Event Host</th>
+            <th>Event Channel</th>
+            <th>CPD</th>
+            <th>Event Fees</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.EventList.OrderByDescending(x => x.EventDateFrom))
+        {
+            var eventDate = @item.EventDateFrom + " - " + @item.EventDateTo;
+            var userStatus = item.UserEventStatusId ?? 0;
+            var userEventId = item.UserEventId ?? 0;
+            var statusTxt = userStatus == 174 ? "pending payment" : "pending";
+            var goingOnclick = (item.EventFees > 0 ? "Confirm" : "Update") + "Attendance(" + @item.EventDateId + ", " + @item.EventId + ", 168)";
+
+            <tr>
+                <td>@item.EventName</td>
+                <td>@item.EventTypeDesc</td>
+                <td>@item.EventHostDesc</td>
+                <td>@item.EventChannelDesc</td>
+                <td>@item.CPDPoint</td>
+                <td>@item.EventFees.ToString("f2")</td>
+                <td>
+                    <div class="list-icons">
+                        <div class="dropdown">
+                            @if ((userStatus == 0 || userStatus == 167 || userStatus == 174) && DateTime.Now <= item.RegClosingDate)
+                            {
+                                <a href="#" class="badge badge-warning dropdown-toggle" data-toggle="dropdown">@statusTxt</a>
+                                <div class="dropdown-menu">
+                                    <a href="#" class="dropdown-item" onclick="@goingOnclick"><i class="icon-checkmark-circle text-success"></i><span class="badge badge-success">going</span></a>
+                                    <a href="#" class="dropdown-item" onclick="UpdateAttendance(@item.EventDateId, @item.EventId, 169)"><i class="icon-cancel-circle2 text-danger"></i><span class="badge badge-danger">not going</span></a>
+                                </div>
+                            }
+                            else if (userStatus == 168)
+                            {
+                                <span class="badge badge-success">going</span>
+                            }
+                            else if (userStatus == 169)
+                            {
+                                if (DateTime.Now <= item.RegClosingDate)
+                                {
+                                    <a href="#" class="badge badge-danger dropdown-toggle" data-toggle="dropdown">not going</a>
+                                    <div class="dropdown-menu">
+                                        <a href="#" class="dropdown-item" onclick="@goingOnclick"><i class="icon-checkmark-circle text-success"></i><span class="badge badge-success">going</span></a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-danger">not going</span>
+                                }
+                            }
+                            else
+                            {
+                                <span class="badge badge-dark">registration closed</span>
+                            }
+                        </div>
+                    </div>
+                </td>
+                <td>@eventDate</td>
+                <td>
+                    <a href="~/Event/Info/@item.EventId" data-popup="tooltip" title="More Info" class="list-icons-item">
+                        <i class="icon-info22"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="datatable-footer">
+    <div class="dataTables_info">
+        Showing @pager.StartIndex to @pager.EndIndex  of @pager.TotalItems entries
+    </div>
+    <div class="dataTables_paginate paging_simple_numbers">
+        @{ var prevPage = pager.CurrentPage - 1;
+            var disableClass = prevPage == 0 ? "disabled" : "";}
+        <a class="paginate_button previous @disableClass" onclick="SearchData(@prevPage )">←</a>
+
+        @foreach (var page in pager.Pages)
+        {
+            var current = page == pager.CurrentPage ? "current" : "";
+            <a class="paginate_button @current" onclick="SearchData(@page)">@page</a>}
+        @{ var nextPage = pager.CurrentPage + 1;
+            var isLastPage = nextPage > pager.EndPage;
+            var disableNextClass = isLastPage ? "disabled" : ""; }
+        <a class="paginate_button next @disableNextClass" @disableNextClass onclick="SearchData(@prevPage )">→</a>
+    </div>
+</div>
+

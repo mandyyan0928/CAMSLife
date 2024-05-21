@@ -1,0 +1,797 @@
+﻿@{ 
+    List<string> month1 = new List<string>();
+    List<string> month2 = new List<string>();
+    List<string> month3 = new List<string>();
+    List<string> month4 = new List<string>();
+    List<string> month5 = new List<string>();
+    List<string> month6 = new List<string>();
+    List<string> month7 = new List<string>();
+    List<string> month8 = new List<string>();
+    List<string> month9 = new List<string>();
+    List<string> month10 = new List<string>();
+    List<string> month11 = new List<string>();
+    List<string> month12 = new List<string>();
+
+    int row1 = 2;
+    int row2 = 2;
+    int row3 = 2;
+    int row4 = 2;
+    int row5 = 2;
+    int row6 = 2;
+    int row7 = 2;
+    int row8 = 2;
+    int row9 = 2;
+    int row10 = 2;
+    int row11 = 2;
+    int row12 = 2;
+
+    foreach (var data in Model.AdditionalRowTableList)
+    {
+        switch (data.Month)
+        {
+            case "1":
+                month1=data.TableString;
+                row1++;
+                break;
+            case "2":
+                month2=data.TableString;
+                row2++;
+                break;
+            case "3":
+                month3=data.TableString;
+                row3++;
+                break;
+            case "4":
+                month4=data.TableString;
+                row4++;
+                break;
+            case "5":
+                month5 =data.TableString;
+                row5++;
+                break;
+            case "6":
+                month6=data.TableString;
+                row6++;
+                break;
+            case "7":
+                month7=data.TableString;
+                row7++;
+                break;
+            case "8":
+                month8=data.TableString;
+                row8++;
+                break;
+            case "9":
+                month9=data.TableString;
+                row9++;
+                break;
+            case "10":
+                month10=data.TableString;
+                row10++;
+                break;
+            case "11":
+                month11=data.TableString;
+                row11++;
+                break;
+            case "12":
+                month12=data.TableString;
+                row12++;
+                break;
+        }
+    }
+
+
+<h5>OR Commission Summary</h5>
+<table style="border-collapse:collapse;margin-left:6.07606pt" cellspacing="0">
+    <tr style="height:19pt">
+        <td style="width:66pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="2" bgcolor="#BEC0BF">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s3" style="text-indent: 0pt; text-align: center;">Month</p>
+        </td>
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="2" bgcolor="#BEC0BF">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s3" style=" text-indent: 0pt; text-align: center;">Commission Cycle</p>
+        </td>
+        <td style="width:178pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" colspan="2" bgcolor="#BEC0BF">
+            <p class="s3" style="padding-top: 3pt;padding-left: 80pt;padding-right: 79pt;text-indent: 0pt;text-align: center;">Year</p>
+        </td>
+        <td style="width:179pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" colspan="3" bgcolor="#BEC0BF">
+            <p class="s3" style="padding-top: 3pt;padding-left: 79pt;padding-right: 78pt;text-indent: 0pt;text-align: center;">Total</p>
+        </td>
+    </tr>
+    <tr style="height:19pt">
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#BEC0BF">
+            <p class="s3" id="year1" style="padding-top: 3pt;padding-left: 34pt;padding-right: 33pt;text-indent: 0pt;text-align: center;">@Model.LastYear </p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#BEC0BF">
+            <p class="s3" id="year2" style="padding-top: 3pt;padding-left: 35pt;padding-right: 34pt;text-indent: 0pt;text-align: center;">@Model.CurrentYear</p>
+        </td>
+        <td style="width:89pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#BEC0BF">
+            <p class="s3" id="year3" style="padding-top: 3pt;padding-left: 35pt;padding-right: 34pt;text-indent: 0pt;text-align: center;">@Model.LastYear</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#BEC0BF">
+            <p class="s3" id="year4" style="padding-top: 3pt;padding-left: 35pt;padding-right: 34pt;text-indent: 0pt;text-align: center;">@Model.CurrentYear</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#BEC0BF">
+            <p class="s3" id="yearPercent" style="padding-top: 3pt;padding-left: 35pt;padding-right: 34pt;text-indent: 0pt;text-align: center;">Gain / Loss Percentage (%)</p>
+        </td>
+    </tr>
+    <tr style="height:19pt">
+        <td style="width:66pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row1" bgcolor="#DCDCDC">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s3" style="text-indent: 0pt;text-align: center;">January</p>
+        </td>
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" style="padding-top: 3pt; text-indent: 0pt; text-align: center;">@Model.DateString1</p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" id="year1Jan1amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearjan1Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" id="year2Jan1amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearjan1Amt</p>
+        </td>
+        <td style="width:89pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row1">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="year1Jan3amt" style="padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearjan3Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row1">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="year2Jan3amt" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.CurrentYearjan3Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row1">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="yearPercent1" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.YearPercent1%</p>
+        </td>
+    </tr>
+    <tr style="height:19pt">
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" style="padding-top: 3pt; text-indent: 0pt; text-align: center;">@Model.DateString2</p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" id="year1Jan2amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearjan2Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" id="year2Jan2amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearjan2Amt</p>
+        </td>
+    </tr>
+    @if (month1 != null && month1.Count > 0)
+    {
+        foreach (var data in month1)
+        {
+            @Html.Raw(data)
+        }
+    }
+    <tr style="height:19pt">
+        <td style="width:66pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row2" bgcolor="#DCDCDC">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s3" style="text-indent: 0pt;text-align: center;">February</p>
+        </td>
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" style="padding-top: 3pt;  text-indent: 0pt; text-align: center;">@Model.DateString3</p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" id="year1Feb1amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearfeb1Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" id="year2Feb1amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearfeb1Amt</p>
+        </td>
+        <td style="width:89pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row2">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="year1Feb3amt" style="padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearfeb3Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row2">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="year2Feb3amt" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.CurrentYearfeb3Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row2">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="yearPercent2" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.YearPercent2%</p>
+        </td>
+    </tr>
+    <tr style="height:19pt">
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" style="padding-top: 3pt; text-indent: 0pt; text-align: center;">@Model.DateString4</p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" id="year1Feb2amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearfeb2Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" id="year2Feb2amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearfeb2Amt</p>
+        </td>
+    </tr>
+    @if (month2 != null && month2.Count > 0)
+    {
+        foreach (var data in month2)
+        {
+            @Html.Raw(data)
+        }
+    }
+    <tr style="height:19pt">
+        <td style="width:66pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row3" bgcolor="#DCDCDC">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s3" style="text-indent: 0pt;text-align: center;">March</p>
+        </td>
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" style="padding-top: 3pt; text-indent: 0pt; text-align: center;">@Model.DateString5</p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" id="year1Mar1amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearmar1Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" id="year2Mar1amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearmar1Amt</p>
+        </td>
+        <td style="width:89pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row3">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="year1Mar3amt" style="padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearmar3Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row3">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="year2Mar3amt" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.CurrentYearmar3Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row3">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="yearPercent3" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.YearPercent3%</p>
+        </td>
+    </tr>
+    <tr style="height:19pt">
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" style="padding-top: 3pt; text-indent: 0pt; text-align: center;">@Model.DateString6</p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" id="year1Mar2amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearmar2Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" id="year2Mar2amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearmar2Amt</p>
+        </td>
+    </tr>
+    @if (month3 != null && month3.Count > 0)
+    {
+        foreach (var data in month3)
+        {
+            @Html.Raw(data)
+        }
+    }
+    <tr style="height:19pt">
+        <td style="width:66pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row4" bgcolor="#DCDCDC">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s3" style="padding-left: 23pt;padding-right: 22pt;text-indent: 0pt;text-align: center;">April</p>
+        </td>
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" style="padding-top: 3pt;text-indent: 0pt;text-align: center;">@Model.DateString7</p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" id="year1Apr1amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearapr1Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" id="year2Apr1amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearapr1Amt</p>
+        </td>
+        <td style="width:89pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row4">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="year1Apr3amt" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.LastYearapr3Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row4">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="year2Apr3amt" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.CurrentYearapr3Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row4">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="yearPercent4" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.YearPercent4%</p>
+        </td>
+    </tr>
+    <tr style="height:19pt">
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" style="padding-top: 3pt; text-indent: 0pt; text-align: center;">@Model.DateString8</p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" id="year1Apr2amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearapr2Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" id="year2Apr2amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearapr2Amt</p>
+        </td>
+    </tr>
+    @if (month4 != null && month4.Count > 0)
+    {
+        foreach (var data in month4)
+        {
+            @Html.Raw(data)
+        }
+    }
+    <tr style="height:19pt">
+        <td style="width:66pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row5" bgcolor="#DCDCDC">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s3" style="padding-left: 23pt;padding-right: 22pt;text-indent: 0pt;text-align: center;">May</p>
+        </td>
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" style="padding-top: 3pt;  text-indent: 0pt; text-align: center;">@Model.DateString9</p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" id="year1May1amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearmay1Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" id="year2May1amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearmay1Amt</p>
+        </td>
+        <td style="width:89pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row5">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="year1May3amt" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.LastYearmay3Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row5">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="year2May3amt" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.CurrentYearmay3Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row5">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="yearPercent5" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.YearPercent5%</p>
+        </td>
+    </tr>
+    <tr style="height:19pt">
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" style="padding-top: 3pt; text-indent: 0pt; text-align: center;">@Model.DateString10</p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" id="year1May2amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearmay2Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" id="year2May2amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearmay2Amt</p>
+        </td>
+    </tr>
+    @if (month5 != null && month5.Count > 0)
+    {
+        foreach (var data in month5)
+        {
+            @Html.Raw(data)
+        }
+    }
+    <tr style="height:19pt">
+        <td style="width:66pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row6" bgcolor="#DCDCDC">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s3" style="padding-left: 23pt;padding-right: 22pt;text-indent: 0pt;text-align: center;">June</p>
+        </td>
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" style="padding-top: 3pt; text-indent: 0pt; text-align: center;">@Model.DateString11</p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" id="year1Jun1amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearjun1Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" id="year2Jun1amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearjun1Amt</p>
+        </td>
+        <td style="width:89pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row6">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="year1Jun3amt" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.LastYearjun3Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row6">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="year2Jun3amt" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.CurrentYearjun3Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row6">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="yearPercent6" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.YearPercent6%</p>
+        </td>
+    </tr>
+    <tr style="height:19pt">
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" style="padding-top: 3pt;  text-indent: 0pt; text-align: center;">@Model.DateString12</p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" id="year1Jun2amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearjun2Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" id="year2Jun2amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearjun2Amt</p>
+        </td>
+    </tr>
+    @if (month6 != null && month6.Count > 0)
+    {
+        foreach (var data in month6)
+        {
+            @Html.Raw(data)
+        }
+    }
+    <tr style="height:19pt">
+        <td style="width:66pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row7" bgcolor="#DCDCDC">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s3" style="padding-left: 23pt;padding-right: 22pt;text-indent: 0pt;text-align: center;">July</p>
+        </td>
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" style="padding-top: 3pt; text-indent: 0pt; text-align: center;">@Model.DateString13</p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" id="year1Jul1amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearjul1Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" id="year2Jul1amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearjul1Amt</p>
+        </td>
+        <td style="width:89pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row7">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="year1Jul3amt" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.LastYearjul3Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row7">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="year2Jul3amt" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.CurrentYearjul3Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row7">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="yearPercent7" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.YearPercent7%</p>
+        </td>
+    </tr>
+    <tr style="height:19pt">
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" style="padding-top: 3pt; text-indent: 0pt; text-align: center;">@Model.DateString14</p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" id="year1Jul2amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearjul2Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" id="year2Jul2amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearjul2Amt</p>
+        </td>
+    </tr>
+    @if (month7 != null && month7.Count > 0)
+    {
+        foreach (var data in month7)
+        {
+            @Html.Raw(data)
+        }
+    }
+    <tr style="height:19pt">
+        <td style="width:66pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row8" bgcolor="#DCDCDC">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s3" style="text-indent: 0pt;text-align: center;">August</p>
+        </td>
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" style="padding-top: 3pt; text-indent: 0pt; text-align: center;">@Model.DateString15</p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" id="year1Aug1amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearaug1Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" id="year2Aug1amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearaug1Amt</p>
+        </td>
+        <td style="width:89pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row8">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="year1Aug3amt" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.LastYearaug3Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row8">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="year2Aug3amt" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.CurrentYearaug3Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row8">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="yearPercent8" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.YearPercent8%</p>
+        </td>
+    </tr>
+    <tr style="height:19pt">
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" style="padding-top: 3pt; text-indent: 0pt; text-align: center;">@Model.DateString16</p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" id="year1Aug2amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearaug2Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" id="year2Aug2amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearaug2Amt</p>
+        </td>
+    </tr>
+    @if (month8 != null && month8.Count > 0)
+    {
+        foreach (var data in month8)
+        {
+            @Html.Raw(data)
+        }
+    }
+    <tr style="height:19pt">
+        <td style="width:66pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row9" bgcolor="#DCDCDC">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s3" style="text-indent: 0pt;text-align: center;">September</p>
+        </td>
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" style="padding-top: 3pt; text-indent: 0pt; text-align: center;">@Model.DateString17</p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" id="year1Sep1amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearsep1Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" id="year2Sep1amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearsep1Amt</p>
+        </td>
+        <td style="width:89pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row9">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="year1Sep3amt" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.LastYearsep3Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row9">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="year2Sep3amt" style="padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearsep3Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row9">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="yearPercent9" style="padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.YearPercent9%</p>
+        </td>
+    </tr>
+    <tr style="height:19pt">
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" style="padding-top: 3pt; text-indent: 0pt; text-align: center;">@Model.DateString18</p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" id="year1Sep2amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearsep2Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" id="year2Sep2amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearsep2Amt</p>
+        </td>
+    </tr>
+    @if (month9 != null && month9.Count > 0)
+    {
+        foreach (var data in month9)
+        {
+            @Html.Raw(data)
+        }
+    }
+    <tr style="height:19pt">
+        <td style="width:66pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row10" bgcolor="#DCDCDC">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s3" style="text-indent: 0pt;text-align: center;">October</p>
+        </td>
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" style="padding-top: 3pt; text-indent: 0pt; text-align: center;">@Model.DateString19</p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" id="year1Oct1amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearoct1Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" id="year2Oct1amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearoct1Amt</p>
+        </td>
+        <td style="width:89pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row10">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="year1Oct3amt" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.LastYearoct3Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row10">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="year2Oct3amt" style="padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearoct3Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row10">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="yearPercent10" style="padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.YearPercent10%</p>
+        </td>
+    </tr>
+    <tr style="height:19pt">
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" style="padding-top: 3pt; text-indent: 0pt; text-align: center;">@Model.DateString20</p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" id="year1Oct2amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearoct2Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" id="year2Oct2amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearoct2Amt</p>
+        </td>
+    </tr>
+    @if (month10 != null && month10.Count > 0)
+    {
+        foreach (var data in month10)
+        {
+            @Html.Raw(data)
+        }
+    }
+    <tr style="height:19pt">
+        <td style="width:66pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row11" bgcolor="#DCDCDC">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s3" style="text-indent: 0pt;text-align: center;">November</p>
+        </td>
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" style="padding-top: 3pt; text-indent: 0pt; text-align: center;">@Model.DateString21</p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" id="year1Nov1amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearnov1Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" id="year2Nov1amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearnov1Amt</p>
+        </td>
+        <td style="width:89pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row11">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="year1Nov3amt" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.LastYearnov3Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row11">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="year2Nov3amt" style="padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearnov3Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row11">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="yearPercent11" style="padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.YearPercent11%</p>
+        </td>
+    </tr>
+    <tr style="height:19pt">
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" style="padding-top: 3pt; text-indent: 0pt; text-align: center;">@Model.DateString22</p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" id="year1Nov2amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYearnov2Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" id="year2Nov2amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYearnov2Amt</p>
+        </td>
+    </tr>
+    @if (month11 != null && month11.Count > 0)
+    {
+        foreach (var data in month11)
+        {
+            @Html.Raw(data)
+        }
+    }
+    <tr style="height:19pt">
+        <td style="width:66pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row12" bgcolor="#DCDCDC">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s3" style="text-indent: 0pt;text-align: center;">December</p>
+        </td>
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" style="padding-top: 3pt; text-indent: 0pt; text-align: center;">@Model.DateString23</p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" id="year1Dec1amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYeardec1Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" id="year2Dec1amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYeardec1Amt</p>
+        </td>
+        <td style="width:89pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row12">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="year1Dec3amt" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.LastYeardec3Amt</p>
+        </td>
+        <td style="width:89pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row12">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="year2Dec3amt" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.CurrentYeardec3Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@row12">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="yearPercent12" style="padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.YearPercent12%</p>
+        </td>
+    </tr>
+    <tr style="height:19pt">
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" style="padding-top: 3pt; text-indent: 0pt; text-align: center;">@Model.DateString24</p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" id="year1Dec2amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.LastYeardec2Amt</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#F5F5F5">
+            <p class="s4" id="year2Dec2amt" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.CurrentYeardec3Amt</p>
+        </td>
+    </tr>
+    @if (month12 != null && month12.Count > 0)
+    {
+        foreach (var data in month12)
+        {
+            @Html.Raw(data)
+        }
+    }
+    <tr style="height:19pt">
+        <td style="width:66pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="2" bgcolor="#DCDCDC">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s3" style="text-indent: 0pt;text-align: center;"></p>
+        </td>
+        <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" style="padding-top: 3pt; text-indent: 0pt; text-align: center;"></p>
+        </td>
+        <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;"></p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+            <p class="s4" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">Total : </p>
+        </td>
+        <td style="width:89pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="2">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="currentYearTotal" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.LastYearTotal</p>
+        </td>
+        <td style="width:89pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="2">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="lastYearTotal" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@Model.CurrentYearTotal</p>
+        </td>
+        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="2">
+            <p style="text-indent: 0pt;text-align: left;">
+                <br />
+            </p>
+            <p class="s4" id="yearPercentTotal" style="padding-right: 2pt;text-indent: 0pt;text-align: right;">@Model.YearPercentTotal%</p>
+        </td>
+    </tr>
+</table>
+
+
+}

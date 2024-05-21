@@ -1,0 +1,62 @@
+﻿@using CaliphWeb.Helper
+@using System.Globalization;
+@model  CaliphWeb.Models.ViewModel.EventPaymentListDataViewModel
+
+@{ var pager = new Pager(pageSize: Model.Paging.PageSize, currentPage: Model.Paging.CurrentPage, totalItems: Model.Paging.ItemCount);}
+
+<table class="table datatable-basic">
+    <thead>
+        <tr>
+            <th>Reference No.</th>
+            <th>Payment Method</th>
+            <th>Status</th>
+            <th>Created By</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.EventPaymentList)
+        {
+            <tr>
+                <td>@item.UserEventPaymentRefNo</td>
+                <td>@item.PaymentChannelDesc</td>
+                <td>@item.PayementStatusDesc</td>
+                <td>@item.CreatedBy</td>
+                <td>@item.CreatedDate</td>
+                @if (item.PayementStatusId == 180)
+                {
+                    <td>
+                        <a href="#" class="btn btn-success" onclick="ConfirmUpdate('@item.UserEventPaymentId', 181, '@item.UserEventId')">Approve</a>
+                        <a href="#" class="btn btn-danger" onclick="ConfirmUpdate('@item.UserEventPaymentId', 182, '@item.UserEventId')">Reject</a>
+                    </td>
+                }
+                else
+                {
+                    <td></td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="datatable-footer">
+    <div class="dataTables_info">
+        Showing @pager.StartIndex to @pager.EndIndex  of @pager.TotalItems entries
+    </div>
+    <div class="dataTables_paginate paging_simple_numbers">
+        @{ var prevPage = pager.CurrentPage - 1;
+            var disableClass = prevPage == 0 ? "disabled" : "";}
+        <a class="paginate_button previous @disableClass" onclick="SearchData(@prevPage )">←</a>
+
+        @foreach (var page in pager.Pages)
+        {
+            var current = page == pager.CurrentPage ? "current" : "";
+            <a class="paginate_button @current" onclick="SearchData(@page)">@page</a>}
+        @{ var nextPage = pager.CurrentPage + 1;
+            var isLastPage = nextPage > pager.EndPage;
+            var disableNextClass = isLastPage ? "disabled" : ""; }
+        <a class="paginate_button next @disableNextClass" @disableNextClass onclick="SearchData(@prevPage )">→</a>
+    </div>
+</div>
+

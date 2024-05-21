@@ -1,0 +1,112 @@
+﻿@model CaliphWeb.Models.ViewModel.PaymentViewModel
+
+@{
+    var refNo = String.IsNullOrEmpty(Model.UserEventPaymentRefNo) ? "-" : Model.UserEventPaymentRefNo;
+    var price = String.IsNullOrEmpty(Model.Amount) ? "-" : Model.Amount;
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Result - Caliph Group</title>
+
+    <link rel="icon" type="image/png" href="~/global_assets/images/logo_icon.png" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+    <!-- global stylesheets -->
+    <link href="~/global_assets/css/icons/icomoon/styles.min.css" rel="stylesheet" type="text/css">
+    <link href="~/global_assets/assets/css/all.css" rel="stylesheet" type="text/css">
+    <!-- /global stylesheets -->
+</head>
+<body>
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+            <div class="page-header page-header-light">
+                <div class="page-header-content header-elements-lg-inline">
+                    <div class="page-title d-flex">
+                        <h4><i class="icon-stack-plus"></i> <span class="font-weight-semibold">Payment Result</span></h4>
+                    </div>
+                </div>
+            </div>
+            <!-- Form inputs -->
+            <div class="card h-100">
+                <div class="card-header">
+                    @if (Model.IsSuccess)
+                    {
+                        <h3 class="card-title">Payment Successful</h3>
+                    }
+                    else
+                    {
+                        <h3 class="card-title">Payment Failed</h3>
+                    }
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Reference No.</label>
+                        <div class="col-lg-8">
+                            @refNo
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Amount</label>
+                        <div class="col-lg-8">
+                            @price
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Event Host</label>
+                        <div class="col-lg-8">
+                            @Model.EventHost
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Event Name</label>
+                        <div class="col-lg-8">
+                            @Model.EventName
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Event Channel</label>
+                        <div class="col-lg-8">
+                            @Model.EventChannel
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Event Location</label>
+                        <div class="col-lg-8">
+                            @Model.EventLocation
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Date From</label>
+                        <div class="col-lg-8">
+                            @Model.EventDateFrom
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Date To</label>
+                        <div class="col-lg-8">
+                            @Model.EventDateTo
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-12">
+                            <div class="text-left float-left">
+                                <a class="btn btn-primary" href="~/Event/UpcomingEvent"><i class="icon-arrow-left12"></i>Back</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+        <div class="col-lg-2"></div>
+    </div>
+</body>
+</html>
+

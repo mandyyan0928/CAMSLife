@@ -1,0 +1,252 @@
+﻿
+@model CaliphWeb.ViewModel.PersistencyCalculatorViewModel
+@using CaliphWeb.ViewModel
+
+<script src="~/global_assets/js/demo_pages/components_collapsible.js"></script>
+<script src="~/global_assets/js/demo_pages/picker_date.js"></script>
+<!-- Basic datatable -->
+<div class="card" id="search">
+    <div class="card-header">
+    </div>
+    <div class="card-body">
+        @{ var loginUser = CaliphWeb.Helper.UserHelper.GetLoginUserViewModel();}
+
+        <div class=" table-responsive">
+            <div class="row">
+                <div class="col-md-12 d-flex align-content-between">
+                    <div class="col-md-5 m-1">
+                        <span> Date:</span>
+                        <div class="input-group">
+                            <span class="input-group-prepend">
+                                <span class="input-group-text"><i class="icon-calendar22"></i></span>
+                            </span>
+                            <input type="text"   id="CreatedDate" class="form-control daterange-basic">
+                        </div>
+                    </div>
+                    <label class="m-1">
+                        <br />
+                        <button type="button" onclick="SearchSummaryData()" class="btn btn-primary d-inline" id="bootbox_form"> <i class="icon-search4"></i> </button>
+                    </label>
+                </div>
+            </div>
+
+            <div class="table datatable-header">
+                <div class="row">
+                </div>
+
+                <table class="table table-border-dashed">
+                    <tbody>
+                        <tr id="action">
+                            <th colspan="2">
+                                <h2>Whole Group</h2>
+                            </th>
+
+                            <th>ACE</th>
+                        </tr>
+
+
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                                <a href="#" onclick="DisplayCalculator('@loginUser.Username', 'w', '@Json.Encode(@loginUser.Fullname)')">
+                                    @Html.Raw(loginUser.Username + "(" + loginUser.RoleName + ") <br/> " + loginUser.Fullname)
+
+                                </a>
+                            </td>
+                            <td id="ace_whole_@loginUser.Username">
+                                @Model.ACE.ToString("n2")
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+                @foreach (var generationGroup in Model.HierarchyPolicies)
+                {
+                    <table class="table table-border-dashed mt-5">
+                        <tbody>
+                            <tr id="action">
+                                <th colspan="2" rowspan="2">
+                                    <h2>@generationGroup.GenerationName</h2>
+                                </th>
+                                <th>ACE</th>
+                            </tr>
+
+
+                            <tr>
+
+                                @if (generationGroup.Generation > 0)
+                                {
+                                    <td id="ace_group_@generationGroup.Generation">
+                                        @{var groupace = generationGroup.AgentHierarchyPolicies.Sum(x => x.ACE);}
+                                        @generationGroup.AgentHierarchyPolicies.Sum(x => x.ACE).ToString("n2")
+
+
+                                    </td>
+                                   
+                                }
+                            </tr>
+
+                            @foreach (var agentHierarchyPolicy in generationGroup.AgentHierarchyPolicies)
+                            {
+                                var user = agentHierarchyPolicy.Agent;
+
+                                <tr>
+                                    <td>
+                                        @if (user.role == "leader")
+                                        {
+                                            <a href="#collapse_@user.agent_id" data-toggle="collapse" onclick="ExpandGroup('@user.agent_id', @generationGroup.Generation)" style="font-size:18px; font-weight:800">
+                                                +
+                                            </a>
+                                            <input type="hidden" id="expand_@user.agent_id" value="0" />
+                                        }
+                                    </td>
+                                    <td>
+                                        <a href="#" onclick="DisplayCalculator('@user.agent_id', 'g', '@Json.Encode(@user.agent_name)')">
+
+
+                                            @user.agent_id (  @user.role )<br />
+                                            @user.agent_name
+                                        </a>
+                                    </td>
+                                    <td id="ace_leader_@user.agent_id">
+
+                                        @agentHierarchyPolicy.ACE.ToString("n2")
+
+                                    </td>
+                                    
+                                </tr>
+                                <tr id="collapse_@user.agent_id" class="collapse">
+                                    <td colspan="8">
+                                        <div class="alert alert-primary border-0 alert-dismissible">
+                                            <span class="font-weight-semibold"> @user.agent_id</span>
+                                            <div id="agent-policy-table_@user.agent_id">
+                                                <table class="table table-border-dashed">
+                                                    <thead>
+                                                        <tr id="action">
+                                                            <td>
+                                                                Action
+                                                            </td>
+                                                            <td>Agent</td>
+                                                            <td>ACE</td>
+                                                           
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td colspan="8"><i class="icon-spinner6 spinner mr-2"></i>Loading....</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                }
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- /basic datatable -->
+
+
+
+
+@section Scripts{
+
+    <script type="text/javascript">
+        let startOfMonth = new Date('@Model.StartDate.ToString("yyyy-MM-dd")');
+        let endOfMonth =new Date('@Model.EndDate.ToString("yyyy-MM-dd")');
+        // Basic initialization
+        $('#CreatedDate').daterangepicker({
+            parentEl: '.content-inner',
+            startDate: startOfMonth,
+            endDate: endOfMonth,
+
+        });
+
+        function ExpandGroup(agent, generation) {
+
+            var hasExpand = $('#expand_' + agent).val();
+
+            if (hasExpand == 1) {
+                return;
+            }
+        @{ var filter = new CaliphWeb.ViewModel.PersistencyCalculatorViewModel();}
+            var searchFilter = @Html.Raw(Json.Encode(filter));
+            searchFilter.StartDate = $('#CreatedDate').data().daterangepicker.startDate._d.toJSON();
+            searchFilter.EndDate = $('#CreatedDate').data().daterangepicker.endDate._d.toJSON();
+            searchFilter.AgentId = agent;
+            searchFilter.Generation = generation;
+            $.ajax({
+                url: '@Url.Action("SearchAgentPolicy", "Persistency")',
+                type: 'POST',
+                data: { req: searchFilter, page:'@CaliphWeb.Controllers.PersistencyController.PAGE_BUSINESS_REPORT' },
+                success: function (response) {
+                    $('#agent-policy-table_' + agent).html('');
+                    $('#agent-policy-table_' + agent).html(response);
+                    $('#expand_' + agent).val(1);
+                }
+            });
+        }
+
+
+           function DisplayCalculator(agent, type, name) {
+        @{ var filterCalculator = new CaliphWeb.ViewModel.PersistencyCalculatorViewModel();}
+            var searchFilter = @Html.Raw(Json.Encode(filterCalculator));
+            searchFilter.StartDate = $('#CreatedDate').data().daterangepicker.startDate._d.toJSON();
+               searchFilter.EndDate = $('#CreatedDate').data().daterangepicker.endDate._d.toJSON();
+               searchFilter.AgentId = agent;
+               searchFilter.AgentName = name;
+               searchFilter.Type = type;
+            $.ajax({
+                url: '@Url.Action("Search", "Persistency")',
+                type: 'POST',
+                data: { req: searchFilter },
+                success: function (response) {
+                    window.open('/persistency/individualbusinessreport?agentid=' + agent
+                        , '_blank');
+                }
+            });
+        }
+
+
+           function SearchSummaryData() {
+            @{ var filterSummary = new CaliphWeb.ViewModel.PersistencyCalculatorViewModel
+                {
+                   AgentId = Model.AgentId,
+                   AgentName= Model.AgentName
+                };
+}
+            var searchFilter = @Html.Raw(Json.Encode(filterSummary));
+            searchFilter.StartDate = $('#CreatedDate').data().daterangepicker.startDate._d.toJSON();
+            searchFilter.EndDate = $('#CreatedDate').data().daterangepicker.endDate._d.toJSON();
+            BlockUIHelper.blockUI('search')
+            //save to tempdata
+            // reload
+
+            // grab from tempdata when page load
+            $.ajax({
+                url: '@Url.Action("Search", "Persistency")',
+                type: 'POST',
+                data: { req: searchFilter},
+                success: function (response) {
+                    //$('#client-table').html(response);
+                    location.reload();
+                }
+            });
+
+        }
+
+
+       
+
+    </script>
+}

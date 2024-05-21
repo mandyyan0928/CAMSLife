@@ -1,0 +1,50 @@
+﻿ 
+
+@model CaliphWeb.Models.API.Budget.BudgetModel
+ 
+<div id="monthlybudgettab">
+  
+    <div class="row form-group align-content-center">
+        
+        <div class="col-md-2">
+            Months
+        </div>
+        <div class="col-md-2">
+            @{
+
+                var months = new List<DateTime>();
+                var startMonth = Model.Income.IncomeData.ProductStartMonth == 0 ? 1 : Model.Income.IncomeData.ProductStartMonth;
+                var startYear = Model.Income.IncomeData.BudgetYear.HasValue ? Model.Income.IncomeData.BudgetYear.Value : DateTime.Now.Year;
+
+                for (int i = 0; i <= 11; i++)
+                {
+                    var month = startMonth + i;
+                    var year = startYear;
+                    if (month > 12)
+                    {
+                        month = month - 12;
+                        year = year + 1;
+                    }
+
+                    var date = new DateTime(year, month, 1);
+                    months.Add(date);
+                }
+            }
+            <select required data-placeholder="Month" onchange="RefreshMonthlyBudgetTable()" id="monthly-month" class="form-control">
+
+               @{ var counter = 1;}
+                @foreach (var month in months)
+                {
+                <option value="@month.ToString("MM-yyyy")" >@month.ToString("MMM yyyy")</option>
+                    counter++;
+                }
+             
+            </select>
+        </div>
+    </div>
+    <div class="table table-responsive" id="monthly-budget-table">
+        @Html.Partial("_MonthlyBudgetTable", Model.Monthly)
+         
+    </div>
+                    </div>
+

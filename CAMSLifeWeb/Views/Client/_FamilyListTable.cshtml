@@ -1,0 +1,42 @@
+﻿
+@using CaliphWeb.Models.API.Client.Response
+@model List<ClientFamily>
+
+
+<table class="table datatable-basic">
+    <thead>
+        <tr>
+            <th> Relationship</th>
+            <th> Name</th>
+            <th> Gender</th>
+            <th> Contact</th>
+            <th> Hobby</th>
+            <th> Birthday</th>
+            <th> School</th>
+            <th> Remarks</th>
+            <th> Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var family in Model)
+        {
+        <tr>
+            <td>@family.RelationDesc </td>
+            <td>@family.Name</td>
+            <td>@family.GenderDesc </td>
+            <td>@family.HPDesc</td>
+            <td>@family.HobbyDesc</td>
+            <td>@family.DOB</td>
+            <td>@family.SchoolDesc</td>
+            <td class="text-center">
+                @family.Remarks
+            </td>
+            <td>
+                <a onclick="DeleteFamily(@family.ClientFamilyId, @family.ClientId)" data-popup="tooltip" title="delete" data-placement="right" href="#" class="list-icons-item">
+                    <i class="icon-trash"></i>
+                </a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

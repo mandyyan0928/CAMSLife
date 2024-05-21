@@ -1,0 +1,85 @@
+﻿@model CaliphWeb.ViewModel.StripePaymentResult
+@{
+    Layout = null;
+}
+<link rel="stylesheet" href="~/global_assets/assets/stripe-checkout.css" />
+<script src="https://js.stripe.com/v3/"></script>
+<script src="~/global_assets/js/main/jquery.min.js"></script>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <form id="result-form">
+        <input type="hidden" value="" />
+
+        <div id="payment-message" class="hidden"></div>
+    </form>
+</body>
+</html>
+
+<script type="text/javascript">
+
+    const stripe = Stripe("pk_live_51Kb4GWF9jGaYbIVJgtXcQt7Cvjx6wilBUeOSS8Iebc9Xx6S0pTQcCL0vFRTaEP7Y8r3LPbPEybyWEIkXtJUpBFti00PeLEJTzS");
+
+    var result = {
+        paymentChannel: '@Model.PaymentChannel',
+         id: '@Model.Id',
+    }
+  async  function checkStatus() {
+        const clientSecret = new URLSearchParams(window.location.search).get(
+            "payment_intent_client_secret"
+        );
+
+        if (!clientSecret) {
+            return;
+        }
+
+        const { paymentIntent } = await stripe.retrievePaymentIntent(clientSecret);
+         
+        //switch (paymentIntent.status) {
+        //    //case "succeeded":
+        //    //    showMessage("Payment succeeded!");
+        //    //    break;
+        //    //case "processing":
+        //    //    showMessage("Your payment is processing.");
+        //    //    break;
+        //    //case "requires_payment_method":
+        //    //    showMessage("Your payment was not successful, please try again.");
+        //    //    break;
+        //    //default:
+        //    //    showMessage("Something went wrong.");
+        //    //    break;
+        //}
+        var options = {
+            url: '/Payment/Result/' + result.id + '/' + result.paymentChannel,
+            method: 'POST',
+            data: {
+                status: paymentIntent.status,
+            }
+        };
+        url_redirect(options);
+        
+    }
+
+    function url_redirect(options) {
+        var $form = $("<form />");
+
+        $form.attr("action", options.url);
+        $form.attr("method", options.method);
+        debugger;
+        for (var data in options.data)
+            $form.append('<input type="hidden" name="' + data + '" value="' + options.data[data] + '" />');
+
+        $("body").append($form);
+        $form.submit();
+    }
+
+
+    checkStatus();
+
+</script>

@@ -1,0 +1,159 @@
+﻿
+
+@using CaliphWeb.Models.ViewModel;
+
+
+<script src="~/global_assets/js/demo_pages/form_validation.js"></script>
+<script src="~/global_assets/js/demo_pages/form_input_groups.js"></script>
+<!-- Page header -->
+<div class="page-header page-header-light">
+    <div class="page-header-content header-elements-lg-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-user-plus"></i> <span class="font-weight-semibold">Add Agent</span></h4>
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+
+    </div>
+
+    <div class="breadcrumb-line breadcrumb-line-light header-elements-lg-inline">
+        <div class="d-flex">
+            <div class="breadcrumb">
+                <a class="breadcrumb-item"><i class="icon-users4 mr-2"></i> Agent</a>
+                <a class="breadcrumb-item">Add Agent</a>
+            </div>
+
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+    </div>
+</div>
+<!-- /page header -->
+
+<div class="mb-3">
+    <h6 class="mb-0 font-weight-semibold">
+    </h6>
+</div>
+
+<form id="add" class="form-validate-jquery">
+    <div class="row">
+        <div class="col-lg-12">
+            <!-- Form inputs -->
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title">Basic Info</h5>
+                </div>
+                <div class="card-body">
+                    <fieldset class="mb-3">
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Username<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <input type="text" id="username" name="Username" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Fullname<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <input type="text" id="fullname" name="Fullname" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">IC<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <input type="text" id="ic" name="IcNo" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Password<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <input type="password" id="password" name="PW" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Confirm Password<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <input type="password" id="confirm_password" name="ConfirmPassword" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Upline Username<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                @if (User.Identity.IsAuthenticated && Session["user"] != null)
+                                {
+
+                                    var user = CaliphWeb.Helper.UserHelper.GetLoginUserViewModel();
+                                    if (user.IsLeader)
+                                    {
+                                        <input type="text" id="upline_username" name="UplineUsername" value="@user.Username" class="form-control" required>
+                                    }
+                                    else
+                                    {
+                                        <input type="text" id="upline_username" name="UplineUsername" class="form-control" required>
+                                    }
+                                }
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<div class="row form-group m-2">
+    <div class="col-lg-12">
+        <div class="text-right float-right">
+            <button type="button" class="btn btn-primary" onclick="Add()">Submit <i class="icon-paperplane ml-2"></i></button>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script type="text/javascript">
+                var swalInit = swal.mixin({
+                    buttonsStyling: false,
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-light',
+                        denyButton: 'btn btn-light',
+                        input: 'form-control'
+                    }
+                });
+
+
+        function Add() {
+            var form = $("#add");
+            form.validate();
+            if (form.valid()) {
+                var formData = $('#add').serialize();
+                $.ajax({
+                    url: '@Url.Action("AddAgent", "Agent")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        if (response.IsSuccess) {
+                            form.trigger('reset');
+                            swalInit.fire({
+                                title: 'Success!',
+                                text: 'Agent added successfully!',
+                                icon: 'success'
+                            });
+                        }
+                        else {
+                            swalInit.fire({
+                                title: 'Error!',
+                                text: response.StatusMsg,
+                                icon: 'error'
+                            });
+                        }
+                    }
+                });
+
+            }
+        }
+    </script>
+}

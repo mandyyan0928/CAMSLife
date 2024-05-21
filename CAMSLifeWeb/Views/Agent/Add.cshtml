@@ -1,0 +1,208 @@
+﻿
+ 
+@using CaliphWeb.Models.ViewModel;
+@model  AddAgentRecruitViewModel
+
+
+<script src="~/global_assets/js/demo_pages/form_validation.js"></script>
+<script src="~/global_assets/js/demo_pages/form_input_groups.js"></script>
+<!-- Page header -->
+<div class="page-header page-header-light">
+    <div class="page-header-content header-elements-lg-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-user-plus"></i> <span class="font-weight-semibold">Add Recruitment</span></h4>
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+
+    </div>
+
+    <div class="breadcrumb-line breadcrumb-line-light header-elements-lg-inline">
+        <div class="d-flex">
+            <div class="breadcrumb">
+                <a class="breadcrumb-item"><i class="icon-users4 mr-2"></i> Agent Recruitment</a>
+                <a class="breadcrumb-item">Add Recruitment</a>
+            </div>
+
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+    </div>
+</div>
+<!-- /page header -->
+
+<div class="mb-3">
+    <h6 class="mb-0 font-weight-semibold">
+    </h6>
+</div>
+
+<form id="add" class="form-validate-jquery">
+    <div class="row">
+        <div class="col-lg-12">
+            <!-- Form inputs -->
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title">Basic Info</h5>
+                </div>
+                <div class="card-body">
+                    <fieldset class="mb-3">
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Name<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <input type="text" id="name" name="Name" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Contact<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <input type="text" id="contactno" name="ContactNo" class="form-control" required>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Email <span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <input type="text" id="EmailAdd" name="EmailAdd" class="form-control" required>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Education Background<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <select class="custom-select" name="SourceId" required>
+                                    <option value="">Please Select</option>
+                                    @foreach (var source in Model.EducationalBackgrounds)
+                                    {
+                                        <option value="@source.MasterDataId">@source.Name</option>
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Age<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <select class="custom-select" name="AgeId" required>
+                                    <option value="">Please Select</option>
+                                    @foreach (var source in Model.Age)
+                                    {
+                                        <option value="@source.MasterDataId">@source.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Annual Income<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <select class="custom-select" name="AnnualIncomeId" required>
+                                    <option value="">Please Select</option>
+                                    @foreach (var source in Model.AnnualIncome)
+                                    {
+                                        <option value="@source.MasterDataId">@source.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Occupation<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <select class="custom-select" name="OccupationId" required>
+                                    <option value="">Please Select</option>
+                                    @foreach (var source in Model.Occupation)
+                                    {
+                                        <option value="@source.MasterDataId">@source.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Marital Status<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <select class="custom-select" name="MaritalId" required>
+                                    <option value="">Please Select</option>
+                                    @foreach (var source in Model.MaritalStatus)
+                                    {
+                                        <option value="@source.MasterDataId">@source.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Source<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <select class="custom-select" name="TypeId" required>
+                                    <option value="">Please Select</option>
+                                    @foreach (var source in Model.Type)
+                                    {
+                                        <option value="@source.MasterDataId">@source.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+
+
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<div class="row form-group m-2">
+    <div class="col-lg-12">
+        <div class="text-right float-right">
+            <button type="button" class="btn btn-primary" onclick="Add()">Submit <i class="icon-paperplane ml-2"></i></button>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script type="text/javascript">
+                var swalInit = swal.mixin({
+                    buttonsStyling: false,
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-light',
+                        denyButton: 'btn btn-light',
+                        input: 'form-control'
+                    }
+                });
+
+
+        function Add() {
+            var form = $("#add");
+            form.validate();
+            if (form.valid()) {
+                var formData = $('#add').serialize();
+                $.ajax({
+                    url: '@Url.Action("Add", "Agent")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+
+                        form.trigger('reset');
+                        swalInit.fire({
+                            title: 'Success!',
+                            text: 'Agent recruitment added successfully!',
+                            icon: 'success'
+                        });
+                    }
+                });
+
+            }
+        }
+    </script>
+}

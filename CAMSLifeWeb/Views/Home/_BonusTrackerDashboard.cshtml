@@ -1,0 +1,173 @@
+﻿
+@model CaliphWeb.Models.ViewModel.BonusTrackerDashboard
+
+<!-- Marketing campaigns -->
+<div class="card-header header-elements-sm-inline">
+    <h5 class="card-title">Potential Bonus (<span style="color:green ; font-weight:800"> @((Model.PotentialBonus.BonusPercent*100).ToString("n0")) %</span>)</h5>
+
+    <a href="/BonusTracker/AgentBonusDetails"> View Details</a>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="chart has-fixed-height" id="pie_next_potential_bonus"></div>
+
+    </div>
+    <input type="hidden" id="overall-bonus-progress" value="@Model.Overall_CompleteProgress.ToString("n0")" />
+    <div class="col-md-5 pt-10">
+        <h5 class="card-title">Details</h5>
+        <div style="margin-top:15%">
+            <div class="text-center mt-3">
+                <h6 class="mb-0 font-weight-semibold">ACE (@Model.NetACE.ToString("n0")/@Model.PotentialBonus.FromNetACE.ToString("n2"))</h6>
+                @{ var remaining = Model.PotentialBonus.FromNetACE - Model.NetACE;}
+                @if (remaining > 0)
+                {
+                <span class="badge badge-info-100 text-info">
+                       remaining: @remaining.ToString("n2")
+                </span>
+                }
+            </div>
+
+            <div class="progress rounded-pill">
+                @{ var completeProgress = Model.ACE_CompleteProgress;}
+                @{ var barColor = completeProgress >= 100 ? "success" : "warning"; }
+                <div class="progress-bar bg-@barColor" style="width: @( completeProgress.ToString()+"%")">
+                    <span>@completeProgress.ToString("n0") % Complete</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div>
+            <div class="text-center mt-3">
+                <h6 class="mb-0 font-weight-semibold">Cases (@Model.Cases.ToString("n0")/@Model.PotentialBonus.Cases.ToString())</h6>
+                @{   remaining = Model.PotentialBonus.Cases - Model.Cases;}
+                @if (remaining > 0)
+                {
+            <span class="badge badge-info-100 text-info">
+                remaining: @remaining.ToString("n0")  
+            </span>
+                }
+            </div>
+
+            <div class="progress rounded-pill">
+                @{ completeProgress = Model.Cases_CompleteProgress;}
+                @{ barColor = completeProgress >= 100 ? "success" : "warning"; }
+
+                <div class="progress-bar bg-@barColor" style="width: @(completeProgress.ToString()+"%")">
+                    <span> @completeProgress.ToString("n0") % Complete</span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+
+            <div class="text-center mt-3">
+                <h6 class="mb-0 font-weight-semibold">D0 PR (@Model.PersistencyRatio.ToString("n2")%/@Model.PotentialBonus.PR_D0.ToString("n2")%)</h6>
+                @{ remaining = Model.PotentialBonus.PR_D0 - Model.PersistencyRatio;}
+                @if (remaining > 0)
+                {
+                    <span class="badge badge-info-100 text-info">
+                       remaining: @remaining.ToString("n2")% 
+                    </span>
+                }
+            </div>
+
+            <div class="progress rounded-pill">
+                @{ completeProgress = Model.PersistencyRatio_CompleteProgress;}
+                @{ barColor = completeProgress >= 100 ? "success" : "warning"; }
+                <div class="progress-bar bg-@barColor" style="width: @(completeProgress.ToString("n0")+"%")">
+                    <span>@completeProgress.ToString("n0") % Complete</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+@if (Model.QualifiedBonus.Count > 0)
+{
+    <div class="table-responsive border-primary" style="height:250px">
+        <table class="table text-nowrap w-100">
+
+            <tbody>
+                <tr class="table-active table-border-double">
+                    <td colspan="3">My Bonus Achievement</td>
+                    <td class="text-right">
+
+                        <span class="progress-meter" id="today-progress" data-progress="30"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Bonus</th>
+                    <th>ACE</th>
+                    <th>Cases</th>
+                    <th>D0 PR</th>
+                </tr>
+                @foreach (var history in Model.QualifiedBonus)
+                {
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="mr-3">
+                                    @((history.BonusPercent*100).ToString("n0"))% Bonus
+                                </div>
+                                <div>
+
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <p class="font-weight-bold text-center"> @Model.NetACE.ToString("n0") /@history.FromNetACE.ToString("n0") </p>
+
+                            @{ var progress = (history.FromNetACE > 0 ? Model.NetACE / history.FromNetACE : 0) * 100;
+                                progress = progress > 100 ? 100 : progress;
+                            }
+                            <div class="progress">
+                                @{ barColor = progress >= 100 ? "success" : "warning"; }
+                                <div class="progress-bar bg-@barColor" style="width:  @(progress+"%")">
+                                    @progress.ToString("n0") %
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <p class="font-weight-bold text-center"> @Model.Cases.ToString("n0") /@history.Cases.ToString("n0") </p>
+
+                            @{ progress = (history.Cases > 0 ? Model.Cases / history.Cases : 0) * 100;
+                                progress = progress > 100 ? 100 : progress;
+                            }
+                            <div class="progress">
+                                @{ barColor = progress >= 100 ? "success" : "warning"; }
+                                <div class="progress-bar bg-@barColor" style="width:  @(progress+"%")">
+                                    @progress.ToString("n0")%
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <p class="font-weight-bold text-center"> @Model.PersistencyRatio.ToString("n0") %/@history.PR_D0.ToString("n0") %</p>
+
+                            @{ progress = (history.PR_D0 > 0 ? Model.PersistencyRatio / history.PR_D0 : 0) * 100;
+                                progress = progress > 100 ? 100 : progress;
+                            }
+                            <div class="progress">
+                                @{ barColor = progress >= 100 ? "success" : "warning"; }
+                                <div class="progress-bar bg-@barColor" style="width:  @(progress+"%")">
+                                    @progress.ToString("n0")%
+                                </div>
+                            </div>
+                        </td>
+
+                    </tr>
+                }
+
+
+
+
+            </tbody>
+        </table>
+    </div>
+
+}
+
+
+
+<!-- /marketing campaigns -->

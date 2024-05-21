@@ -1,0 +1,135 @@
+﻿@using CaliphWeb.ViewModel.Data
+@using CaliphWeb.Helper
+@model  CaliphWeb.Models.ViewModel.ClientData
+
+
+
+@{ var pager = new Pager(pageSize: Model.Paging.PageSize, currentPage: Model.Paging.CurrentPage, totalItems: Model.Paging.ItemCount);}
+
+<table class="table datatable-basic">
+    <thead>
+        <tr>
+            <th> Name</th>
+            <th> Contact</th>
+            <th> Age</th>
+            <th>KIV Date</th>
+            <th class="text-center">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var client in Model.Clients)
+        {
+            <tr>
+                <td data-toggle="modal" data-target="#modal-@client.ClientId" style="cursor:pointer">@client.Name</td>
+                <td>@client.ContactNo</td>
+                <td>@client.AgeDesc</td>
+                <td>@client.KIVDate</td>
+                <td class="text-center">
+                    <a onclick="RevertKIV(@client.ClientId,@pager.CurrentPage )" data-popup="tooltip" title="Revert back to client list" data-placement="right" href="#" class="list-icons-item">
+                        <i class="icon-undo"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@foreach (var client in Model.Clients)
+{
+    <div id="modal-@client.ClientId" class="modal fade" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header pb-3">
+                    <h5 class="modal-title">Activity List</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body py-0">
+                    <table class="table datatable-basic">
+                        <thead>
+                            <tr>
+                                <th>Deal</th>
+                                <th>Contact</th>
+                                <th>Activity</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (client.ActivityHistory != null)
+                            {
+                                foreach (var activity in client.ActivityHistory)
+                                {
+                                    <tr>
+                                        <td>@activity.DealTitleDesc</td>
+                                        <td>@activity.ContactNo</td>
+                                        <td>@activity.ActivityPointsDesc</td>
+                                        <td>@activity.ActivityStartDate</td>
+                                        <td>
+                                            @{
+                                                var activeStatus = (int)MasterDataEnum.Status.Active;
+                                                var doneStatus = (int)MasterDataEnum.Status.Done;
+                                                var missedStatus = (int)MasterDataEnum.Status.Missed;
+                                                if (activity.StatusId == activeStatus)
+                                                {
+                                                    <div class="list-icons">
+                                                        <div class="dropdown">
+                                                            <a href="#" class="badge badge-warning dropdown-toggle" data-toggle="dropdown"> active</a>
+
+                                                            <div class="dropdown-menu">
+                                                                <a href="#" class="dropdown-item" onclick="ConfirmUpdate(@activity.ClientDealActivityId, @doneStatus)"><i class="icon-checkmark4 text-success"></i><span class="badge badge-success">done</span></a>
+                                                                <a href="#" class="dropdown-item" onclick="ConfirmUpdate(@activity.ClientDealActivityId, @missedStatus)"><i class="icon-cross3 text-danger"></i><span class="badge badge-danger">missed</span></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else if (activity.StatusId == doneStatus)
+                                                {
+                                                    <span class="badge badge-success">done</span>
+                                                }
+                                                else if (activity.StatusId == missedStatus)
+                                                {
+                                                    <span class="badge badge-danger">missed</span>
+                                                }
+
+                                            }
+                                        </td>
+                                    </tr>
+
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="modal-footer pt-3">
+                    <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                    @*<button type="button" class="btn btn-primary" onclick="EditActivity()">Edit <i class="icon-paperplane ml-2"></i></button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+<div class="datatable-footer">
+    <div class="dataTables_info">
+        Showing @pager.StartIndex to @pager.EndIndex  of @pager.TotalItems entries
+    </div>
+    <div class="dataTables_paginate paging_simple_numbers">
+        @{ var prevPage = pager.CurrentPage - 1;
+            var disableClass = prevPage == 0 ? "disabled" : "";}
+        <a class="paginate_button previous @disableClass" onclick="SearchData(@prevPage )">←</a>
+
+        @foreach (var page in pager.Pages)
+        {
+            var current = page == pager.CurrentPage ? "current" : "";
+            <a class="paginate_button @current" onclick="SearchData(@page)">@page</a>
+        }
+        @{ var nextPage = pager.CurrentPage + 1;
+            var isLastPage = nextPage > pager.EndPage;
+            var disableNextClass = isLastPage ? "disabled" : "";
+        }
+        <a class="paginate_button next @disableNextClass" @disableNextClass onclick="SearchData(@prevPage )">→</a>
+    </div>
+</div>
+

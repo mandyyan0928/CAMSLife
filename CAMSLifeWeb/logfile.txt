@@ -1,0 +1,225 @@
+2024-02-14 14:02:29,689 [5] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:02:29,703 [5] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:02:29,703 [5] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:02:29,735 [5] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:02:29,735 [5] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:02:29,735 [5] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:02:29,735 [5] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:02:29,750 [5] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:02:29,750 [5] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:02:29,766 [5] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:02:29,766 [5] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:02:29,766 [5] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:02:31,156 [5] INFO CaliphWeb.Helper.HttpClientHelper - Request to http://103.13.121.167/CaliphLifeAPI_DEV/api/GetToken:
+Request: {"Username":"caliphlifedev","Password":"s3a#fM@b9G","grant_type":null}
+Response: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImNhbGlwaGxpZmVkZXYiLCJuYmYiOjE3MDc4OTA1NTEsImV4cCI6MTcwNzg5MTE1MSwiaWF0IjoxNzA3ODkwNTUxLCJpc3MiOiJodHRwOi8vMTAzLjEzLjEyMS4xNjcvQ2FsaXBoTGlmZUFQSV9ERVYiLCJhdWQiOiJjYWxpcGhsaWZlZGV2In0.AWmaj_Q5a3ZzTKK8KDE5VikqI18v4SD9XDBsAl5VoH0"
+2024-02-14 14:02:31,375 [5] INFO CaliphWeb.Helper.HttpClientHelper - Request to http://103.13.121.167/CaliphLifeAPI_DEV/api/v1/client-deal/get-by-filter:
+Request: {"ClientId":null,"StatusId":null,"DealTitleId":null,"ActivityPointId":null,"Name":null,"PageSize":9999,"PageNumber":1,"CreatedBy":""}
+Response: {"data":[],"ItemCount":0,"StatusCode":"0000","StatusMsg":"Success"}
+2024-02-14 14:02:31,594 [5] INFO CaliphWeb.Helper.HttpClientHelper - Request to http://103.13.121.167/CaliphLifeAPI_DEV/api/GetToken:
+Request: {"Username":"caliphlifedev","Password":"s3a#fM@b9G","grant_type":null}
+Response: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImNhbGlwaGxpZmVkZXYiLCJuYmYiOjE3MDc4OTA1NTEsImV4cCI6MTcwNzg5MTE1MSwiaWF0IjoxNzA3ODkwNTUxLCJpc3MiOiJodHRwOi8vMTAzLjEzLjEyMS4xNjcvQ2FsaXBoTGlmZUFQSV9ERVYiLCJhdWQiOiJjYWxpcGhsaWZlZGV2In0.AWmaj_Q5a3ZzTKK8KDE5VikqI18v4SD9XDBsAl5VoH0"
+2024-02-14 14:02:31,751 [5] INFO CaliphWeb.Helper.HttpClientHelper - Request to http://103.13.121.167/CaliphLifeAPI_DEV/api/v1/client/get-by-client-filter:
+Request: {"ClientId":null,"StatusId":null,"Name":null,"PageSize":9999,"PageNumber":1,"CreatedBy":"","CreatedDateFrom":null,"CreatedDateTo":null}
+Response: {"data":[],"ItemCount":0,"StatusCode":"0000","StatusMsg":"Success"}
+2024-02-14 14:02:31,953 [5] INFO CaliphWeb.Helper.HttpClientHelper - Request to http://103.13.121.167/CaliphLifeAPI_DEV/api/GetToken:
+Request: {"Username":"caliphlifedev","Password":"s3a#fM@b9G","grant_type":null}
+Response: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImNhbGlwaGxpZmVkZXYiLCJuYmYiOjE3MDc4OTA1NTIsImV4cCI6MTcwNzg5MTE1MiwiaWF0IjoxNzA3ODkwNTUyLCJpc3MiOiJodHRwOi8vMTAzLjEzLjEyMS4xNjcvQ2FsaXBoTGlmZUFQSV9ERVYiLCJhdWQiOiJjYWxpcGhsaWZlZGV2In0.w-blpeup7ZkDaz0JgI8-l2gDERRZM8ihUvowvzXI12A"
+2024-02-14 14:02:32,109 [5] INFO CaliphWeb.Helper.HttpClientHelper - Request to http://103.13.121.167/CaliphLifeAPI_DEV/api/v1/client-deal-activity/get-by-filter:
+Request: {"ClientId":null,"ClientDealId":null,"ClientDealActivityId":null,"ActivityPointId":null,"DealTitleId":null,"StatusId":null,"ActivityStartDate":"2024-02-14T14:02:31.7974798+08:00","ActivityEndDate":null,"PageSize":9999,"PageNumber":1,"CreatedBy":""}
+Response: {"data":[],"ItemCount":0,"StatusCode":"0000","StatusMsg":"Success"}
+2024-02-14 14:02:32,251 [5] INFO CaliphWeb.Helper.HttpClientHelper - Request to http://103.13.121.167/CaliphLifeAPI_DEV/api/GetToken:
+Request: {"Username":"caliphlifedev","Password":"s3a#fM@b9G","grant_type":null}
+Response: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImNhbGlwaGxpZmVkZXYiLCJuYmYiOjE3MDc4OTA1NTIsImV4cCI6MTcwNzg5MTE1MiwiaWF0IjoxNzA3ODkwNTUyLCJpc3MiOiJodHRwOi8vMTAzLjEzLjEyMS4xNjcvQ2FsaXBoTGlmZUFQSV9ERVYiLCJhdWQiOiJjYWxpcGhsaWZlZGV2In0.w-blpeup7ZkDaz0JgI8-l2gDERRZM8ihUvowvzXI12A"
+2024-02-14 14:02:32,409 [5] INFO CaliphWeb.Helper.HttpClientHelper - Request to http://103.13.121.167/CaliphLifeAPI_DEV/api/v1/announcement/get-by-filter:
+Request: {"AnnouncementId":null,"UserId":0,"PublishStartDate":null,"PublishEndDate":"2024-02-14T14:02:32.128149+08:00","PageSize":100,"PageNumber":1}
+Response: {"data":[],"ItemCount":0,"StatusCode":"0000","StatusMsg":"Success"}
+2024-02-14 14:02:32,547 [5] INFO CaliphWeb.Helper.HttpClientHelper - Request to http://103.13.121.167/CaliphLifeAPI_DEV/api/GetToken:
+Request: {"Username":"caliphlifedev","Password":"s3a#fM@b9G","grant_type":null}
+Response: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImNhbGlwaGxpZmVkZXYiLCJuYmYiOjE3MDc4OTA1NTIsImV4cCI6MTcwNzg5MTE1MiwiaWF0IjoxNzA3ODkwNTUyLCJpc3MiOiJodHRwOi8vMTAzLjEzLjEyMS4xNjcvQ2FsaXBoTGlmZUFQSV9ERVYiLCJhdWQiOiJjYWxpcGhsaWZlZGV2In0.w-blpeup7ZkDaz0JgI8-l2gDERRZM8ihUvowvzXI12A"
+2024-02-14 14:02:32,705 [5] INFO CaliphWeb.Helper.HttpClientHelper - Request to http://103.13.121.167/CaliphLifeAPI_DEV/api/v1/agent-commission/get-by-filter:
+Request: {"Username":null,"AgentCommissionId":null,"PayoutDateFrom":"2024-02-01T00:00:00","PayoutDateTo":"2024-02-14T00:00:00+08:00","PageSize":100,"PageNumber":1}
+Response: {"data":[],"ItemCount":0,"StatusCode":"0000","StatusMsg":"Success"}
+2024-02-14 14:02:41,110 [6] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:02:41,110 [6] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:02:41,110 [6] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:02:41,125 [6] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:02:41,125 [6] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:02:41,125 [6] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:02:41,141 [6] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:02:41,141 [6] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:02:41,141 [6] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:02:47,486 [5] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:02:47,486 [5] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:02:47,486 [5] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:02:47,501 [5] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:02:47,501 [5] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:02:47,501 [5] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:02:47,501 [5] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:02:47,501 [5] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:02:47,501 [5] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:02:47,799 [5] INFO CaliphWeb.Helper.HttpClientHelper - Request to http://103.13.121.167/CaliphLifeAPI_DEV/api/GetToken:
+Request: {"Username":"caliphlifedev","Password":"s3a#fM@b9G","grant_type":null}
+Response: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImNhbGlwaGxpZmVkZXYiLCJuYmYiOjE3MDc4OTA1NjcsImV4cCI6MTcwNzg5MTE2NywiaWF0IjoxNzA3ODkwNTY3LCJpc3MiOiJodHRwOi8vMTAzLjEzLjEyMS4xNjcvQ2FsaXBoTGlmZUFQSV9ERVYiLCJhdWQiOiJjYWxpcGhsaWZlZGV2In0.8bxfcu48uzSsoamgLoiLXumQ_84RPN2VSZchyYUgVpE"
+2024-02-14 14:02:47,939 [5] INFO CaliphWeb.Helper.HttpClientHelper - Request to http://103.13.121.167/CaliphLifeAPI_DEV/api/v1/system-user/get:
+Request: {"Username":"superadmin","PW":"105539437C559183828FF9B8ED8BD7F2"}
+Response: {"data":{"UserId":1,"Username":"superadmin","DisplayName":"super admin","PW":"","Fullname":"super admin ","RoleCode":"super-admin","RoleName":"Super Admin","RoleId":1,"IcNo":null,"ContactNo":null,"Email":null,"JoinDate":null,"LastLogin":"2024-02-14T13:38:11.487","StatusId":1,"StatusDesc":"Active","UplineUserId":0,"UplineUsername":null,"UplineDisplayName":null,"MenuList":[{"MainMenuId":1,"MainMenuName":"Client","SubMenuId":1,"SubMenuName":"Add Client","PageAction":"Client","PageController":"Add"},{"MainMenuId":1,"MainMenuName":"Client","SubMenuId":2,"SubMenuName":"Client List","PageAction":"Client","PageController":"List"},{"MainMenuId":1,"MainMenuName":"Client","SubMenuId":6,"SubMenuName":"KIV Client","PageAction":"Client","PageController":"KIV"},{"MainMenuId":3,"MainMenuName":"Deal","SubMenuId":7,"SubMenuName":"Add Deal","PageAction":"Deal","PageController":"Add"},{"MainMenuId":3,"MainMenuName":"Deal","SubMenuId":8,"SubMenuName":"Deal List","PageAction":"Deal","PageController":"List"},{"MainMenuId":4,"MainMenuName":"Activity","SubMenuId":12,"SubMenuName":"Add Activity","PageAction":"Activity","PageController":"Add"},{"MainMenuId":4,"MainMenuName":"Activity","SubMenuId":13,"SubMenuName":"Activity List","PageAction":"Activity","PageController":"List"},{"MainMenuId":4,"MainMenuName":"Activity","SubMenuId":14,"SubMenuName":"Calendar","PageAction":"Activity","PageController":"Calendar"},{"MainMenuId":5,"MainMenuName":"20 Point System","SubMenuId":15,"SubMenuName":"Point Summary","PageAction":"PointSystem","PageController":"Summary"},{"MainMenuId":0,"MainMenuName":null,"SubMenuId":23,"SubMenuName":"Dashboard","PageAction":"Home","PageController":"Index"}],"CreatedBy":"sys","CreatedDate":"2022-04-01T00:00:00","UpdatedBy":null,"UpdatedDate":null},"ItemCount":0,"StatusCode":"0000","StatusMsg":"Success"}
+2024-02-14 14:02:57,064 [7] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:02:57,064 [7] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:02:57,064 [7] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:02:57,064 [7] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:02:57,064 [7] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:02:57,064 [7] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:02:57,080 [7] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:02:57,080 [7] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:02:57,080 [7] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:02:57,080 [7] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:02:57,080 [7] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:02:57,080 [7] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:02:57,236 [7] INFO CaliphWeb.Helper.HttpClientHelper - Request to http://103.13.121.167/CaliphLifeAPI_DEV/api/GetToken:
+Request: {"Username":"caliphlifedev","Password":"s3a#fM@b9G","grant_type":null}
+Response: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImNhbGlwaGxpZmVkZXYiLCJuYmYiOjE3MDc4OTA1NzcsImV4cCI6MTcwNzg5MTE3NywiaWF0IjoxNzA3ODkwNTc3LCJpc3MiOiJodHRwOi8vMTAzLjEzLjEyMS4xNjcvQ2FsaXBoTGlmZUFQSV9ERVYiLCJhdWQiOiJjYWxpcGhsaWZlZGV2In0.D5hMR7cdPvMbkJWYNrhXnFU0IT9ndLGSDJE_PTi5vyY"
+2024-02-14 14:02:57,345 [7] INFO CaliphWeb.Helper.HttpClientHelper - Request to http://103.13.121.167/CaliphLifeAPI_DEV/api/v1/client-deal/get-by-filter:
+Request: {"ClientId":null,"StatusId":null,"DealTitleId":null,"ActivityPointId":null,"Name":null,"PageSize":9999,"PageNumber":1,"CreatedBy":null}
+Response: {"data":[],"ItemCount":0,"StatusCode":"0000","StatusMsg":"Success"}
+2024-02-14 14:02:57,487 [7] INFO CaliphWeb.Helper.HttpClientHelper - Request to http://103.13.121.167/CaliphLifeAPI_DEV/api/GetToken:
+Request: {"Username":"caliphlifedev","Password":"s3a#fM@b9G","grant_type":null}
+Response: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImNhbGlwaGxpZmVkZXYiLCJuYmYiOjE3MDc4OTA1NzcsImV4cCI6MTcwNzg5MTE3NywiaWF0IjoxNzA3ODkwNTc3LCJpc3MiOiJodHRwOi8vMTAzLjEzLjEyMS4xNjcvQ2FsaXBoTGlmZUFQSV9ERVYiLCJhdWQiOiJjYWxpcGhsaWZlZGV2In0.D5hMR7cdPvMbkJWYNrhXnFU0IT9ndLGSDJE_PTi5vyY"
+2024-02-14 14:02:57,611 [7] INFO CaliphWeb.Helper.HttpClientHelper - Request to http://103.13.121.167/CaliphLifeAPI_DEV/api/v1/client/get-by-client-filter:
+Request: {"ClientId":null,"StatusId":null,"Name":null,"PageSize":9999,"PageNumber":1,"CreatedBy":null,"CreatedDateFrom":null,"CreatedDateTo":null}
+Response: {"data":[{"TotalDeals":0,"ClientId":1,"Name":"Test","NickName":null,"ContactNo":"1122334455","ICNo":null,"EmailAdd":null,"CurrentAddress":null,"EducationDesc":null,"IncomeYearDesc":null,"OtherSourceofIncomeDesc":null,"FilingDate":"2024-02-12T23:29:20.13","KIVDate":null,"DOB":null,"SourceId":64,"SourceDesc":"New homeowners","StatusId":3,"StatusDesc":"Confirm","AnnualIncomeId":19,"AnnualIncomeDesc":"RM 50,000 - RM 75,000","AgeId":71,"AgeDesc":"25 ~ 34","OccupationId":26,"OccupationDesc":"Proprietor, Manager, Executive","MaritalId":34,"MaritalDesc":"Divorce / Widowed with Kids","LengthOfTimeKnownId":16,"LengthOfTimeKnownDesc":"2—5 years","HowOftenSeenInAYearId":41,"HowOftenSeenInAYearDesc":"1-2 times","HowWellKnownId":38,"HowWellKnownDesc":"Casual Friend","CouldApproachOnBusinessId":47,"CouldApproachOnBusinessDesc":"Easily","AbilityToProvideRefId":50,"AbilityToProvideRefDesc":"Good","GenderId":0,"GenderDesc":null,"CareerDesc":null,"CreatedBy":"agent","CreatedDate":"2024-02-12T23:29:20.377","UpdatedBy":"agent","UpdatedDate":"2024-02-12T23:30:20.803"},{"TotalDeals":0,"ClientId":2,"Name":"test2","NickName":null,"ContactNo":"01122334455","ICNo":null,"EmailAdd":null,"CurrentAddress":null,"EducationDesc":null,"IncomeYearDesc":null,"OtherSourceofIncomeDesc":null,"FilingDate":"2024-02-12T23:30:08.873","KIVDate":null,"DOB":null,"SourceId":65,"SourceDesc":"People with whom you do business","StatusId":4,"StatusDesc":"Potential","AnnualIncomeId":19,"AnnualIncomeDesc":"RM 50,000 - RM 75,000","AgeId":71,"AgeDesc":"25 ~ 34","OccupationId":31,"OccupationDesc":"Retired","MaritalId":35,"MaritalDesc":"Married without Kids","LengthOfTimeKnownId":15,"LengthOfTimeKnownDesc":"Less than 2 years","HowOftenSeenInAYearId":41,"HowOftenSeenInAYearDesc":"1-2 times","HowWellKnownId":38,"HowWellKnownDesc":"Casual Friend","CouldApproachOnBusinessId":44,"CouldApproachOnBusinessDesc":"Probably not","AbilityToProvideRefId":49,"AbilityToProvideRefDesc":"Fair","GenderId":0,"GenderDesc":null,"CareerDesc":null,"CreatedBy":"agent","CreatedDate":"2024-02-12T23:30:09.057","UpdatedBy":null,"UpdatedDate":null}],"ItemCount":2,"StatusCode":"0000","StatusMsg":"Success"}
+2024-02-14 14:02:57,768 [7] INFO CaliphWeb.Helper.HttpClientHelper - Request to http://103.13.121.167/CaliphLifeAPI_DEV/api/GetToken:
+Request: {"Username":"caliphlifedev","Password":"s3a#fM@b9G","grant_type":null}
+Response: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImNhbGlwaGxpZmVkZXYiLCJuYmYiOjE3MDc4OTA1NzcsImV4cCI6MTcwNzg5MTE3NywiaWF0IjoxNzA3ODkwNTc3LCJpc3MiOiJodHRwOi8vMTAzLjEzLjEyMS4xNjcvQ2FsaXBoTGlmZUFQSV9ERVYiLCJhdWQiOiJjYWxpcGhsaWZlZGV2In0.D5hMR7cdPvMbkJWYNrhXnFU0IT9ndLGSDJE_PTi5vyY"
+2024-02-14 14:02:57,892 [7] INFO CaliphWeb.Helper.HttpClientHelper - Request to http://103.13.121.167/CaliphLifeAPI_DEV/api/v1/client-deal-activity/get-by-filter:
+Request: {"ClientId":null,"ClientDealId":null,"ClientDealActivityId":null,"ActivityPointId":null,"DealTitleId":null,"StatusId":null,"ActivityStartDate":"2024-02-14T14:02:57.6424127+08:00","ActivityEndDate":null,"PageSize":9999,"PageNumber":1,"CreatedBy":null}
+Response: {"data":[],"ItemCount":0,"StatusCode":"0000","StatusMsg":"Success"}
+2024-02-14 14:02:58,018 [7] INFO CaliphWeb.Helper.HttpClientHelper - Request to http://103.13.121.167/CaliphLifeAPI_DEV/api/GetToken:
+Request: {"Username":"caliphlifedev","Password":"s3a#fM@b9G","grant_type":null}
+Response: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImNhbGlwaGxpZmVkZXYiLCJuYmYiOjE3MDc4OTA1NzgsImV4cCI6MTcwNzg5MTE3OCwiaWF0IjoxNzA3ODkwNTc4LCJpc3MiOiJodHRwOi8vMTAzLjEzLjEyMS4xNjcvQ2FsaXBoTGlmZUFQSV9ERVYiLCJhdWQiOiJjYWxpcGhsaWZlZGV2In0.gvokYKl8joJEOUhcx00Nw2j7CtWmjCvS_r3d35pUwRk"
+2024-02-14 14:02:58,127 [7] INFO CaliphWeb.Helper.HttpClientHelper - Request to http://103.13.121.167/CaliphLifeAPI_DEV/api/v1/announcement/get-by-filter:
+Request: {"AnnouncementId":null,"UserId":1,"PublishStartDate":null,"PublishEndDate":"2024-02-14T14:02:57.8924125+08:00","PageSize":100,"PageNumber":1}
+Response: {"data":[],"ItemCount":0,"StatusCode":"0000","StatusMsg":"Success"}
+2024-02-14 14:02:58,253 [7] INFO CaliphWeb.Helper.HttpClientHelper - Request to http://103.13.121.167/CaliphLifeAPI_DEV/api/GetToken:
+Request: {"Username":"caliphlifedev","Password":"s3a#fM@b9G","grant_type":null}
+Response: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImNhbGlwaGxpZmVkZXYiLCJuYmYiOjE3MDc4OTA1NzgsImV4cCI6MTcwNzg5MTE3OCwiaWF0IjoxNzA3ODkwNTc4LCJpc3MiOiJodHRwOi8vMTAzLjEzLjEyMS4xNjcvQ2FsaXBoTGlmZUFQSV9ERVYiLCJhdWQiOiJjYWxpcGhsaWZlZGV2In0.gvokYKl8joJEOUhcx00Nw2j7CtWmjCvS_r3d35pUwRk"
+2024-02-14 14:02:58,376 [7] INFO CaliphWeb.Helper.HttpClientHelper - Request to http://103.13.121.167/CaliphLifeAPI_DEV/api/v1/agent-commission/get-by-filter:
+Request: {"Username":"superadmin","AgentCommissionId":null,"PayoutDateFrom":"2024-02-01T00:00:00","PayoutDateTo":"2024-02-14T00:00:00+08:00","PageSize":100,"PageNumber":1}
+Response: {"data":[],"ItemCount":0,"StatusCode":"0000","StatusMsg":"Success"}
+2024-02-14 14:02:59,033 [9] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:02:59,033 [9] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:02:59,033 [9] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:02:59,611 [9] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:02:59,626 [9] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:02:59,626 [9] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:02:59,658 [9] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:02:59,658 [9] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:02:59,658 [9] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:02:59,767 [9] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:02:59,767 [9] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:02:59,767 [9] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:01,189 [16] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:01,189 [16] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:01,189 [16] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:01,220 [16] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:01,220 [16] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:01,220 [16] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:01,251 [16] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:01,251 [16] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:01,251 [16] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:01,251 [16] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:01,267 [16] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:01,267 [16] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:02,644 [8] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:02,644 [8] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:02,644 [8] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:02,644 [8] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:02,644 [8] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:02,644 [8] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:02,644 [8] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:02,644 [8] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:02,644 [8] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:02,644 [8] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:02,644 [8] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:02,644 [8] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:04,176 [10] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:04,176 [10] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:04,176 [10] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:04,176 [10] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:04,176 [10] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:04,176 [10] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:04,176 [10] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:04,176 [10] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:04,176 [10] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:04,176 [10] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:04,176 [10] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:04,176 [10] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:04,692 [16] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:04,692 [16] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:04,692 [16] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:04,692 [16] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:04,692 [16] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:04,692 [16] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:04,692 [16] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:04,692 [16] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:04,692 [16] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:04,692 [16] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:04,692 [16] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:04,692 [16] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:05,220 [9] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:05,236 [9] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:05,236 [9] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:05,298 [9] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:05,298 [9] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:05,298 [9] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:05,329 [9] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:05,329 [9] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:05,329 [9] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:05,345 [9] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:05,345 [9] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:05,345 [9] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:06,239 [6] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:06,239 [6] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:06,239 [6] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:06,239 [6] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:06,239 [6] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:06,239 [6] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:06,239 [6] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:06,239 [6] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:06,239 [6] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:06,252 [6] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:06,252 [6] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:06,252 [6] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:07,894 [8] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:07,894 [8] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:07,894 [8] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:07,894 [8] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:07,894 [8] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:07,894 [8] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:07,894 [8] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:07,894 [8] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:07,894 [8] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:07,894 [8] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:07,894 [8] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:07,894 [8] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:08,111 [8] INFO CaliphWeb.Helper.HttpClientHelper - Request to http://103.13.121.167/CaliphLifeAPI_DEV/api/GetToken:
+Request: {"Username":"caliphlifedev","Password":"s3a#fM@b9G","grant_type":null}
+Response: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImNhbGlwaGxpZmVkZXYiLCJuYmYiOjE3MDc4OTA1ODgsImV4cCI6MTcwNzg5MTE4OCwiaWF0IjoxNzA3ODkwNTg4LCJpc3MiOiJodHRwOi8vMTAzLjEzLjEyMS4xNjcvQ2FsaXBoTGlmZUFQSV9ERVYiLCJhdWQiOiJjYWxpcGhsaWZlZGV2In0.xuE45tMrN2YLWRD-lz9OIuM26U5b9ainqgAJHZgang8"
+2024-02-14 14:03:08,251 [8] INFO CaliphWeb.Helper.HttpClientHelper - Request to http://103.13.121.167/CaliphLifeAPI_DEV/api/v1/event/user-get-by-filter:
+Request: {"EventId":null,"RoleId":null,"UserId":1,"EventName":null,"EventTypeId":null,"EventHostId":null,"UserEventUserId":null,"UserEventStatusId":null,"AttendanceId":157,"StatusId":null,"CreatedBy":null,"EventDateFrom":null,"EventDateTo":null,"PageSize":10,"PageNumber":1,"EventDateId":null,"UserEventId":null,"PaymentChannelId":null,"UserEventPaymentRefNo":null}
+Response: {"data":[],"ItemCount":0,"StatusCode":"0000","StatusMsg":"Success"}
+2024-02-14 14:03:08,410 [9] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:08,410 [9] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:08,410 [9] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:08,410 [9] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:08,410 [9] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:08,410 [9] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:08,410 [9] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:08,410 [9] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:08,410 [9] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:08,410 [9] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:08,410 [9] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:08,410 [9] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message
+2024-02-14 14:03:43,271 [5] DEBUG CaliphWeb.Helper.HttpClientHelper - This is a debug message
+2024-02-14 14:03:44,182 [5] INFO CaliphWeb.Helper.HttpClientHelper - This is an info message
+2024-02-14 14:03:44,197 [5] ERROR CaliphWeb.Helper.HttpClientHelper - This is an error message

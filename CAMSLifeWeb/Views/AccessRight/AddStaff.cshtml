@@ -1,0 +1,144 @@
+﻿
+@{
+    ViewBag.Title = "AddStaff";
+}
+
+@model CaliphWeb.Models.ViewModel.AddStaffViewModel2
+
+<script src="~/global_assets/js/demo_pages/form_input_groups.js"></script>
+<script src="~/global_assets/js/demo_pages/form_select2.js"></script>
+<script src="~/global_assets/js/demo_pages/form_validation.js"></script>
+<!-- Page header -->
+<div class="page-header page-header-light">
+    <div class="page-header-content header-elements-lg-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-plus-circle2"></i> <span class="font-weight-semibold">Add Staff</span></h4>
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+
+    </div>
+
+    <div class="breadcrumb-line breadcrumb-line-light header-elements-lg-inline">
+        <div class="d-flex">
+            <div class="breadcrumb">
+                <a class="breadcrumb-item"><i class="icon-calendar3 mr-2"></i>Access Right</a>
+                <a class="breadcrumb-item">Add Staff</a>
+            </div>
+
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+    </div>
+</div>
+<!-- /page header -->
+<!-- Tabs with top line -->
+<div class="mb-3 mt-2">
+    <h6 class="mb-0 font-weight-semibold">
+    </h6>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Add Staff</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="top-tab1">
+
+                        <form id="add-activity" class="form-validate-jquery">
+                            <fieldset class="mb-3">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Staff Name<span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="text" required id="staffName" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Department<span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <select required data-placeholder="Please Select" class="form-control select-search" name="DepartmentId">
+                                            <option value="">Please Select</option>
+                                            @foreach (var item in Model.Data)
+                                            {
+                                                <option value="@item.RoleId">@item.Name</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Staff Contact<span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="text" required id="staffContact" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Staff IC<span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="text" required id="staffIc" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Password<span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="password" required id="password" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Confirm Password<span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="password" required id="cpassword" class="form-control">
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                        <div class="row form-group m-2">
+                            <div class="col-lg-12">
+                                <div class="text-right float-right">
+                                    <button type="button" class="btn btn-primary" onclick="AddActivity()">Submit <i class="icon-paperplane ml-2"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+@section Scripts{
+
+    <script type="text/javascript">
+
+        function AddActivity() {
+
+            var form = $("#add-activity");
+
+            form.validate();
+            if (form.valid()) {
+                event.preventDefault();
+                var formData = form.serialize();
+                $.ajax({
+                    url: '@Url.Action("AddStaff", "AccessRight")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        swalInit.fire({
+                            title: 'Success!',
+                            text: 'Activity added successfully!',
+                            icon: 'success'
+                        });
+                        $('.select2').val(null).trigger('change');
+                        form.trigger('reset');
+                    }
+                });
+            }
+
+        }
+
+    </script>
+}

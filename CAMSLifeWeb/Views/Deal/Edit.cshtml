@@ -1,0 +1,189 @@
+﻿
+@{
+    ViewBag.Title = "Edit";
+}
+
+
+@model CaliphWeb.Models.ViewModel.EditDealViewModel
+<script src="~/global_assets/js/demo_pages/form_select2.js"></script>
+<script src="~/global_assets/js/demo_pages/form_validation.js"></script>
+<!-- Page header -->
+<div class="page-header page-header-light">
+    <div class="page-header-content header-elements-lg-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-stack-plus"></i> <span class="font-weight-semibold">Edit Deal</span></h4>
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+
+    </div>
+
+    <div class="breadcrumb-line breadcrumb-line-light header-elements-lg-inline">
+        <div class="d-flex">
+            <div class="breadcrumb">
+                <a class="breadcrumb-item"><i class="icon-coin-dollar mr-2"></i>Deal</a>
+                <a href="@Url.Action("List","Deal")" class="breadcrumb-item">Deal List</a>
+                <a class="breadcrumb-item">Edit Deal</a>
+            </div>
+
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+    </div>
+</div>
+<!-- /page header -->
+
+<div class="mb-3">
+    <h6 class="mb-0 font-weight-semibold">
+    </h6>
+</div>
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <!-- Form inputs -->
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="card-title">Deal Info</h5>
+            </div>
+
+            <div class="card-body">
+                <form id="edit-deal" class="form-validate-jquery">
+                    <fieldset class="mb-3">
+                        <input type="hidden" value="@Model.Deal.ClientDealId" id="ClientDealId" name="ClientDealId">
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Client<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                @*<select required data-placeholder="Client Name" name="select2" onchange="ShowContact(this);" class="form-control select-search" data-fouc>
+                                        <option value="" disabled>Select</option>
+                                        @foreach (var client in Model.Clients)
+                                        {
+                                            var selected = Model.Deal.ClientId == client.ClientId ? "selected" : "";
+                                            <option value="@client.ClientId" @selected data-contact="@client.ContactNo">@client.Name</option>
+                                        }
+                                    </select>*@
+                                <label id="contact" class="form-control">@Model.Deal.ClientName</label>
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Contact</label>
+                            <div class="col-lg-8">
+                                <label id="contact" class="form-control">@Model.Deal.ContactNo</label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Title<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <select required data-placeholder="Product" name="DealTitleId" id="DealTitleId" class="form-control  form-control-select2 select-search" data-fouc>
+                                    <option value="">Select</option>
+                                    @foreach (var title in Model.Titles)
+                                    {
+                                        var selected = Model.Deal.DealTitleId == title.MasterDataId ? "selected" : "";
+                                        <option value="@title.MasterDataId" @selected>@title.Name</option>
+}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Name<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <input type="text" name="Name" required id="Name" value="@Model.Deal.Name" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Description</label>
+                            <div class="col-lg-8">
+                                <textarea id="Remarks" name="Remarks" value="@Model.Deal.Remarks" class="form-control">@Model.Deal.Remarks</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Owner<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <select required data-placeholder="Agent Name" name="select2" onchange="ShowContact(this);" class="form-control select-search" data-fouc>
+                                    <option value="">Select</option>
+                                    @foreach (var user in Model.AgentUsers)
+                                    {
+                                        var selected = user.Username == Model.Deal.CreatedBy ? "selected" : "";
+                                <option value="@user.Username" @selected>@(user.Username+"-"+user.Fullname)</option>
+}
+
+                                </select>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <div class="text-left float-left">
+                                <button type="button" class="btn btn-primary" onclick="window.location.href = '@Url.Action("List","Deal")'"><i class="icon-arrow-left12 mr-2"></i>Back</button>
+                            </div>
+                            <div class="text-right">
+                                <button type="submit" class="btn btn-primary" onclick="EditDeal()">Edit <i class="icon-paperplane ml-2"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /form inputs -->
+    </div>
+
+</div>
+
+
+@section Scripts{
+
+    <script type="text/javascript">
+
+        var swalInit = swal.mixin({
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-light',
+                denyButton: 'btn btn-light',
+                input: 'form-control'
+            }
+        });
+
+
+        function EditDeal() {
+            var form = $("#edit-deal");
+            form.validate();
+            if (form.valid()) {
+                event.preventDefault();
+                var formData = form.serialize();
+                $.ajax({
+                    url: '@Url.Action("Edit", "Deal")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+
+                        swalInit.fire({
+                            title: 'Success!',
+                            text: 'Deal updated successfully!',
+                            icon: 'success'
+                        }).then((result) => {
+                            /* Read more about isConfirmed, isDenied below */
+                            if (result.isConfirmed) {
+                                window.location = '@Url.Action("List", "Deal")';
+                            }
+                            else if (result.isDenied) {
+                                Swal.fire('Changes are not saved', '', 'info')
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
+        function ShowContact(element) {
+            var id = $(element).val();
+            var contact = $(element).find(':selected').attr('data-contact')
+            $('#contact').text(contact);
+        }
+    </script>
+}

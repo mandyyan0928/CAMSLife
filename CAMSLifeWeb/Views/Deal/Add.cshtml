@@ -1,0 +1,159 @@
+﻿
+@{
+    ViewBag.Title = "Add Deal";
+}
+
+@model CaliphWeb.Models.ViewModel.AddDealViewModel
+<script src="~/global_assets/js/demo_pages/form_validation.js"></script>
+
+<script src="~/global_assets/js/demo_pages/form_select2.js"></script>
+<!-- Page header -->
+<div class="page-header page-header-light">
+    <div class="page-header-content header-elements-lg-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-stack-plus"></i> <span class="font-weight-semibold">Add Deal</span></h4>
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+
+    </div>
+
+    <div class="breadcrumb-line breadcrumb-line-light header-elements-lg-inline">
+        <div class="d-flex">
+            <div class="breadcrumb">
+                <a class="breadcrumb-item"><i class="icon-coin-dollar mr-2"></i>Deal</a>
+                <a class="breadcrumb-item">Add Deal</a>
+            </div>
+
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+    </div>
+</div>
+<!-- /page header -->
+
+<div class="mb-3">
+    <h6 class="mb-0 font-weight-semibold">
+    </h6>
+</div>
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <!-- Form inputs -->
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="card-title">Deal Info</h5>
+            </div>
+
+            <div class="card-body">
+                <form id="add-deal" class="form-validate-jquery">
+                    <fieldset class="mb-3">
+                        
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Client<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <select required data-placeholder="Client Name" name="ClientId" id="ClientId" onchange="ShowContact(this);" class="form-control form-control-select2 select-search" data-fouc>
+                                    <option value="">Select</option>
+                                    @foreach (var client in Model.Clients)
+                                    {
+                                        <option value="@client.ClientId" data-contact="@client.ContactNo">@client.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Contact</label>
+                            <div class="col-lg-8">
+                                <label id="contact" class="form-control"></label>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Product Name<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <select required data-placeholder="Product" name="DealTitleId" id="DealTitleId" class="form-control  form-control-select2 select-search" data-fouc>
+                                    <option value="">Select</option>
+                                    @foreach (var title in Model.Titles)
+                                    {
+                                        <option value="@title.MasterDataId">@title.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Deal Name<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <input type="text" name="Name" required id="Name" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Description</label>
+                            <div class="col-lg-8">
+                                <textarea id="Remarks" name="Remarks" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <button type="submit" class="btn btn-primary" onclick="AddDeal()">Submit <i class="icon-paperplane ml-2"></i></button>
+                        </div>
+
+                    </fieldset>
+
+
+                </form>
+            </div>
+        </div>
+        <!-- /form inputs -->
+    </div>
+
+</div>
+
+
+@section Scripts{
+
+    <script type="text/javascript">
+
+        var swalInit = swal.mixin({
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-light',
+                denyButton: 'btn btn-light',
+                input: 'form-control'
+            }
+        });
+        function AddDeal() {
+            var form = $("#add-deal");
+            form.validate();
+            if (form.valid()) {
+                event.preventDefault();
+                var formData = form.serialize();
+                $.ajax({
+                    url: '@Url.Action("Add", "Deal")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        $(".select-search").empty();
+                        $('#contact').text('');
+                        form.trigger('reset');
+                        swalInit.fire({
+                            title: 'Success!',
+                            text: 'Deal added successfully!',
+                            icon: 'success'
+                        });
+                    }
+                });
+            }
+        }
+
+        function ShowContact(element) {
+            var id = $(element).val();
+            var contact = $(element).find(':selected').attr('data-contact')
+            $('#contact').text(contact);
+        }
+
+
+
+    </script>
+}

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CAMSLifeWeb", "CAMSLifeWeb\CAMSLifeWeb.csproj", "{BB86B588-BBD8-4ADC-9ED8-168EC7E9B4D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PullAgentInfo", "PullAgentInfo\PullAgentInfo.csproj", "{E7E6F631-906D-4B16-93EA-4C31CBBC4F0D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BB86B588-BBD8-4ADC-9ED8-168EC7E9B4D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB86B588-BBD8-4ADC-9ED8-168EC7E9B4D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB86B588-BBD8-4ADC-9ED8-168EC7E9B4D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB86B588-BBD8-4ADC-9ED8-168EC7E9B4D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7E6F631-906D-4B16-93EA-4C31CBBC4F0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7E6F631-906D-4B16-93EA-4C31CBBC4F0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7E6F631-906D-4B16-93EA-4C31CBBC4F0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7E6F631-906D-4B16-93EA-4C31CBBC4F0D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D13FF0C5-E823-45FF-AEA3-4F82FEC507A8}
+	EndGlobalSection
+EndGlobal

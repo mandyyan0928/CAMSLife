@@ -1,0 +1,96 @@
+﻿@using CaliphWeb.ViewModel.Data
+@using CaliphWeb.Helper
+@model  CaliphWeb.Models.ViewModel.ActivityData
+<table class="table datatable-basic">
+    <thead>
+        <tr>
+            <th> Deal</th>
+            <th> Name</th>
+            <th> Contact</th>
+            <th> Activity</th>
+            <th> Date</th>
+            <th >Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var activity in Model.Activities)
+        {
+        <tr>
+            <td>@activity.DealTitleDesc</td>
+            <td>@activity.ClientName</td>
+            <td>@activity.ContactNo</td>
+            <td>@activity.ActivityPointsDesc</td>
+            <td>@activity.ActivityStartDate</td>
+            <td>
+                <a onclick="ConfirmDelete(@activity.ClientDealActivityId)" href="#">
+                    <i class="icon-trash"></i>
+                </a>
+                <a href="#" onclick="ShowEditActivity(@activity.ClientDealActivityId)" data-popup="tooltip" title="Update">
+                    <i class="icon-pencil"></i>
+                </a>
+            </td>
+            @*<td>
+            @{
+                var activeStatus = (int)MasterDataEnum.Status.Active;
+                var doneStatus = (int)MasterDataEnum.Status.Done;
+                var missedStatus = (int)MasterDataEnum.Status.Missed;
+                if (activity.StatusId == activeStatus)
+                {
+                                <div class="list-icons">
+                                    <div class="dropdown">
+                                        <a href="#" class="badge badge-warning dropdown-toggle" data-toggle="dropdown"> active</a>
+
+                                        <div class="dropdown-menu">
+                                            <a href="#" class="dropdown-item" onclick="ConfirmUpdate(@activity.ClientDealActivityId, @doneStatus)"><i class="icon-checkmark4 text-success"></i><span class="badge badge-success">done</span></a>
+                                            <a href="#" class="dropdown-item" onclick="ConfirmUpdate(@activity.ClientDealActivityId, @missedStatus)"><i class="icon-cross3 text-danger"></i><span class="badge badge-danger">missed</span></a>
+                                        </div>
+                                    </div>
+                                </div>
+                }
+                else if (activity.StatusId == doneStatus)
+                {
+                    <span class="badge badge-success">done</span>
+                }
+                else if (activity.StatusId == missedStatus)
+                {
+                    <span class="badge badge-danger">missed</span>
+                }
+
+            }
+        </td>*@
+
+        </tr>
+        }
+
+    </tbody>
+</table>
+
+
+
+
+
+@{ var pager = new Pager(pageSize: Model.Paging.PageSize, currentPage: Model.Paging.CurrentPage, totalItems: Model.Paging.ItemCount);}
+
+<div class="datatable-footer">
+    <div class="dataTables_info">
+        Showing @pager.StartIndex to @pager.EndIndex  of @pager.TotalItems entries
+    </div>
+    <div class="dataTables_paginate paging_simple_numbers">
+        @{ var prevPage = pager.CurrentPage - 1;
+            var disableClass = prevPage == 0 ? "disabled" : "";}
+        <a class="paginate_button previous @disableClass" onclick="SearchData(@prevPage )">←</a>
+
+        @foreach (var page in pager.Pages)
+        {
+            var current = page == pager.CurrentPage ? "current" : "";
+            <a class="paginate_button @current" onclick="SearchData(@page)">@page</a>
+        }
+        @{ var nextPage = pager.CurrentPage + 1;
+            var isLastPage = nextPage > pager.EndPage;
+            var disableNextClass = isLastPage ? "disabled" : "";
+        }
+        <a class="paginate_button next @disableNextClass" @disableNextClass onclick="SearchData(@prevPage )">→</a>
+    </div>
+</div>
+

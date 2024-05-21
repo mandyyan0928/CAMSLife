@@ -1,0 +1,369 @@
+﻿
+@{
+    ViewBag.Title = "Add";
+}
+
+@model CaliphWeb.Models.ViewModel.AddActivityViewModel
+
+<script src="~/global_assets/js/demo_pages/form_input_groups.js"></script>
+<script src="~/global_assets/js/demo_pages/picker_date.js"></script>
+<script src="~/global_assets/js/demo_pages/form_select2.js"></script>
+<script src="~/global_assets/js/demo_pages/form_validation.js"></script>
+<!-- Page header -->
+<div class="page-header page-header-light">
+    <div class="page-header-content header-elements-lg-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-plus-circle2"></i> <span class="font-weight-semibold">Add Activity</span></h4>
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+
+    </div>
+
+    <div class="breadcrumb-line breadcrumb-line-light header-elements-lg-inline">
+        <div class="d-flex">
+            <div class="breadcrumb">
+                <a class="breadcrumb-item"><i class="icon-calendar3 mr-2"></i>Activity</a>
+                <a class="breadcrumb-item">Add Activity</a>
+            </div>
+
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+    </div>
+</div>
+<!-- /page header -->
+<!-- Tabs with top line -->
+<div class="mb-3 mt-2">
+    <h6 class="mb-0 font-weight-semibold">
+    </h6>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Add Activity</h5>
+            </div>
+
+            <div class="card-body">
+                @*<ul class="nav nav-tabs nav-tabs-top">
+                        <li class="nav-item"><a href="#top-tab1" class="nav-link active" data-toggle="tab">Sales Activity</a></li>
+                        <li class="nav-item"><a href="#top-tab2" class="nav-link" data-toggle="tab">Referral Leads</a></li>
+
+                    </ul>*@
+
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="top-tab1">
+                        @Html.Partial("_AddActivity", Model)
+                        <div class="row form-group m-2">
+                            <div class="col-lg-12">
+                                <div class="text-right float-right">
+                                    <button type="button" class="btn btn-primary" onclick="AddActivity()">Submit <i class="icon-paperplane ml-2"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="tab-pane fade" id="top-tab2">
+                            <form id="add-lead" class="form-leads">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Deal<span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <select required data-placeholder="Deal Title" name="ClientDealId" id="ClientDealId" class="form-control select-search" data-fouc>
+                                            <option value="">Select</option>
+                                            @foreach (var deal in Model.Deals)
+                                            {
+                                                <option value="@deal.ClientDealId"> @deal.DealTitleDesc - @deal.Name </option>
+
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Name<span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="text" required id="Name" name="Name" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Contact<span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="text" required id="HP" name="HP" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Notes<span class="text-danger"></span></label>
+                                    <div class="col-lg-8">
+                                        <textarea id="notes" name="Remarks" class="form-control"> </textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="text-right float-right">
+                                        <button type="button" onclick="AddLead()" class="btn btn-primary">Add</button>
+
+                                    </div>
+
+                                </div>
+                            </form>
+
+                        </div>*@
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<!-- /tabs with top line -->
+<!-- leads modal -->
+<div id="modal_leads" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header pb-3">
+                <h5 class="modal-title">Add Leads</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body py-0">
+                <form action="#" class="form-leads">
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Name<span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <input type="text" required id="name" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Contact<span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <input type="text" required id="contact" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Notes<span class="text-danger"></span></label>
+                        <div class="col-lg-8">
+                            <textarea id="notes" class="form-control"> </textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer pt-3">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                <button type="button" onclick="ShowSuccessLeads()" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /leads modal -->
+<!-- edit leads modal -->
+<div id="modal_editleads" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header pb-3">
+                <h5 class="modal-title">Edit Leads</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body py-0">
+                <form action="#">
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Name</label>
+                        <div class="col-lg-8">
+                            <input type="text" id="name" value="Aimee Pearce" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Contact</label>
+                        <div class="col-lg-8">
+                            <input type="text" value="011-30927121" id="contact" class="form-control">
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer pt-3">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                <button type="button" onclick="ShowSuccessEditLeads()" class="btn btn-primary">Edit </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--  edit  modal -->
+
+@section Scripts{
+
+    <script type="text/javascript">
+        $('#detail').hide();
+
+        $('#timefrom').pickatime({
+            onStart: function () {
+                var date = new Date();
+                this.set('select', [8, 0])
+                startDate = new Date(date.getDate() + " " + timeto);
+
+            }, min: [8, 00],
+            max: [22, 30]
+        });
+        $('#timeto').pickatime({
+            onStart: function () {
+                var date = new Date();
+                this.set('select', [9, 0])
+                endDate = new Date(date + " " + timeto);
+            }, min: [8, 00],
+            max: [23, 30]
+
+        });
+        //ChangeTimeTo();
+
+        var swalInit = swal.mixin({
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-light',
+                denyButton: 'btn btn-light',
+                input: 'form-control'
+            }
+        });
+
+        function ChangeTimeTo() {
+          
+            var date = $('#Date').val();
+            if (date == "") {
+                return;
+            }
+            var timefrom = $('#timefrom').val();
+            var startDate = new Date(date + " " + timefrom);
+
+            var dateto = startDate.getHours() + 1;
+            var picker = $('#timeto').pickatime().pickatime('picker');
+            
+            var dateToMin = startDate.getMinutes();
+            picker.set('select', [dateto, dateToMin]);
+            picker.set('min', [dateto, dateToMin]);
+
+        }
+
+        function ShowContact(element) {
+            var id = $(element).val();
+            var contact = $(element).find(':selected').attr('data-contact')
+            $('#contact').text(contact);
+            $.ajax({
+                url: '@Url.Action("GetDealList", "Activity")',
+                type: 'POST',
+                data: { clientid: id },
+                dataType: 'json',
+                success: function (response) {
+                    $('#ClientDealId').html('');
+                    $('#ClientDealId').append('<option value="">Select</option>');
+                    //for (var r of response) {
+                    //    alert(r);
+                    //    $('#ClientDealId').append(`<option value="${r.ClientDealId}"> ${r.DealTitleDesc} - ${r.Name} </option>`);
+                    //}
+                    response.forEach(r => $('#ClientDealId').append(`<option value="${r.ClientDealId}"> ${r.DealTitleDesc} - ${r.Name} </option>`));
+                    }
+                });
+        }
+
+        function ShowDetail(element) {
+            var id = $(element).val();
+            if (id == 7) {
+                $('#detail').show();
+                $('#refName').attr('required', true);
+                $('#refHp').attr('required', true);
+            }
+            else {
+                $('#detail').hide();
+                $('#refName').attr('required', false);
+                $('#refHp').attr('required', false);
+            }
+        }
+
+        function AddActivity() {
+            var date = $('#Date').val();
+            var timefrom = $('#timefrom').val();
+           var startDate = new Date(date + " " + timefrom);
+            var timeto = $('#timeto').val();
+          var   endDate = new Date(date + " " + timeto);
+
+            $('#ActivityStartDate').val(startDate.toJSON());
+            $('#ActivityEndDate').val(endDate.toJSON());
+
+            var form = $("#add-activity");
+
+            form.validate();
+            if (form.valid()) {
+                event.preventDefault();
+                var formData = form.serialize();
+                $.ajax({
+                    url: '@Url.Action("Add", "Activity")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+
+                    
+                        swalInit.fire({
+                            title: 'Success!',
+                            text: 'Activity added successfully!',
+                            icon: 'success'
+                        }).then(result => {
+                            location.reload();
+                        })
+                        //$('.select2').val(null).trigger('change');
+                        //form.trigger('reset');
+                    }
+                });
+            }
+
+        }
+
+        function AddLead() {
+            var form = $("#add-lead");
+            form.validate();
+            if (form.valid()) {
+                event.preventDefault();
+                var formData = form.serialize();
+                $.ajax({
+                    url: '@Url.Action("AddLead", "Activity")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        swalInit.fire({
+                            title: 'Success!',
+                            text: 'Leads added successfully!',
+                            icon: 'success'
+                        });
+                    }
+                });
+            }
+
+        }
+
+
+        function ShowSuccessLeads() {
+            var form = $(".form-leads");
+            form.validate();
+            if (form.valid()) {
+                event.preventDefault();
+                swalInit.fire({
+                    title: 'Success!',
+                    text: 'Leads added successfully!',
+                    icon: 'success'
+                });
+                $('#modal_leads').modal('hide');
+
+            }
+        }
+        function ShowSuccessEditLeads() {
+            ShowSuccess();
+            $('#modal_editleads').modal('hide');
+        }
+
+        function ShowEdit() {
+            $('#modal_editleads').modal('show');
+        }
+    </script>
+}

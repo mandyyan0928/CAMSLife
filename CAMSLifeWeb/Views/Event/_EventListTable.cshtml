@@ -1,0 +1,72 @@
+﻿@using CaliphWeb.Helper
+@using System.Globalization;
+@model  CaliphWeb.Models.ViewModel.EventListDataViewModel
+
+@{ var pager = new Pager(pageSize: Model.Paging.PageSize, currentPage: Model.Paging.CurrentPage, totalItems: Model.Paging.ItemCount);}
+
+<table class="table datatable-basic">
+    <thead>
+        <tr>
+            <th>Event Name</th>
+            <th>Event Type</th>
+            <th>Event Host</th>
+            <th>Venue</th>
+            <th>CPD Point</th>
+            <th>Attendance</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.EventList)
+        {
+            var attendanceText = "";
+            var eventDateText = "";
+
+            foreach (var eventDate in item.EventDateList)
+            {
+                attendanceText += (eventDate.TotalAttendance > 0 ? "<a href=\"#\" onclick=\"SearchAttendance('1', '" + @item.EventId + "', '" + @eventDate.EventDateId + "')\">" + @eventDate.TotalAttendance + "</a>" : "0") + "</br>";
+                eventDateText += eventDate.EventDateFrom.ToString("g", CultureInfo.GetCultureInfo("en-US")) + " - " + eventDate.EventDateTo.ToString("g", CultureInfo.GetCultureInfo("en-US")) + "</br>";
+            }
+
+            <tr>
+                <td>@item.EventName</td>
+                <td>@item.EventTypeDesc</td>
+                <td>@item.EventHostDesc</td>
+                <td>@item.EventChannelLocation</td>
+                <td>@item.CPDPoint</td>
+                <td>@Html.Raw(@attendanceText)</td>
+                <td>@Html.Raw(@eventDateText)</td>
+                <td>
+                    <a href="~/Event/Edit/@item.EventId" data-popup="tooltip" title="Edit Event" class="list-icons-item">
+                        <i class="icon-pencil7"></i>
+                    </a>
+                    <a href="~/Event/Info/@item.EventId" data-popup="tooltip" title="More Info" class="list-icons-item">
+                        <i class="icon-info22"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="datatable-footer">
+    <div class="dataTables_info">
+        Showing @pager.StartIndex to @pager.EndIndex  of @pager.TotalItems entries
+    </div>
+    <div class="dataTables_paginate paging_simple_numbers">
+        @{ var prevPage = pager.CurrentPage - 1;
+            var disableClass = prevPage == 0 ? "disabled" : "";}
+        <a class="paginate_button previous @disableClass" onclick="SearchData(@prevPage )">←</a>
+
+        @foreach (var page in pager.Pages)
+        {
+            var current = page == pager.CurrentPage ? "current" : "";
+            <a class="paginate_button @current" onclick="SearchData(@page)">@page</a>}
+        @{ var nextPage = pager.CurrentPage + 1;
+            var isLastPage = nextPage > pager.EndPage;
+            var disableNextClass = isLastPage ? "disabled" : ""; }
+        <a class="paginate_button next @disableNextClass" @disableNextClass onclick="SearchData(@prevPage )">→</a>
+    </div>
+</div>
+

@@ -1,0 +1,170 @@
+﻿
+@{
+    ViewBag.Title = "DealHistory";
+}
+
+
+<script src="~/global_assets/js/demo_pages/picker_date.js"></script>
+<script src="~/global_assets/js/demo_pages/form_select2.js"></script>
+
+<!-- Page header -->
+<div class="page-header page-header-light">
+    <div class="page-header-content header-elements-lg-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-list"></i> <span class="font-weight-semibold"> Deal History</span> </h4>
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+
+    </div>
+
+
+    <div class="breadcrumb-line breadcrumb-line-light header-elements-lg-inline">
+        <div class="d-flex">
+            <div class="breadcrumb">
+                <a class="breadcrumb-item"><i class="icon-menu2 mr-2"></i> Report</a>
+                <a class="breadcrumb-item"> Deal History</a>
+            </div>
+
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+    </div>
+</div>
+<!-- /page header -->
+<!-- Basic datatable -->
+<div class="card">
+    <div class="card-header">
+        @*<h5 class="card-title">Basic datatable</h5>*@
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div class="datatable-header">
+                <div class="row">
+                    <div class="col-md-2">
+                        <span>Name:</span><br />
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="col-md-2">
+                        <span>Title:</span>
+                        <div required>
+                            <select name="select2" class="form-control select-search" data-fouc>
+                                <option value="">  All            </option>
+                                <option value="1">Family First</option>
+                                <option value="2">Future First</option>
+                                <option value="3">Invest First</option>
+                                <option value="1">Invest First Plus</option>
+                                <option value="2">CI First</option>
+                                <option value="2">Income First</option>
+                                <option value="2">Others</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <span> Date:</span>
+                        <div class="input-group">
+                            <span class="input-group-prepend">
+                                <span class="input-group-text"><i class="icon-calendar22"></i></span>
+                            </span>
+                            <input type="text" class="form-control daterange-basic" value="01/01/2015 - 01/31/2015">
+                        </div>
+                    </div>
+                        <div class="col-md-2">
+                            <span>Agent:</span>
+                            <div>
+                                <select required name="select2" class="form-control select-search" data-fouc>
+                                    <option value="">All</option>
+                                    <option value="1"> Hamzavi</option>
+                                    <option value="2">Phang Lie Kay </option>
+                                    <option value="3">M. K. Puthucheary</option>
+                                    <option value="1">Yee Oi Hoe</option>
+                                    <option value="2">Mohd</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <br />
+                            <button type="button" class="btn btn-primary d-inline" id="bootbox_form"> <i class="icon-search4"></i> </button>
+
+                        </div>
+                        <div class="col-md-1 float-right text-right">
+                            <label class="m-1">
+                                <span>Show:</span>
+                                <select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" class="custom-select">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            <table class="table datatable-basic">
+                <thead>
+                    <tr>
+                        <th>Deal Title</th>
+                        <th>Client Name</th>
+                        <th>Client Contact</th>
+                        <th>Filling Date</th>
+                        <th>Closed Date</th>
+                        <th>Agent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Family First</td>
+                        <td>Marth</td>
+                        <td>016-2345678</td>
+                        <td>10/01/2021</td>
+                        <td>18/08/2021</td>
+                        <td>20/08/2021</td>
+                        <td>Hamzavi</td>
+                    </tr>
+                    <tr>
+                        <td>Future First</td>
+                        <td>Mandy</td>
+                        <td>016-2345678</td>
+                        <td>13/03/2021</td>
+                        <td>01/07/2021</td>
+                        <td>20/08/2021</td>
+                        <td>Hamzavi</td>
+                    </tr>
+                    <tr>
+                        <td>Income   First</td>
+                        <td>Sunny</td>
+                        <td>016-2345678</td>
+                        <td>13/03/2021</td>
+                        <td>01/07/2021</td>
+                        <td>20/08/2021</td>
+                        <td>Hamzavi</td>
+                    </tr>
+                    <tr>
+                        <td>Invest First</td>
+                        <td>Elvin</td>
+                        <td>016-2345678</td>
+                        <td>13/03/2021</td>
+                        <td>01/07/2021</td>
+                        <td>20/08/2021</td>
+                        <td>Hamzavi</td>
+                    </tr>
+                    <tr>
+                        <td>Others</td>
+                        <td>Mohd</td>
+                        <td>016-2345678</td>
+                        <td>13/03/2021</td>
+                        <td>01/07/2021</td>
+                        <td>20/08/2021</td>
+                        <td>Hamzavi</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="datatable-footer"><div class="dataTables_info" id="DataTables_Table_0_info" role="status" aria-live="polite">Showing 1 to 10 of 15 entries</div><div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate"><a class="paginate_button previous disabled" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="-1" id="DataTables_Table_0_previous">←</a><span><a class="paginate_button current" aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0">1</a><a class="paginate_button " aria-controls="DataTables_Table_0" data-dt-idx="2" tabindex="0">2</a></span><a class="paginate_button next" aria-controls="DataTables_Table_0" data-dt-idx="3" tabindex="0" id="DataTables_Table_0_next">→</a></div></div>
+        </div>
+
+    </div>
+</div>
+<!-- /basic datatable -->

@@ -1,0 +1,867 @@
+﻿
+@model CaliphWeb.Models.ViewModel.MapaCalculatorViewModel
+
+<script src="~/global_assets/js/plugins/visualization/echarts/echarts.min.js"></script>
+<script src="~/global_assets/js/demo_pages/form_validation.js"></script>
+<script src="~/global_assets/js/demo_pages/form_select2.js"></script>
+@*<script src="~/global_assets/js/pages/budget.js?v1"></script>*@
+<!-- Page header -->
+
+<style>
+    .fix-width {
+        table-layout: fixed;
+        font-size: smaller;
+        overflow-wrap: normal;
+    }
+    .table-small td, .table-small th {
+        padding: 0.75rem 0.75rem;
+    }
+
+</style>
+@{ var title = "";
+    if (Model.Type == (int)CaliphWeb.ViewModel.Data.MasterDataEnum.AgentStimulatorType.DirectGroup)
+    {
+        title = "Direct Group Mapa";
+    }
+   else if (Model.Type == (int)CaliphWeb.ViewModel.Data.MasterDataEnum.AgentStimulatorType.WholeGroup)
+    {
+        title = "Whole Group Mapa";
+    }
+    }
+
+<div class="page-header page-header-light">
+    <div class="page-header-content header-elements-lg-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-list"></i> <span class="font-weight-semibold">@title</span> </h4>
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+    </div>
+
+    <div class="breadcrumb-line breadcrumb-line-light header-elements-lg-inline">
+        <div class="d-flex">
+            <div class="breadcrumb">
+                <a href="@Url.Action("Index", "Home")" class="breadcrumb-item"><i class="icon-calculator mr-2"></i> Report</a>
+                <a class="breadcrumb-item">@title </a>
+            </div>
+
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+    </div>
+</div>
+<!-- /page header -->
+<!-- Basic datatable -->
+<div class="card">
+    <div class="card-header">
+    </div>
+    <div class="card-body" id="mapa-page">
+        <div class="row form-group">
+            <div class="col-md-3">
+                Year
+            </div>
+            <div class="col-md-2">
+                @{
+                    var years = new List<int>();
+                    var startYear = 2021;
+                    var endYear = DateTime.Now.Year;
+
+                    while (startYear <= endYear)
+                    {
+                        years.Add(startYear);
+                        startYear++;
+                    }
+
+                    var currentMonth = DateTime.Now.Month;
+                    if (currentMonth >= 11)
+                    {
+                        years.Add(DateTime.Now.Year + 1);
+                    }
+
+                }
+                <select required data-placeholder="Year" id="Year" class="form-control" onchange="OnYearChange()">
+                    @foreach (var year in years)
+                    {
+                        var selectedYear = year == Model.Year ? "selected" : "";
+                        <option value="@year" @selectedYear>@year</option>
+
+                    }
+
+                </select>
+            </div>
+
+            <div class="col-md-3 text-right mt-2">
+                Type 
+            </div>
+            <div class="col-md-2">
+                
+                @title
+            </div>
+        </div>
+        @*<div class="row form-group">
+            <div class="col-md-3">
+                Growth (%)
+            </div>
+            <div class="col-md-2">
+                <input type="hidden"  id="id" value="@Model.ID"/>
+                <input type="number" class="form-control" id="Growth" name="Growth" onchange="CalculatePlannedMAPA()" />
+            </div>
+
+        </div>*@
+        <input type="hidden" id="id" value="@Model.ID" />
+
+        <ul class="nav nav-tabs nav-tabs-highlight nav-justified">
+            <li class="nav-item"><a href="#justified-left-tab1" class="nav-link active" data-toggle="tab"><i class="icon-calculator2"></i> Summarry</a></li>
+            <li class="nav-item"><a href="#justified-left-tab3" class="nav-link " data-toggle="tab"><i class="icon-table"></i> Plan & Actual</a></li>
+        </ul>
+        <div class="tab-content">
+            <!--Summary-->
+            <div class="tab-pane fade show active" onclick="RednerMAPASummary()" id="justified-left-tab1">
+                @Html.Partial("_MapaSummary", Model)
+            </div>
+
+            <!--Actual-->
+            <div class="tab-pane fade" id="justified-left-tab3">
+                @Html.Partial("_MapaActual")
+            </div>
+
+        </div>
+
+
+        <div class="row form-group">
+            <div class="col-md-10">
+            </div>
+            <div class="col-md-2">
+                <a href="#" onclick="SaveMAPAToDatabase()" class="btn btn-primary"> Save </a>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<!-- /basic datatable -->
+
+
+@section Scripts{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            for (var i = 1; i <= 12; i++) {
+                var calculateTotal = i === 12;
+                MapaActual_M_Calculation(i, calculateTotal);
+                MapaActual_A_Calculation(i, calculateTotal);
+                MapaActual_P_Calculation(i, calculateTotal);
+                MapaActual_AA_Calculation(i, calculateTotal);
+
+            }
+        });
+
+        function ReplaceNumberWithCommas(yourNumber) {
+            //Seperates the components of the number
+            var n = yourNumber.toString().split(".");
+            //Comma-fies the first part
+            n[0] = n[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            //Combines the two sections
+            return n.join(".");
+        }
+
+
+
+
+        function CalcMAPASummary(month) {
+            // mapa summary
+            var plannedSummary = parseFloat($('#mapaPlanning_Plan_MAPAACE_'+month).text().replace(',', ''));
+            $("#budgetsummary" + month).text(plannedSummary);
+            var achievedsummary = $("#achievesummary" + month).text();
+            var percent = (achievedsummary == 0 ? achievedsummary : plannedSummary / achievedsummary) * 100;
+
+            $("#percentsummary" + month).text(ReplaceNumberWithCommas(percent.toFixed(2)));
+
+            var monthlyShortfall = plannedSummary - achievedsummary;
+            $("#shortfallsummary" + month).text(ReplaceNumberWithCommas(monthlyShortfall.toFixed(2)));
+
+            var accumulateShortfall = monthlyShortfall;
+            for (var i = 1; i < month; i++) {
+                var shortfall = $("#shortfallsummary" + i).text();
+                accumulateShortfall += parseFloat(shortfall.replaceAll(',', '').replace(/,/g, ''));
+                console.log('accumulate short fall ' + i + '  ' + accumulateShortfall);
+            }
+            $("#accumulateshortfallsummary" + month).text(ReplaceNumberWithCommas(accumulateShortfall.toFixed(2)));
+
+            var startMonth = 1;
+            var endMonth = 3
+            var quarter = 1;
+            if (month >= 3 && month <= 6) {
+                startMonth = 4;
+                endMonth = 6;
+                quarter = 2;
+            }
+            else if (month >= 7 && month <= 9) {
+                startMonth = 7;
+                endMonth = 9;
+                quarter = 3;
+            }
+            else if (month >= 10 && month <= 12) {
+                startMonth = 10;
+                endMonth = 12;
+                quarter = 4;
+            }
+
+            var totalQuarterACE = 0;
+            while (startMonth <= endMonth) {
+                console.log('getting quarter ace for month ' + startMonth);
+                var aceMonth = $("#ace" + startMonth).text().replaceAll(',', '').replace(/,/g, '');
+                console.log(aceMonth);
+                if (aceMonth === '' || isNaN(aceMonth) || aceMonth === undefined)
+                    aceMonth = 0;
+                console.log(aceMonth);
+                totalQuarterACE += parseFloat(aceMonth);
+                startMonth++;
+            }
+
+
+            var totalAchieveQuarterAce = parseFloat($("#totalAchieveAceQuarter" + quarter).text().replaceAll(',', ''));
+
+
+            var perQuarter = totalAchieveQuarterAce + totalQuarterACE;
+
+            $("#totalBudgetAceQuarter" + quarter).text(ReplaceNumberWithCommas(totalQuarterACE.toFixed(2)));
+            $("#totalBudgetAceQuarterHeader" + quarter).text(ReplaceNumberWithCommas(perQuarter.toFixed(2)));
+
+
+            var quarterAchievePercent = 0;
+            if (perQuarter > 0)
+                quarterAchievePercent = (totalAchieveQuarterAce / perQuarter) * 100;
+            $("#quarterAchievePercentHeader" + quarter).text(ReplaceNumberWithCommas(quarterAchievePercent.toFixed(2)) + "%");
+
+
+        }
+
+
+
+
+        var totalNewRecruit = 0;
+
+        function CalculatePlannedMAPA() {
+
+
+            var previousYearAce = parseFloat($('#mapaPlanning_previousYearTotalACE').text().replaceAll(',', ''));
+            var growth = parseFloat($('#Growth').val());
+            var currentYearAce = (previousYearAce * (growth / 100)).toFixed(2);
+            $('#totalPlanningAce').text(ReplaceNumberWithCommas(currentYearAce));
+
+            for (var i = 1; i <= 12; i++) {
+                var manpower = 0;
+
+
+                var actual_percent = parseFloat($('#mapaPlanning_Actual_Percent_' + i).text().replaceAll(',', '').replace('%', '')) / 100;
+
+                var actual_activeAgent_YTDRecruit = parseFloat($('#mapaPlanning_Actual_ActiveAgent_YTDRecruit_' + i).text().replaceAll(',', ''));
+                var actual_acticeAgent_TotalCases = parseFloat($('#mapaPlanning_Actual_ActiveAgent_TotalCases_' + i).text().replaceAll(',', ''));
+                var actual_ace_TotalCases = parseFloat($('#mapaPlanning_Actual_ACE_TotalCases_' + i).text().replaceAll(',', ''));
+
+                var plan_ace = roundToTwo (currentYearAce * actual_percent);
+                var plan_activeAgent_YTDRecruit = actual_activeAgent_YTDRecruit;
+                var plan_acticeAgent_TotalCases = actual_acticeAgent_TotalCases;
+                var plan_ace_TotalCases = actual_ace_TotalCases;
+
+
+
+                var mutiply = ((plan_activeAgent_YTDRecruit / 100) *(plan_acticeAgent_TotalCases * plan_ace_TotalCases));
+                var plan_manpower = mutiply > 0 ? plan_ace / mutiply : 0;
+
+
+                $('#mapaPlanning_Plan_Mpower_' + i).text(ReplaceNumberWithCommas(plan_manpower.toFixed(0)));
+                $('#mapaPlanning_Plan_ActiveAgent_YTDRecruit_' + i).text(ReplaceNumberWithCommas(plan_activeAgent_YTDRecruit.toFixed(2)));
+                $('#mapaPlanning_Plan_ActiveAgent_TotalCases_' + i).text(ReplaceNumberWithCommas(plan_acticeAgent_TotalCases.toFixed(2)));
+                $('#mapaPlanning_Plan_ACE_TotalCases_' + i).text(ReplaceNumberWithCommas(plan_ace_TotalCases.toFixed(2)));
+                $('#mapaPlanning_Plan_ACE_' + i).text(ReplaceNumberWithCommas(plan_ace.toFixed(2)));
+                $('#mapaPlanning_Plan_MAPAACE_' + i).text(ReplaceNumberWithCommas(plan_ace.toFixed(2)));
+
+
+
+
+                $('#mapaQuarter_Plan_Manpower_' + i).text(ReplaceNumberWithCommas(plan_manpower.toFixed(0)));
+                $('#mapaQuarter_Plan_ActiveAgent_YTDRecruit_' + i).text(ReplaceNumberWithCommas(plan_activeAgent_YTDRecruit.toFixed(2)));
+                $('#mapaQuarter_Plan_ActiveAgent_TotalCases_' + i).text(ReplaceNumberWithCommas(plan_acticeAgent_TotalCases.toFixed(2)));
+                $('#mapaQuarter_Plan_ACE_TotalCases_' + i).text(ReplaceNumberWithCommas(plan_ace_TotalCases.toFixed(2)));
+                $('#mapaPlanning_Plan_ACE_' + i).text(ReplaceNumberWithCommas(plan_ace.toFixed(2)));
+                $('#mapaQuarter_Plan_MAPAACE_' + i).text(ReplaceNumberWithCommas(plan_ace.toFixed(2)));
+
+
+
+                CalculateMAPAPlanning(i);
+               // CalculateMAPAPlanning(i);
+                CalcMAPASummary(i);
+                //calculate at end of quarter
+                if (i % 3 === 0) {
+                    CalculateMAPAEndQuarterRec(i);
+                    CalculateMAPAPlanningEndQuarterTotalAce(i);
+                    CalculateMAPAActualEndQuarterTotalAce(i);
+                    CalculateMAPAActual(i);
+                  //  totalNewRecruit += newRecuit;
+                }
+
+
+
+              //  var newRecuit = parseFloat($('#mapaPlanning_Plan_Rec_' + i).text().replaceAll(',', ''));
+
+
+            }
+            $('#totalPlanningNewRecruit').text(ReplaceNumberWithCommas(totalNewRecruit.toFixed(0)));
+            CalculateMAPATotal();
+
+        }
+
+        function SaveMAPAToDatabase() {
+
+            BlockUIHelper.blockUI('mapa-page');
+            var id = $('#id').val();
+            var mapaRequest = {
+                AgentSimulatorId:id,
+                AgentSimulatorYear: $('#Year').val(),
+                AgentSimulatorTypeId: @Model.Type,
+                Manpower_YTDRecruit1: formatInputToFloat( $('#mapaActual_Plan_Input_Mpower_1').val()),
+                Manpower_YTDRecruit2: formatInputToFloat($('#mapaActual_Plan_Input_Mpower_2').val()),
+                Manpower_YTDRecruit3: formatInputToFloat($('#mapaActual_Plan_Input_Mpower_3').val()),
+                Manpower_YTDRecruit4: formatInputToFloat($('#mapaActual_Plan_Input_Mpower_4').val()),
+                Manpower_YTDRecruit5: formatInputToFloat($('#mapaActual_Plan_Input_Mpower_5').val()),
+                Manpower_YTDRecruit6: formatInputToFloat($('#mapaActual_Plan_Input_Mpower_6').val()),
+                Manpower_YTDRecruit7: formatInputToFloat($('#mapaActual_Plan_Input_Mpower_7').val()),
+                Manpower_YTDRecruit8: formatInputToFloat($('#mapaActual_Plan_Input_Mpower_8').val()),
+                Manpower_YTDRecruit9: formatInputToFloat($('#mapaActual_Plan_Input_Mpower_9').val()),
+                Manpower_YTDRecruit10: formatInputToFloat($('#mapaActual_Plan_Input_Mpower_10').val()),
+                Manpower_YTDRecruit11: formatInputToFloat($('#mapaActual_Plan_Input_Mpower_11').val()),
+                Manpower_YTDRecruit12: formatInputToFloat($('#mapaActual_Plan_Input_Mpower_12').val()),
+
+                ActiveAgent_YTDRecruit1: formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_YTDRecruit_1').val()),
+                ActiveAgent_YTDRecruit2: formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_YTDRecruit_2').val()),
+                ActiveAgent_YTDRecruit3: formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_YTDRecruit_3').val()),
+                ActiveAgent_YTDRecruit4: formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_YTDRecruit_4').val()),
+                ActiveAgent_YTDRecruit5: formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_YTDRecruit_5').val()),
+                ActiveAgent_YTDRecruit6: formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_YTDRecruit_6').val()),
+                ActiveAgent_YTDRecruit7: formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_YTDRecruit_7').val()),
+                ActiveAgent_YTDRecruit8: formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_YTDRecruit_8').val()),
+                ActiveAgent_YTDRecruit9: formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_YTDRecruit_9').val()),
+                ActiveAgent_YTDRecruit10: formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_YTDRecruit_10').val()),
+                ActiveAgent_YTDRecruit11: formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_YTDRecruit_11').val()),
+                ActiveAgent_YTDRecruit12: formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_YTDRecruit_12').val()),
+
+
+                ActiveAgent_TotalCases1: formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_TotalCases_1').val()),
+                ActiveAgent_TotalCases2: formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_TotalCases_2').val()),
+                ActiveAgent_TotalCases3: formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_TotalCases_3').val()),
+                ActiveAgent_TotalCases4: formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_TotalCases_4').val()),
+                ActiveAgent_TotalCases5: formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_TotalCases_5').val()),
+                ActiveAgent_TotalCases6: formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_TotalCases_6').val()),
+                ActiveAgent_TotalCases7: formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_TotalCases_7').val()),
+                ActiveAgent_TotalCases8: formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_TotalCases_8').val()),
+                ActiveAgent_TotalCases9: formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_TotalCases_9').val()),
+                ActiveAgent_TotalCases10: formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_TotalCases_10').val()),
+                ActiveAgent_TotalCases11: formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_TotalCases_11').val()),
+                ActiveAgent_TotalCases12: formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_TotalCases_12').val()),
+
+
+                ACE_TotalCases1: formatInputToFloat($('#mapaActual_Plan_Input_ACE_TotalCases_1').val()),
+                ACE_TotalCases2: formatInputToFloat($('#mapaActual_Plan_Input_ACE_TotalCases_2').val()),
+                ACE_TotalCases3: formatInputToFloat($('#mapaActual_Plan_Input_ACE_TotalCases_3').val()),
+                ACE_TotalCases4: formatInputToFloat($('#mapaActual_Plan_Input_ACE_TotalCases_4').val()),
+                ACE_TotalCases5: formatInputToFloat($('#mapaActual_Plan_Input_ACE_TotalCases_5').val()),
+                ACE_TotalCases6: formatInputToFloat($('#mapaActual_Plan_Input_ACE_TotalCases_6').val()),
+                ACE_TotalCases7: formatInputToFloat($('#mapaActual_Plan_Input_ACE_TotalCases_7').val()),
+                ACE_TotalCases8: formatInputToFloat($('#mapaActual_Plan_Input_ACE_TotalCases_8').val()),
+                ACE_TotalCases9: formatInputToFloat($('#mapaActual_Plan_Input_ACE_TotalCases_9').val()),
+                ACE_TotalCases10: formatInputToFloat($('#mapaActual_Plan_Input_ACE_TotalCases_10').val()),
+                ACE_TotalCases11: formatInputToFloat($('#mapaActual_Plan_Input_ACE_TotalCases_11').val()),
+                ACE_TotalCases12: formatInputToFloat($('#mapaActual_Plan_Input_ACE_TotalCases_12').val()),
+
+            };
+
+            $.ajax({
+                url: '@Url.Action("UpdateGrowth", "Agent")',
+                type: 'POST',
+                data: { req: mapaRequest },
+                async: false,
+                success: function (response) {
+                    if (response.Data != null) {
+                        $('#id').val(response.Data);
+                    }
+
+                
+
+
+                    swalInit.fire({
+                        title: 'Updated!',
+                        text: 'MAPA updated succesfully',
+                        icon: 'success'
+                    });
+                },
+                complete: function (result) {
+                    BlockUIHelper.unblockUI('mapa-page');
+
+                }
+            });
+        }
+
+        function roundToTwo(num) {
+            return +(Math.round(num + "e+2") + "e-2");
+        }
+
+        function CalculateMAPAEndQuarterRec(month) {
+            var currentQuarter = getQuarterandMonth(month);
+            var previousQuarterEndMonth = currentQuarter.endMonth - 3;
+
+
+            if (previousQuarterEndMonth == 0)
+                previousQuarterLastActualMPower = $("#mapaPlanning_Actual_ManPower_" + 12).text().replaceAll(',', '');
+            else
+                previousQuarterLastActualMPower = $("#mapaPlanning_Plan_ManPower_" + previousQuarterEndMonth).text().replaceAll(',', '');
+
+            var currentQuarterLastPlanMpower = $("#mapaPlanning_Plan_ManPower_" + currentQuarter.endMonth).text().replaceAll(',', '');
+
+            var quarterDifference = (parseFloat(currentQuarterLastPlanMpower) - parseFloat(previousQuarterLastActualMPower));
+            var newRecruit = quarterDifference / 3;
+            totalNewRecruit += quarterDifference;
+
+            if (newRecruit === '' || isNaN(newRecruit) || newRecruit === undefined || newRecruit<0)
+                newRecruit = 0;
+        //    $("#mapaPlanning_Plan_QuarterAce_" + currentQuarter.quarter).text(ReplaceNumberWithCommas(quarterDifference.toFixed(0)));
+
+
+            for (var i = currentQuarter.startMonth; i <= currentQuarter.endMonth; i++) {
+                $("#mapaPlanning_Plan_Rec_" + i).text(ReplaceNumberWithCommas(newRecruit.toFixed(0)));
+            }
+
+        }
+
+        function CalculateMAPAPlanningEndQuarterTotalAce(month) {
+            var currentQuarter = getQuarterandMonth(month);
+            var totalACE = 0;
+            for (var i = currentQuarter.startMonth; i <= currentQuarter.endMonth; i++) {
+                var ace = parseFloat($("#mapaPlanning_Plan_ACE_" + i).text().replaceAll(',', ''));
+                totalACE += ace;
+            }
+
+            $("#mapaPlanning_Plan_QuarterAce_" + currentQuarter.quarter).text(ReplaceNumberWithCommas(totalACE.toFixed(2)));
+
+        }
+
+        function CalculateMAPAActualEndQuarterTotalAce(month) {
+            var currentQuarter = getQuarterandMonth(month);
+            $("#mapaActual_Plan_QuarterAce_" + currentQuarter.quarter).text($('#mapaPlanning_Plan_QuarterAce_' + currentQuarter.quarter).text());
+        }
+
+        function CalculateMAPAPlanning(month) {
+
+            var mpower_ytd = $("#mapaPlanning_Plan_Mpower_" + month).text().replace(',','');
+            var activeagent_ytd = parseFloat($("#mapaPlanning_Plan_ActiveAgent_YTDRecruit_" + month).text().replaceAll(',', '') / 100);
+            var activeagent_totalcases = $("#mapaPlanning_Plan_ActiveAgent_TotalCases_" + month).text().replaceAll(',', '');
+            var ace_totalcases = $("#mapaPlanning_Plan_ACE_TotalCases_" + month).text().replaceAll(',', '');
+
+            var ace = mpower_ytd * activeagent_ytd * activeagent_totalcases * ace_totalcases;
+            var displayAce = ReplaceNumberWithCommas(ace.toFixed(2));
+            $("#ace_" + month).text(displayAce);
+            //$("#mapaPlanning_Plan_ACE_" + month).text(displayAce);
+           $("#mapaPlanning_Plan_ManPower_" + month).text(ReplaceNumberWithCommas(parseFloat(mpower_ytd).toFixed(2)));
+
+            var actualActiveRatio = parseFloat($('#mapaPlanning_Actual_ActiveRatio_' + month).text().replaceAll(',', '').replace('%', ''))/100;
+
+            var activeagent = mpower_ytd * actualActiveRatio;
+            $("#mapaPlanning_Plan_ActAgt_" + month).text(ReplaceNumberWithCommas(roundUp(activeagent, 0)));
+
+            //active agent / mpower
+            var activeRatio =( (activeagent / mpower_ytd)*100).toFixed(2);
+            if (activeRatio === '' || isNaN(activeRatio) || activeRatio === undefined)
+                activeRatio = 0;
+            $("#mapaPlanning_Plan_ActiveRatio_" + month).text(ReplaceNumberWithCommas(activeRatio) + '%');
+
+
+            var cases = roundUp(activeagent * activeagent_totalcases, 0);
+            $("#mapaPlanning_Plan_Cases_" + month).text(ReplaceNumberWithCommas(cases));
+
+        }
+
+        function CalculateMAPAActualQuarter(month) {
+
+            var mpower_ytd = $("#mapaPlanning_Plan_Mpower_" + month).text().replace(',', '');
+            var activeagent_ytd = parseFloat($("#mapaPlanning_Plan_ActiveAgent_YTDRecruit_" + month).text().replaceAll(',', '') / 100);
+            var activeagent_totalcases = $("#mapaPlanning_Plan_ActiveAgent_TotalCases_" + month).text().replaceAll(',', '');
+            var ace_totalcases = $("#mapaPlanning_Plan_ACE_TotalCases_" + month).text().replaceAll(',', '');
+
+            var ace = mpower_ytd * activeagent_ytd * activeagent_totalcases * ace_totalcases;
+            var displayAce = ReplaceNumberWithCommas(ace.toFixed(2));
+            $("#ace_" + month).text(displayAce);
+            //$("#mapaPlanning_Plan_ACE_" + month).text(displayAce);
+            $("#mapaQuarter_Manpower_" + month).text(ReplaceNumberWithCommas(parseFloat(mpower_ytd).toFixed(2)));
+
+            var actualActiveRatio = parseFloat($('#mapaPlanning_Actual_ActiveRatio_' + month).text().replaceAll(',', '').replace('%', '')) / 100;
+
+            var activeagent = mpower_ytd * actualActiveRatio;
+            $("#mapaPlanning_Plan_ActAgt_" + month).text(ReplaceNumberWithCommas(roundUp(activeagent, 0)));
+
+            //active agent / mpower
+            var activeRatio = ((activeagent / mpower_ytd) * 100).toFixed(2);
+            if (activeRatio === '' || isNaN(activeRatio) || activeRatio === undefined)
+                activeRatio = 0;
+            $("#mapaPlanning_Plan_ActiveRatio_" + month).text(ReplaceNumberWithCommas(activeRatio) + '%');
+
+
+            var cases = roundUp(activeagent * activeagent_totalcases, 0);
+            $("#mapaPlanning_Plan_Cases_" + month).text(ReplaceNumberWithCommas(cases));
+
+        }
+
+        function CalculateMAPAActual(month) {
+            var currentQuarter = getQuarterandMonth(month);
+
+            for (var i = currentQuarter.startMonth; i <= currentQuarter.endMonth; i++) {
+                $("#mapaActual_Plan_ACE_" + i).text($('#mapaPlanning_Plan_ManPower_' + i).text());
+                $("#mapaActual_Plan_ManPower_" + i).text($('#mapaPlanning_Plan_ManPower_' + i).text());
+                $("#mapaActual_Plan_Rec_" + i).text($('#mapaPlanning_Plan_Rec_' + i).text());
+                $("#mapaActual_Plan_ActAgt_" + i).text($('#mapaPlanning_Plan_ActAgt_' + i).text());
+                $("#mapaActual_Plan_ActiveRatio_" + i).text($('#mapaPlanning_Plan_ActiveRatio_' + i).text());
+                $("#mapaActual_Plan_Cases_" + i).text($('#mapaPlanning_Plan_Cases_' + i).text());
+
+
+            }
+
+        }
+
+        function CalculateMAPAQuarter(month) {
+            var currentQuarter = getQuarterandMonth(month);
+
+            for (var i = currentQuarter.startMonth; i <= currentQuarter.endMonth; i++) {
+                $("#mapaActual_Plan_ACE_" + i).text($('#mapaPlanning_Plan_ManPower_' + i).text());
+                $("#mapaActual_Plan_ManPower_" + i).text($('#mapaPlanning_Plan_ManPower_' + i).text());
+                $("#mapaActual_Plan_Rec_" + i).text($('#mapaPlanning_Plan_Rec_' + i).text());
+                $("#mapaActual_Plan_ActAgt_" + i).text($('#mapaPlanning_Plan_ActAgt_' + i).text());
+                $("#mapaActual_Plan_ActiveRatio_" + i).text($('#mapaPlanning_Plan_ActiveRatio_' + i).text());
+                $("#mapaActual_Plan_Cases_" + i).text($('#mapaPlanning_Plan_Cases_' + i).text());
+            }
+        }
+
+        function CalculateMAPATotal() {
+            $("#mapaActual_Plan_TotalACE").text($('#totalPlanningAce').text());
+            $("#mapaActual_Plan_TotalNewRecruit").text($('#totalPlanningNewRecruit').text());
+        }
+
+        function getQuarterandMonth(month) {
+
+            var startMonth = 1;
+            var endMonth = 3
+            var quarter = 1;
+            if (month >=4 && month <= 6) {
+                startMonth = 4;
+                endMonth = 6;
+                quarter = 2;
+            }
+            else if (month >= 7 && month <= 9) {
+                startMonth = 7;
+                endMonth = 9;
+                quarter = 3;
+            }
+            else if (month >= 10 && month <= 12) {
+                startMonth = 10;
+                endMonth = 12;
+                quarter = 4;
+            }
+
+
+            var quarterInfo = {
+                startMonth:startMonth,
+                endMonth:endMonth,
+                quarter:quarter
+            }
+            return quarterInfo;
+        }
+
+        function CalculateMAPADirectGroup(month) {
+
+            var mpower_ytd = $("#Manpower_YTDRecruit_" + month).val();
+            var activeagent_ytd = parseFloat($("#ActiveAgent_YTDRecruit_" + month).val() / 100);
+            var activeagent_totalcases = $("#ActiveAgent_TotalCases_" + month).val();
+            var ace_totalcases = $("#ACE_TotalCases_" + month).val();
+
+            var ace = mpower_ytd * activeagent_ytd * activeagent_totalcases * ace_totalcases;
+            var displayAce = ReplaceNumberWithCommas(ace.toFixed(2));
+            $("#ace_" + month).text(displayAce);
+            $("#directGroupBudgetAce_" + month).text(displayAce);
+            $("#directGroupBudgetMPower_" + month).text(mpower_ytd);
+
+            var previousMonth = month - 1;
+            if (previousMonth == 0)
+                previousMonthMPower = 0;
+            else
+                previousMonthMPower = $("#directAchieveMPower_" + month).text();
+
+            var newRecruit = previousMonthMPower - mpower_ytd;
+
+            $("#directGroupBudgetRec_" + month).text(newRecruit);
+
+
+
+            var nextmonth = month + 1;
+            var nextMonthMPower = 0;
+            if (nextmonth <= 12) {
+                nextMonthMPower = $("#directAchieveMPower_" + nextmonth).text();
+                var newNextMonthMPower = nextMonthMPower - mpower_ytd;
+                $("#directGroupBudgetRec_" + nextmonth).text(newNextMonthMPower);
+            }
+
+
+
+            var activeagent = mpower_ytd * activeagent_ytd;
+            $("#directGroupBudgetActAgt_" + month).text(roundUp( activeagent, 0));
+
+
+            var activeRatio = (mpower_ytd * activeagent).toFixed(2);
+            $("#directGroupBudgetActRatio_" + month).text(ReplaceNumberWithCommas(activeRatio));
+
+
+            var cases = roundUp( activeagent * activeagent_totalcases, 0);
+            $("#directGroupBudgetCases_" + month).text(cases);
+
+        }
+
+        function roundUp(num, precision) {
+            precision = Math.pow(10, precision)
+            return Math.ceil(num * precision) / precision
+        }
+
+        var swalInit = swal.mixin({
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-light',
+                denyButton: 'btn btn-light',
+                input: 'form-control'
+            }
+        });
+
+        function OnYearChange() {
+            BlockUIHelper.blockUI('mapa-page')
+            var year = parseInt($('#Year').val());
+            var type = '@Model.Type';
+            window.location = '/Agent/MapaCalculator/'+ year+'?type='+type;
+            //var year = parseInt($('#Year').val());
+            //var previousYear = year - 1;
+
+            //$('#actualYear').text(previousYear);
+            //$('#planYear').text(year);
+
+
+            //$('#currentActualYear').text(year);
+            //$('#currentPlanYear').text(year);
+
+            //get data from api
+
+            // replace
+        }
+
+        // added on 8th November for latest Mapa Changes
+
+        function calculate_Req(month) {
+            var previousMonth = month - 1;
+            var mapa_m_input = formatInputToFloat($('#mapaActual_Plan_Input_Mpower_' + month).val());
+            var previousRecruitInput = $('#mapaActual_Plan_Input_Mpower_' + previousMonth).val();;
+            var previousRecruit = formatInputToFloat(previousRecruitInput);
+            var currentRecuit = formatInputToFloat(mapa_m_input);
+
+            var newRecruit = previousMonth === 0 ? currentRecuit : currentRecuit - previousRecruit;
+
+                $('#mapaActual_Plan_Rec_' + month).text(ReplaceNumberWithCommas(newRecruit.toFixed(0)));
+
+        }
+        function MapaActual_M_Calculation(  month, calculateTotal=true) {
+
+
+            var mapa_m_input = formatInputToFloat( $('#mapaActual_Plan_Input_Mpower_' + month).val());
+
+            $('#mapaActual_Plan_ManPower_' + month).text(ReplaceNumberWithCommas(mapa_m_input.toFixed(0)));
+
+
+            if (calculateTotal == true) {
+                MapaActual_ACE_Calculation(month);
+                MapaActual_Req_Quarter_Total_Calculation(month);
+                MapaActual_Req_Total_Calculation();
+
+                if (month === 12) {
+                    $('#mapaActual_Plan_M_Footer').text(ReplaceNumberWithCommas(mapa_m_input.toFixed(0)));
+                }
+            }
+
+
+        }
+
+
+        function MapaActual_A_Calculation(month, calculateTotal = true) {
+
+
+            var activeRatio = formatInputToFloat( $('#mapaActual_Plan_Input_ActiveAgent_YTDRecruit_' + month).val());
+            var manpower = formatInputToFloat( $('#mapaActual_Plan_Input_Mpower_' + month).val());
+            var activeAgent =( activeRatio/100) * manpower;
+
+            $('#mapaActual_Plan_ActiveRatio_' + month).text(ReplaceNumberWithCommas(activeRatio.toFixed(2)) +" %");
+            $('#mapaActual_Plan_ActAgt_' + month).text(ReplaceNumberWithCommas(activeAgent.toFixed(0)));
+
+            var casesPerAgent = formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_TotalCases_' + month).val());
+            var cases = activeAgent * casesPerAgent;
+
+
+            $('#mapaActual_Plan_Cases_' + month).text(ReplaceNumberWithCommas(cases.toFixed(0)));
+
+            if (calculateTotal === true) {
+                MapaActual_ACE_Calculation(month);
+
+                var totalActiveRatio = 0;
+                for (var i = 1; i <= 12; i++) {
+                    totalActiveRatio += formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_YTDRecruit_' + i).val());
+                }
+
+                var averageRatio = totalActiveRatio / 12;
+                $('#mapaActual_Plan_A_Footer').text(ReplaceNumberWithCommas(averageRatio.toFixed(2)));
+            }
+        }
+
+
+        function MapaActual_P_Calculation(month, calculateTotal=true) {
+
+
+            var casesPerAgent = formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_TotalCases_' + month).val());
+            var activeAgent = formatInputToFloat($('#mapaActual_Plan_ActAgt_' + month).text().replaceAll(',', ''));
+            var cases = activeAgent * casesPerAgent;
+
+
+            $('#mapaActual_Plan_Cases_' + month).text(ReplaceNumberWithCommas(cases.toFixed(0)));
+
+            if (calculateTotal === true) {
+                MapaActual_ACE_Calculation(month);
+
+                var totalCasesPerAgent = 0;
+                for (var i = 1; i <= 12; i++) {
+                    totalCasesPerAgent += formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_TotalCases_' + i).val());
+                }
+
+                var averageCasesPerAgent = totalCasesPerAgent / 12;
+                $('#mapaActual_Plan_P_Footer').text(ReplaceNumberWithCommas(averageCasesPerAgent.toFixed(2)));
+            }
+        }
+
+        function MapaActual_AA_Calculation(month) {
+
+            MapaActual_ACE_Calculation(month);
+
+
+            var totalAcePerCases = 0;
+            for (var i = 1; i <= 12; i++) {
+                totalAcePerCases += formatInputToFloat($('#mapaActual_Plan_Input_ACE_TotalCases_' + i).val());
+            }
+
+            var averageACEperCases = totalAcePerCases / 12;
+            $('#mapaActual_Plan_AA_Footer').text(ReplaceNumberWithCommas(averageACEperCases.toFixed(2)));
+        }
+
+
+        function MapaActual_ACE_Calculation(month) {
+            var mapa_m_input = $('#mapaActual_Plan_Input_Mpower_' + month).val();
+            var mapa_a_input = $('#mapaActual_Plan_Input_ActiveAgent_YTDRecruit_' + month).val();
+            var mapa_p_input = $('#mapaActual_Plan_Input_ActiveAgent_TotalCases_' + month).val();
+            var mapa_aa_input = $('#mapaActual_Plan_Input_ACE_TotalCases_' + month).val();
+
+            var ace = formatInputToFloat(mapa_m_input) * (formatInputToFloat(mapa_a_input)/100) * formatInputToFloat(mapa_p_input) * formatInputToFloat( mapa_aa_input);
+            $('#mapaActual_Plan_ACE_' + month).text(ReplaceNumberWithCommas(ace.toFixed(2)));
+            $('#mapaActual_Plan_MAPAACE_' + month).text(ReplaceNumberWithCommas(ace.toFixed(2)));
+            $('#budgetsummary_' + month).text(ReplaceNumberWithCommas(ace.toFixed(2)));
+
+            //achieve figure
+            var achieve_ace = formatInputToFloat($('#achievesummary_' + month).text().replaceAll(',', ''));
+            var percent = ace == 0 ? 0 : (achieve_ace / ace)*100;
+            //percentsummary_ = achieve/budget
+
+            $('#percentsummary_' + month).text(ReplaceNumberWithCommas(formatInputToFloat(percent).toFixed(2)) + '%');
+
+            if (percent < 50 )
+                $('#percentsummary_' + month).addClass('text-danger');
+            else
+                $('#percentsummary_' + month).removeClass('text-danger');
+
+            MapaActual_ACE_Quarter_Total_Calculation(month);
+            MapaActual_ACE_Total_Calculation();
+
+            if (ace > 0) {
+                calculate_Req(month);
+            }
+            return ace.toFixed(2);
+        }
+
+
+        function MapaActual_ACE_Quarter_Total_Calculation(month) {
+            var currentQuarter = getQuarterandMonth(month);
+            var totalACE =0;
+            for (var i = currentQuarter.startMonth; i <= currentQuarter.endMonth; i++) {
+                totalACE += formatInputToFloat( $('#mapaActual_Plan_MAPAACE_' + i).text().replaceAll(',',''));
+            }
+            $('.total_quarter_ace_' + currentQuarter.quarter).text(ReplaceNumberWithCommas(totalACE.toFixed(2)));
+
+            var achievedAce = formatInputToFloat($('#total_quarter_achieved_ace_' + currentQuarter.quarter).text().replaceAll(',', ''));
+            var ace_percent = totalACE == 0 ? 0 :(achievedAce / totalACE) * 100;
+
+            $('#quarter_ace_percent_' + currentQuarter.quarter).text(ReplaceNumberWithCommas(ace_percent.toFixed(2)) + ' %');
+
+            if (ace_percent < 50 )
+                $('#quarter_ace_percent_' + currentQuarter.quarter).addClass('text-danger');
+            else
+                $('#quarter_ace_percent_' + currentQuarter.quarter).removeClass('text-danger');
+
+        }
+
+        function MapaActual_ACE_Total_Calculation() {
+            var totalACE = 0;
+            for (var i =1; i <= 12; i++) {
+                totalACE += formatInputToFloat($('#mapaActual_Plan_MAPAACE_' + i).text().replaceAll(',', ''));
+            }
+            $('.total_ace').text(ReplaceNumberWithCommas(totalACE.toFixed(2)));
+
+
+             //summary_yearly_growth
+            //this year budget/plan - last year achive / last year achieve
+            var lastYearACE = formatInputToFloat($('#previous_year_ace' ).text().replaceAll(',', ''));
+            var yearlyGrowth = lastYearACE==0?0: ((totalACE - lastYearACE) / lastYearACE)*100;
+
+            $('#summary_yearly_growth').text(ReplaceNumberWithCommas(yearlyGrowth.toFixed(2)) + ' %');
+
+
+            var achievedAce = formatInputToFloat($('#total_achieved_ace').text().replaceAll(',', ''));
+            var ace_percent = totalACE==0?0:(achievedAce / totalACE) * 100;
+
+            $('#total_ace_percent').text(ReplaceNumberWithCommas(ace_percent.toFixed(2)) + ' %');
+
+
+            if (ace_percent < 50  )
+                $('#total_ace_percent' ).addClass('text-danger');
+            else
+                $('#total_ace_percent').removeClass('text-danger');
+
+        }
+
+
+        function MapaActual_Req_Quarter_Total_Calculation(month) {
+            var currentQuarter = getQuarterandMonth(month);
+            var totalACE = 0;
+            for (var i = currentQuarter.startMonth; i <= currentQuarter.endMonth; i++) {
+                totalACE += formatInputToFloat($('#mapaActual_Plan_Rec_' + i).text().replaceAll(',', ''));
+            }
+            $('.total_quarter_req_' + currentQuarter.quarter).text(ReplaceNumberWithCommas(totalACE.toFixed(2)));
+
+        }
+
+        function MapaActual_Req_Total_Calculation() {
+            var totalACE = 0;
+            for (var i = 1; i <= 12; i++) {
+                totalACE += formatInputToFloat($('#mapaActual_Plan_Rec_' + i).text().replaceAll(',', ''));
+            }
+            $('.total_req').text(ReplaceNumberWithCommas(totalACE.toFixed(2)));
+
+        }
+    </script>
+
+}

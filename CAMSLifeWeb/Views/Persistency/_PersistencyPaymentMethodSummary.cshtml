@@ -1,0 +1,288 @@
+﻿
+@model CaliphWeb.ViewModel.PersistencyCalculatorViewModel
+@using CaliphWeb.ViewModel
+
+<div class=" table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th colspan="2">All Cases	</th>
+                <th colspan="2">In force	</th>
+                <th colspan="2">Lapsed	</th>
+                <th colspan="2">Contract Surrendered	</th>
+                <th colspan="2">Registered Death Claim	</th>
+                <th colspan="2">Postponed	</th>
+                <th colspan="2">Approved Death Claim	</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            </tr>
+            @{ var totalCases = Model.AgentPolicies.Count;
+                var creditCardCases = Model.AgentPolicies.Where(x => x.payment_method_code.ToLower() == PolicyPaymentMethodCode.CreditCard).ToList();
+                var directBillingCases = Model.AgentPolicies.Where(x => x.payment_method_code.ToLower() == PolicyPaymentMethodCode.DirectBilling).ToList();
+                var biroAngkasaCases = Model.AgentPolicies.Where(x => x.payment_method_code.ToLower() == PolicyPaymentMethodCode.BiroAngkasa).ToList();
+                var directDebitCases = Model.AgentPolicies.Where(x => x.payment_method_code.ToLower() == PolicyPaymentMethodCode.DirectDebit).ToList();
+                var totalInForce = Model.TotalInForce;
+                var totalLapsed = Model.TotalLapsed;
+                var totalContractSurrended = Model.TotalContractSurrendereds;
+                var totalRegisteredDeathClaim = Model.RegisteredDeathClaim;
+                var totalPostponed = Model.Postponed;
+                var totalApprovedDeathClaim = Model.ApprovedDeathClaim;
+            }
+
+            <tr>
+                <th>Credit Card</th>
+                @{ var creditCardCount = creditCardCases.Count();}
+                <td>@creditCardCount</td>
+                <td>@((totalCases == 0 ? 0 :( ((double)creditCardCount / totalCases)*100)).ToString("n2")  +"%")</td>
+                <td>
+                    @{ var creditCardInForce = creditCardCases.Where(x => x.certificate_status.ToLower() == PolicyCertificateStatus.InForce).Count();}
+                    @creditCardInForce
+                </td>
+                <td>@((totalInForce==0? 0:(((double)creditCardInForce / totalInForce) * 100)).ToString("n2")  +"%")</td>
+
+                <td>
+                    @{ var creditCardLapsed = creditCardCases.Where(x => x.certificate_status.ToLower() == PolicyCertificateStatus.Lapsed).Count();}
+                    @creditCardLapsed
+                </td>
+                <td>@((totalLapsed == 0 ? 0 : (((double)creditCardLapsed / totalLapsed) * 100)).ToString("n2")  +"%")</td>
+
+
+
+                <td>
+                    @{ var creditCardContractSurrendered = creditCardCases.Where(x => x.certificate_status.ToLower() == PolicyCertificateStatus.ContractSurrended).Count();}
+                    @creditCardContractSurrendered
+                </td>
+                <td>@((totalContractSurrended == 0 ? 0 :(((double)creditCardContractSurrendered / totalContractSurrended) * 100)).ToString("n2")  +"%")</td>
+
+
+                <td>
+                    @{ var creditCardRegisteredDeath = creditCardCases.Where(x => x.certificate_status.ToLower() == PolicyCertificateStatus.RegisteredDeathClaim).Count();}
+                    @creditCardRegisteredDeath
+                </td>
+                <td>@((totalRegisteredDeathClaim == 0 ? 0 :(((double)creditCardRegisteredDeath / totalRegisteredDeathClaim) * 100)).ToString("n2")  +"%")</td>
+
+                <td>
+                    @{ var creditCardPosponed = creditCardCases.Where(x => x.certificate_status.ToLower() == PolicyCertificateStatus.Postponed).Count();}
+                    @creditCardPosponed
+                </td>
+                <td>@((totalPostponed == 0 ? 0 :(((double)creditCardPosponed / totalPostponed) * 100)).ToString("n2")  +"%")</td>
+
+
+                <td>
+                    @{ var creditCardApprovedDeath = creditCardCases.Where(x => x.certificate_status.ToLower() == PolicyCertificateStatus.ApprovedDeathClaim).Count();}
+                    @creditCardApprovedDeath
+                </td>
+                <td>@((totalApprovedDeathClaim == 0 ? 0 :(((double)creditCardApprovedDeath / totalApprovedDeathClaim) * 100)).ToString("n2")  +"%")</td>
+
+            </tr>
+
+            <tr>
+                <th>Direct Billing (Cash)</th>
+                @{ var directBillingCount = directBillingCases.Count();}
+                <td>@directBillingCount</td>
+                <td>@((totalCases == 0 ? 0 :(((double)directBillingCount / totalCases) * 100)).ToString("n2")  +"%")</td>
+                <td>
+                    @{ var directBillingForce = directBillingCases.Where(x => x.certificate_status.ToLower() == PolicyCertificateStatus.InForce).Count();}
+                    @directBillingForce
+                </td>
+                <td>@((totalInForce == 0 ? 0 :(((double)directBillingForce / totalInForce) * 100)).ToString("n2")  +"%")</td>
+
+                <td>
+                    @{ var directBillingLapsed = directBillingCases.Where(x => x.certificate_status.ToLower() == PolicyCertificateStatus.Lapsed).Count();}
+                    @directBillingLapsed
+                </td>
+                <td>@((totalLapsed == 0 ? 0 : (((double)directBillingLapsed / totalLapsed) * 100)).ToString("n2")  +"%")</td>
+
+
+                <td>
+                    @{ var directBillingContractSurrendered = directBillingCases.Where(x => x.certificate_status.ToLower() == PolicyCertificateStatus.ContractSurrended).Count();}
+                    @directBillingContractSurrendered
+                </td>
+                <td>@((totalContractSurrended == 0 ? 0 :(((double)directBillingContractSurrendered / totalContractSurrended) * 100)).ToString("n2")  +"%")</td>
+
+
+                <td>
+                    @{ var directBillingRegisteredDeath = directBillingCases.Where(x => x.certificate_status.ToLower() == PolicyCertificateStatus.RegisteredDeathClaim).Count();}
+                    @directBillingRegisteredDeath
+                </td>
+                <td>@((totalRegisteredDeathClaim == 0 ? 0 :(((double)directBillingRegisteredDeath / totalRegisteredDeathClaim) * 100)).ToString("n2")  +"%")</td>
+
+                <td>
+                    @{ var directBillingPosponed = directBillingCases.Where(x => x.certificate_status.ToLower() == PolicyCertificateStatus.Postponed).Count();}
+                    @directBillingPosponed
+                </td>
+                <td>@((totalPostponed == 0 ? 0 :(((double)directBillingPosponed / totalPostponed) * 100)).ToString("n2")  +"%")</td>
+
+
+                <td>
+                    @{ var directBillingApprovedDeath = directBillingCases.Where(x => x.certificate_status.ToLower() == PolicyCertificateStatus.ApprovedDeathClaim).Count();}
+                    @directBillingApprovedDeath
+                </td>
+                <td>@((totalApprovedDeathClaim == 0 ? 0 :(((double)directBillingApprovedDeath / totalApprovedDeathClaim) * 100)).ToString("n2")  +"%")</td>
+
+            </tr>
+
+            <tr>
+                <th>Biro Angkasa</th>
+                @{ var biroAngkasaCount = biroAngkasaCases.Count();}
+                <td>@biroAngkasaCount</td>
+                <td>@((totalCases == 0 ? 0 : (((double)biroAngkasaCount / totalCases) * 100)).ToString("n2")  +"%")</td>
+                <td>
+                    @{ var biroAngkasaInForce = biroAngkasaCases.Where(x => x.certificate_status.ToLower() == PolicyCertificateStatus.InForce).Count();}
+                    @biroAngkasaInForce
+                </td>
+                <td>@((totalInForce == 0 ? 0 : (((double)biroAngkasaInForce / totalInForce) * 100)).ToString("n2")  +"%")</td>
+                <td>
+                    @{ var biroAngkasaLapsed = biroAngkasaCases.Where(x => x.certificate_status.ToLower() == PolicyCertificateStatus.Lapsed).Count();}
+                    @biroAngkasaLapsed
+                </td>
+                <td>@((totalLapsed == 0 ? 0 : (((double)biroAngkasaLapsed / totalLapsed) * 100)).ToString("n2")  +"%")</td>
+
+
+                <td>
+                    @{ var biroAngkasaContractSurrendered = biroAngkasaCases.Where(x => x.certificate_status.ToLower() == PolicyCertificateStatus.ContractSurrended).Count();}
+                    @biroAngkasaContractSurrendered
+                </td>
+                <td>@((totalContractSurrended == 0 ? 0 : (((double)biroAngkasaContractSurrendered / totalContractSurrended) * 100)).ToString("n2")  +"%")</td>
+
+
+                <td>
+                    @{ var biroAngkasaRegisteredDeath = biroAngkasaCases.Where(x => x.certificate_status.ToLower() == PolicyCertificateStatus.RegisteredDeathClaim).Count();}
+                    @biroAngkasaRegisteredDeath
+                </td>
+                <td>@((totalRegisteredDeathClaim == 0 ? 0 :(((double)biroAngkasaRegisteredDeath / totalRegisteredDeathClaim) * 100)).ToString("n2")  +"%")</td>
+
+                <td>
+                    @{ var biroAngkasaPosponed = biroAngkasaCases.Where(x => x.certificate_status.ToLower() == PolicyCertificateStatus.Postponed).Count();}
+                    @biroAngkasaPosponed
+                </td>
+                <td>@((totalPostponed == 0 ? 0 :(((double)biroAngkasaPosponed / totalPostponed) * 100)).ToString("n2")  +"%")</td>
+
+
+                <td>
+                    @{ var biroAngkasaApprovedDeath = biroAngkasaCases.Where(x => x.certificate_status.ToLower() == PolicyCertificateStatus.ApprovedDeathClaim).Count();}
+                    @biroAngkasaApprovedDeath
+                </td>
+                <td>@((totalApprovedDeathClaim == 0 ? 0 :(((double)biroAngkasaApprovedDeath / totalApprovedDeathClaim) * 100)).ToString("n2")  +"%")</td>
+
+            </tr>
+
+            <tr>
+                <th>Direct Debit</th>
+                @{ var directDebitCount = directDebitCases.Count();}
+                <td>@directDebitCount</td>
+                <td>@((totalCases == 0 ? 0 : (totalCases == 0 ? 0 : ((double)directDebitCount / totalCases) * 100)).ToString("n2")  +"%")</td>
+                <td>
+                    @{ var directDebitInForce = directDebitCases.Where(x => x.certificate_status.ToLower() == PolicyCertificateStatus.InForce).Count();}
+                    @directDebitInForce
+                </td>
+                <td>@((totalInForce == 0 ? 0 : (((double)directDebitInForce / totalInForce) * 100)).ToString("n2")  +"%")</td>
+                <td>
+                    @{ var directDebitLapsed = directDebitCases.Where(x => x.certificate_status.ToLower() == PolicyCertificateStatus.Lapsed).Count();}
+                    @directDebitLapsed
+                </td>
+                <td>@((totalLapsed == 0 ? 0 : (((double)directDebitLapsed / totalLapsed) * 100)).ToString("n2")  +"%")</td>
+
+
+                <td>
+                    @{ var directDebitContractSurrendered = directDebitCases.Where(x => x.certificate_status.ToLower() == PolicyCertificateStatus.ContractSurrended).Count();}
+                    @directDebitContractSurrendered
+                </td>
+                <td>@((totalContractSurrended == 0 ? 0 : (((double)directDebitContractSurrendered / totalContractSurrended) * 100)).ToString("n2")  +"%")</td>
+
+                <td>
+                    @{ var directDebitRegisteredDeath = directDebitCases.Where(x => x.certificate_status.ToLower() == PolicyCertificateStatus.RegisteredDeathClaim).Count();}
+                    @directDebitRegisteredDeath
+                </td>
+                <td>@((totalRegisteredDeathClaim == 0 ? 0 :(((double)directDebitRegisteredDeath / totalRegisteredDeathClaim) * 100)).ToString("n2")  +"%")</td>
+
+                <td>
+                    @{ var directDebitPosponed = directDebitCases.Where(x => x.certificate_status.ToLower() == PolicyCertificateStatus.Postponed).Count();}
+                    @directDebitPosponed
+                </td>
+                <td>@((totalPostponed == 0 ? 0 :(((double)directDebitPosponed / totalPostponed) * 100)).ToString("n2")  +"%")</td>
+
+
+                <td>
+                    @{ var directDebitApprovedDeath = directDebitCases.Where(x => x.certificate_status.ToLower() == PolicyCertificateStatus.ApprovedDeathClaim).Count();}
+                    @directDebitApprovedDeath
+                </td>
+                <td>@((totalApprovedDeathClaim == 0 ? 0 :(((double)directDebitApprovedDeath / totalApprovedDeathClaim) * 100)).ToString("n2")  +"%")</td>
+
+            </tr>
+
+            <tr>
+                <th>Total Cases</th>
+                <td>@totalCases</td>
+                <td></td>
+                <td>
+                    @totalInForce
+                </td>
+                <td>@((totalCases == 0 ? 0 : (((double)totalInForce / totalCases) * 100)).ToString("n2")  +"%")</td>
+                <td>
+                    @totalLapsed
+                </td>
+                <td>@((totalCases == 0 ? 0 : (((double)totalLapsed / totalCases) * 100)).ToString("n2")  +"%")</td>
+                <td>
+                    @totalContractSurrended
+                </td>
+                <td>@((totalCases == 0 ? 0 : (((double)totalContractSurrended / totalCases) * 100)).ToString("n2")  +"%")</td>
+                <td>
+                    @totalApprovedDeathClaim
+                </td>
+                <td>@((totalCases == 0 ? 0 : (((double)totalApprovedDeathClaim / totalCases) * 100)).ToString("n2")  +"%")</td>
+
+                <td>
+                    @totalPostponed
+                </td>
+                <td>@((totalCases == 0 ? 0 : (((double)totalPostponed / totalCases) * 100)).ToString("n2")  +"%")</td>
+                <td>
+                    @totalRegisteredDeathClaim
+                </td>
+                <td>@((totalCases == 0 ? 0 : (((double)totalRegisteredDeathClaim / totalCases) * 100)).ToString("n2")  +"%")</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<div class="row">
+    <div class="col-xl-6">
+        <!-- Basic pie -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title"></h5>
+            </div>
+
+            <div class="card-body">
+                <div class="chart-container">
+                    <div class="chart has-fixed-height" id="paymode_pie" style="width: 450px; height: 500px;"></div>
+
+                </div>
+            </div>
+        </div>
+        <!-- /basic pie -->
+    </div>
+    <div class="col-xl-6">
+
+        <!-- Basic pie -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title"> </h5>
+            </div>
+
+            <div class="card-body">
+                <div class="chart-container">
+                    <div class="chart has-fixed-height" id="status_pie" style="width: 450px; height: 500px;"></div>
+
+                </div>
+            </div>
+        </div>
+        <!-- /basic pie -->
+
+    </div>
+
+</div>

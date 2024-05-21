@@ -1,0 +1,299 @@
+﻿
+@model CaliphWeb.Models.API.Budget.Monthly
+
+@{
+    //high end
+    var monthlyHighEnds = Model.BudgetMonthly.Where(p => p.MonthlyBudgetTypeId == 115);}
+
+
+@{
+
+    //low end
+    var monthlyLowEnds = Model.BudgetMonthly.Where(p => p.MonthlyBudgetTypeId == 116);}
+
+<div class="table table-responsive">
+    <table class="table table-bordered" id="tblmonthly">
+        <thead>
+            <tr>
+                <th rowspan="2">
+                    Monthly Budget
+                </th>
+                <th rowspan="2" id="monthlyBudget">
+
+                </th>
+                <th colspan="4"> High End</th>
+                <th colspan="4"> Others </th>
+
+
+            </tr>
+            <tr>
+                @{var highEndPercentage = monthlyHighEnds.FirstOrDefault() != null ? monthlyHighEnds.First().MonthlyBudgetPercentage : 50;}
+                @{var lowEndPercentage = monthlyLowEnds.FirstOrDefault() != null ? monthlyLowEnds.First().MonthlyBudgetPercentage : 50;}
+                <th colspan="4"> <input type="number" class="form-control" value="@highEndPercentage" id="case115" name="case115" onchange="onMonthlyBudgetPercentChange('high')" /></th>
+                <th colspan="4"> <input type="number" class="form-control" value="@lowEndPercentage" id="case116" name="case116" onchange="onMonthlyBudgetPercentChange('low')" /> </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <th>YTD Shortfall</th>
+                <th id="monthlyfall">-124,672.72</th>
+                <td colspan="4" id="monthlyfall115"></td>
+                <td colspan="4" id="monthlyfall116"></td>
+            </tr>
+
+            <tr>
+                <th></th>
+                <th></th>
+                <td>Who?</td>
+                <td>Budget</td>
+                <td>Achieve</td>
+                <td></td>
+                <td>Who?</td>
+                <td>Budget</td>
+                <td>Achieve</td>
+                <td></td>
+            </tr>
+            @{
+                int count = 1; var next = 1;
+                var highEndCount = monthlyHighEnds == null ? 0 : monthlyHighEnds.Count();
+                var lowEndCount = monthlyLowEnds == null ? 0 : monthlyLowEnds.Count();
+                var totalRow = highEndCount > lowEndCount ? highEndCount : lowEndCount;
+                for (int i = 1; i <= totalRow; i++)
+                {
+
+                    var monthlyLowEndDetails = new CaliphWeb.Models.API.Budget.BudgetMonthly();
+                    if (lowEndCount >= i)
+                    {
+                        monthlyLowEndDetails = monthlyLowEnds.ToArray()[i - 1];
+                    }
+
+                    var monhtlyHighEndDetails = new CaliphWeb.Models.API.Budget.BudgetMonthly();
+                    if (highEndCount >= i)
+                    {
+                        monhtlyHighEndDetails = monthlyHighEnds.ToArray()[i - 1];
+                    }
+
+
+
+                    <tr class="trcases">
+                        @if (count == 1)
+                        {
+                            <th rowspan="@totalRow">Number of cases</th>
+                        }
+                        <th>@count</th>
+                        @if (monhtlyHighEndDetails.BudgetMonthlyId > 0)
+                        {
+                            <td>
+                                <input type="hidden" name="BudgetMonthlyId" value="@monhtlyHighEndDetails.BudgetMonthlyId" />
+                                <select required data-placeholder="Client Name" name="ClientId" id="@(monhtlyHighEndDetails.BudgetMonthlyId + "ClientId")" class="form-control form-control-select2 select-search" data-fouc>
+                                    <option value="">Please Select</option>
+                                    @{
+                                        foreach (var client in Model.Clients)
+                                        {
+                                            var select = monhtlyHighEndDetails.ClientId == client.ClientId ? "selected" : "";
+                                            <option value="@client.ClientId" @select> @client.Name</option>
+                                        }
+
+                                    }
+
+
+                                </select>
+
+                            </td>
+                            <td><input type="number" class="form-control budgetvalue" value="@monhtlyHighEndDetails.BudgetValue.ToString("0.00")" name="HighBudgetValue" id="budgetvalue115-@count" onchange="MonthlyBudget()" /></td>
+                            <td><input type="number" class="form-control" value="@monhtlyHighEndDetails.AchieveValue.ToString("0.00")" name="HighAchieveValue" id="achievevalue115-@count" onchange="MonthlyBudget()" /></td>
+                            <td>
+                                <a onclick="DeleteMonthlyBudget(@monhtlyHighEndDetails.BudgetMonthlyId)" href="#">
+                                    <i class="icon-trash"></i>
+                                </a>
+                                @*<a   onclick="UpdateMonthlyBudget(@monthlyLowEndDetails.BudgetMonthlyId, @count,115)" href="#">
+                                    <i class="icon-pencil"></i>
+                                    </a>*@
+                            </td>
+                        }
+                        else
+                        {
+                            <td colspan="4">
+                            </td>
+                        }
+
+
+                        @if (monthlyLowEndDetails.BudgetMonthlyId > 0)
+                        {
+                            <td>
+
+                                <select required data-placeholder="Client Name" name="ClientId" id="@(monthlyLowEndDetails.BudgetMonthlyId + "ClientId")" class="form-control form-control-select2 select-search" data-fouc>
+                                    <option value="">Please Select</option>
+                                    @{
+                                        foreach (var client in Model.Clients)
+                                        {
+                                            var select = monthlyLowEndDetails.ClientId == client.ClientId ? "selected" : "";
+                                            <option value="@client.ClientId" @select> @client.Name</option>
+                                        }
+                                    }
+                                </select>
+
+                            </td>
+                            <td><input type="number" class="form-control budgetvalue" value="@monthlyLowEndDetails.BudgetValue.ToString("0.00")" name="BudgetValue" id="budgetvalue116-@count" onchange="MonthlyBudget()" /></td>
+                            <td><input type="number" class="form-control" value="@monthlyLowEndDetails.AchieveValue.ToString("0.00")" name="AchieveValue" id="achievevalue116-@count" onchange="MonthlyBudget()" /></td>
+                            <td>
+                                <a onclick="DeleteMonthlyBudget(@monthlyLowEndDetails.BudgetMonthlyId)" href="#">
+                                    <i class="icon-trash"></i>
+                                </a>
+
+                                @*<a onclick="UpdateMonthlyBudget(@monthlyLowEndDetails.BudgetMonthlyId, @count,116)" href="#">
+                                        <i class="icon-pencil"></i>
+                                    </a>*@
+                            </td>
+
+
+                        }
+                        else
+                        {
+                            <td colspan="4"></td>
+                        }
+
+                    </tr>
+                    count = count + 1;
+                    next = count + 1;
+
+                }
+
+            }
+            <tr>
+                <td colspan="2"></td>
+                <!--<td colspan="3" class="text-center">-->
+                @*<button type="button" class="btn btn-primary d-inline" id="bootbox_form" data-toggle="modal" data-target="#modal_budget"> <i class="icon-plus-circle2"></i> </button>*@
+                <!--</td>-->
+                <td colspan="7" class="text-right">
+                    <button type="button" class="btn btn-primary d-inline"
+                            id="bootbox_form"
+                            data-toggle="modal"
+                            data-target="#modal_budget">
+                        <i class="icon-plus-circle2"></i>
+                    </button>
+
+                </td>
+            </tr>
+            <tr>
+                <th></th>
+                <th>Total</th>
+                <td></td>
+                <td id="highendBudgetSum">@monthlyHighEnds.Sum(p => p.BudgetValue).ToString("n2")</td>
+                <td id="highendAchieveSum">@monthlyHighEnds.Sum(p => p.AchieveValue).ToString("n2")</td>
+                <td></td>
+                <td></td>
+                <td id="lowendBudgetSum">@monthlyLowEnds.Sum(p => p.BudgetValue).ToString("n2")</td>
+                <td id="lowendAchieveSum">@monthlyLowEnds.Sum(p => p.AchieveValue).ToString("n2")</td>
+                <td></td>
+
+            </tr>
+            <tr>
+                <th colspan="2">% Achieved</th>
+                <td colspan="3" class="text-center" id="highendAchieved"></td>
+                <td colspan="3" class="text-center" id="lowendAchieved"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th colspan="2">Total Pledge</th>
+                <th colspan="7" class="text-center" id="monthlypledge"></th>
+            </tr>
+            <tr>
+
+                <th colspan="2">Pledged VS Budget</th>
+                <th colspan="7" class="text-center" id="pvb"></th>
+            </tr>
+            <tr>
+
+                <th colspan="2">Total Mthly Achieved</th>
+                <th colspan="7" class="text-center" id="monthlyAchieved"></th>
+            </tr>
+            <tr>
+
+                <th colspan="2">Monthly Shortfall VS Budget</th>
+                <th colspan="7" class="text-center" id="shortfallbudget"></th>
+            </tr>
+            <tr>
+
+                <th colspan="2">% Achieved From Actual Mthly Budget</th>
+                <th colspan="7" class="text-center" id="monthlyAchievedPercent"></th>
+            </tr>
+            <tr>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<!-- budget details modal -->
+<div id="modal_budget" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content" id="add-budget-modal-body">
+            <div class="modal-header pb-3">
+                <h5 class="modal-title">Budget Details</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body py-0">
+                <form id="add-monthlydetail">
+
+                    <input type="hidden" id="AddMonthlyBudgetYear" name="BudgetYear" />
+                    <input type="hidden" id="AddMonthlyBudgetMonth" name="BudgetMonth" />
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Category<span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" checked value="115" class="custom-control-input" name="MonthlyBudgetTypeId" id="high_end">
+                                <label class="custom-control-label" for="high_end">High End</label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" value="116" class="custom-control-input" name="MonthlyBudgetTypeId" id="low_end">
+                                <label class="custom-control-label" for="low_end">Low End</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">No of Cases</label>
+                        <div class="col-lg-8">
+                            <label class="col-form-label col-lg-3">@count</label>
+                            <input type="hidden" id="NoOfCases" name="NoOfCases" class="form-control" value="@count">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Who?<span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            @*<input class="form-control" name="PersonName" />*@
+                            <select required data-placeholder="Client Name" name="ClientId" id="addClientId" class="form-control select-search">
+                                @foreach (var client in Model.Clients)
+                                {
+                                    <option value="@client.ClientId"> @client.Name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Budget<span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <input type="number" id="BudgetValue" required name="BudgetValue" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Achieve<span class="text-danger">*</span></label>
+                        <div class="col-lg-8">
+                            <input type="number" required id="AchieveValue" name="AchieveValue" class="form-control">
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer pt-3">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                <button type="button" onclick="AddMonthlyDetail()" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /budget details modal -->

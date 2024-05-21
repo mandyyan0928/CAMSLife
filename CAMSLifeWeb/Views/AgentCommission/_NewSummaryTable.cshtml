@@ -1,0 +1,185 @@
+﻿
+
+@model CaliphWeb.Models.API.NewCommissionSummaryViewModel
+@using CaliphWeb.Models.API
+    <h5>OR Commission Summary</h5>
+    <table style="border-collapse:collapse;margin-left:6.07606pt" cellspacing="0">
+        <tr style="height:19pt">
+            <td style="width:66pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="2" bgcolor="#BEC0BF">
+                <p style="text-indent: 0pt;text-align: left;">
+                    <br />
+                </p>
+                <p class="s3" style="text-indent: 0pt; text-align: center;">Month</p>
+            </td>
+            <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="2" bgcolor="#BEC0BF">
+                <p style="text-indent: 0pt;text-align: left;">
+                    <br />
+                </p>
+                <p class="s3" style=" text-indent: 0pt; text-align: center;">Commission Cycle</p>
+            </td>
+            <td style="width:178pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" colspan="2" bgcolor="#BEC0BF">
+                <p class="s3" style="padding-top: 3pt;padding-left: 80pt;padding-right: 79pt;text-indent: 0pt;text-align: center;">Year</p>
+            </td>
+            <td style="width:179pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" colspan="3" bgcolor="#BEC0BF">
+                <p class="s3" style="padding-top: 3pt;padding-left: 79pt;padding-right: 78pt;text-indent: 0pt;text-align: center;">Total</p>
+            </td>
+        </tr>
+        <tr style="height:19pt">
+            <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#BEC0BF">
+                <p class="s3" id="year1" style="padding-top: 3pt;padding-left: 34pt;padding-right: 33pt;text-indent: 0pt;text-align: center;">@Model.LastYear </p>
+            </td>
+            <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#BEC0BF">
+                <p class="s3" id="year2" style="padding-top: 3pt;padding-left: 35pt;padding-right: 34pt;text-indent: 0pt;text-align: center;">@Model.CurrentYear</p>
+            </td>
+            <td style="width:89pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#BEC0BF">
+                <p class="s3" id="year3" style="padding-top: 3pt;padding-left: 35pt;padding-right: 34pt;text-indent: 0pt;text-align: center;">@Model.LastYear</p>
+            </td>
+            <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#BEC0BF">
+                <p class="s3" id="year4" style="padding-top: 3pt;padding-left: 35pt;padding-right: 34pt;text-indent: 0pt;text-align: center;">@Model.CurrentYear</p>
+            </td>
+            <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" bgcolor="#BEC0BF">
+                <p class="s3" id="yearPercent" style="padding-top: 3pt;padding-left: 35pt;padding-right: 34pt;text-indent: 0pt;text-align: center;">Gain / Loss Percentage (%)</p>
+            </td>
+        </tr>
+
+        @{ var allPeriodData = new List<CaliphWeb.Models.API.AgentCommission>();
+
+            allPeriodData.AddRange(Model.CurrentYearData);
+            allPeriodData.AddRange(Model.LastYearData);
+
+        }
+        @for (int month = 1; month <= 12; month++)
+        {
+
+            var currentYearMonthData = Model.CurrentYearData.Where(x => x.CycleEndDate.Month == month && x.CycleStartDate.Month == month);
+            var lastYearMonthData = Model.LastYearData.Where(x => x.CycleEndDate.Month == month && x.CycleStartDate.Month == month);
+
+            var totalPeriod = allPeriodData.Select(x => new StartdatEnddate()
+            {
+
+                CycleStartDate = new DateTime(DateTime.Now.Year, x.CycleStartDate.Month, x.CycleStartDate.Day),
+                CycleEndDate = new DateTime(DateTime.Now.Year, x.CycleEndDate.Month, x.CycleEndDate.Day)
+            }).Distinct().ToList();
+            var currentMonthPeriod = totalPeriod.Where(x => x.CycleStartDate.Month == month && x.CycleEndDate.Month == month).GroupBy(x => new { x.CycleStartDate, x.CycleEndDate }).Select(x => x.FirstOrDefault()).OrderBy(x => x.CycleStartDate).ToList() ?? new List<StartdatEnddate>();
+            var totalPeriodCount = currentMonthPeriod.Distinct().Count();
+
+            var counter = 1;
+            decimal lastYearTotalPayout = lastYearMonthData.Sum(x => x.CommAmt);
+            decimal currentYearTotalPayout = currentYearMonthData.Sum(x => x.CommAmt);
+            var gainPercentage = lastYearTotalPayout == 0 ? (currentYearTotalPayout - lastYearTotalPayout) * 100 : ((currentYearTotalPayout - lastYearTotalPayout) / lastYearTotalPayout) * 100;
+
+            var date = new DateTime(DateTime.Now.Year, month, 1);
+
+
+            foreach (var period in currentMonthPeriod)
+            {
+                <tr style="height:19pt">
+                    @if (counter == 1)
+                    {
+                        <td style="width:66pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@totalPeriodCount" bgcolor="#DCDCDC">
+                            <p style="text-indent: 0pt;text-align: left;">
+                                <br />
+                            </p>
+
+                            <p class="s3" style="text-indent: 0pt;text-align: center;">@date.ToString("MMMM")</p>
+                        </td>
+                    }
+                    <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+                        <p class="s4" style="padding-top: 3pt;  text-indent: 0pt; text-align: center;">@period.CycleStartDate.ToString("dd/MM") - @period.CycleEndDate.ToString("dd/MM")</p>
+                    </td>
+                    @{
+                        var currentYearStartCycle = new DateTime(int.Parse(Model.CurrentYear), period.CycleStartDate.Month, period.CycleStartDate.Day);
+                        var currenYearEndCycle = new DateTime(int.Parse(Model.CurrentYear), period.CycleEndDate.Month, period.CycleEndDate.Day);
+                        var currentYearPayoutCycle = Model.CurrentYearData.Where(x => x.CycleStartDate == currentYearStartCycle && x.CycleEndDate == currenYearEndCycle).FirstOrDefault() ?? new AgentCommission();
+
+                        var lastYearStartCycle = new DateTime(int.Parse(Model.LastYear), period.CycleStartDate.Month, period.CycleStartDate.Day);
+                        var lastYearEndCycle = new DateTime(int.Parse(Model.LastYear), period.CycleEndDate.Month, period.CycleEndDate.Day);
+                        var lastYearPayoutCycle = Model.LastYearData.Where(x => x.CycleStartDate == lastYearStartCycle && x.CycleEndDate == lastYearEndCycle).FirstOrDefault() ?? new AgentCommission();
+                    }
+                    <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+                        <p class="s4" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@lastYearPayoutCycle.CommAmt.ToString("n2")</p>
+                    </td>
+                    <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+                        <p class="s4" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">@currentYearPayoutCycle.CommAmt.ToString("n2")</p>
+                    </td>
+
+                    @if (counter == 1)
+                    {
+
+                        <td style="width:89pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@totalPeriodCount">
+                            <p style="text-indent: 0pt;text-align: left;">
+                                <br />
+                            </p>
+                            <p class="s4" id="year1_@month" style="padding-right: 2pt;text-indent: 0pt;text-align: right;">@lastYearTotalPayout.ToString("n2")</p>
+                        </td>
+                        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@totalPeriodCount">
+                            <p style="text-indent: 0pt;text-align: left;">
+                                <br />
+                            </p>
+                            <p class="s4" id="year2_@month" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@currentYearTotalPayout.ToString("n2")</p>
+                        </td>
+
+                        <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="@totalPeriodCount">
+                            <p style="text-indent: 0pt;text-align: left;">
+                                <br />
+                            </p>
+                            <p class="s4" id="yearPercent2" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@gainPercentage.ToString("n2")%</p>
+                        </td>
+                    }
+                    @{
+                        counter++;
+                    }
+                </tr>
+
+            }
+
+
+
+        }
+
+
+
+        @{
+
+            decimal lastYearTotalPay = Model.LastYearData.Sum(x => x.CommAmt);
+            decimal currentYearTotalPay = Model.CurrentYearData.Sum(x => x.CommAmt);
+            decimal totalGainPercentage = lastYearTotalPay == 0 ? (currentYearTotalPay - lastYearTotalPay) * 100 : ((currentYearTotalPay - lastYearTotalPay) / lastYearTotalPay) * 100;
+        }
+        <tr style="height:19pt">
+            <td style="width:66pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="2" bgcolor="#DCDCDC">
+                <p style="text-indent: 0pt;text-align: left;">
+                    <br />
+                </p>
+                <p class="s3" style="text-indent: 0pt;text-align: center;"></p>
+            </td>
+            <td style="width:87pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+                <p class="s4" style="padding-top: 3pt; text-indent: 0pt; text-align: center;"></p>
+            </td>
+            <td style="width:88pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+                <p class="s4" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;"></p>
+            </td>
+            <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787">
+                <p class="s4" style="padding-top: 3pt;padding-right: 2pt;text-indent: 0pt;text-align: right;">Total : </p>
+            </td>
+            <td style="width:89pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="2">
+                <p style="text-indent: 0pt;text-align: left;">
+                    <br />
+                </p>
+                <p class="s4" id="currentYearTotal" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@lastYearTotalPay.ToString("n2")</p>
+            </td>
+            <td style="width:89pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="2">
+                <p style="text-indent: 0pt;text-align: left;">
+                    <br />
+                </p>
+                <p class="s4" id="lastYearTotal" style="padding-left: 57pt; text-indent: 0pt; text-align: right;">@currentYearTotalPay.ToString("n2")</p>
+            </td>
+            <td style="width:90pt;border-top-style:solid;border-top-width:1pt;border-top-color:#878787;border-left-style:solid;border-left-width:1pt;border-left-color:#878787;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#878787;border-right-style:solid;border-right-width:1pt;border-right-color:#878787" rowspan="2">
+                <p style="text-indent: 0pt;text-align: left;">
+                    <br />
+                </p>
+                <p class="s4" id="yearPercentTotal" style="padding-right: 2pt;text-indent: 0pt;text-align: right;">@totalGainPercentage.ToString("n2")%</p>
+            </td>
+        </tr>
+    </table>
+
+ 

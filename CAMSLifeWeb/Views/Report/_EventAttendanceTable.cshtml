@@ -1,0 +1,58 @@
+﻿
+
+@using CaliphWeb.Helper
+@model CaliphWeb.Models.ViewModel.AttendanceReport
+
+
+
+<table class="table datatable-basic">
+    <thead>
+        <tr>
+            <th> Event Name</th>
+            <th> Event Date</th>
+            <th> Agent Id</th>
+            <th> Agent Name</th>
+            <th> Join Status</th>
+            <th> Attendance</th>
+            <th> Payment </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var data in Model.AttendanceList)
+        {
+        <tr>
+            <td>@data.EventName</td>
+            <td>@data.EventDateFrom</td>
+            <td>@data.Username</td>
+            <td>@data.DisplayName</td>
+            <td>@data.UserEventStatusDesc</td>
+            <td>@data.AttendanceDesc</td>
+            <td>@data.PaymentChannelDesc</td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+@{ var pager = new Pager(pageSize: Model.Paging.PageSize, currentPage: Model.Paging.CurrentPage, totalItems: Model.Paging.ItemCount);}
+<div class="datatable-footer">
+    <div class="dataTables_info">
+        Showing @pager.StartIndex to @pager.EndIndex  of @pager.TotalItems entries
+    </div>
+    <div class="dataTables_paginate paging_simple_numbers">
+        @{ var prevPage = pager.CurrentPage - 1;
+            var disableClass = prevPage == 0 ? "disabled" : "";}
+        <a class="paginate_button previous @disableClass" onclick="SearchData(@prevPage )">←</a>
+
+        @foreach (var page in pager.Pages)
+        {
+            var current = page == pager.CurrentPage ? "current" : "";
+            <a class="paginate_button @current" onclick="SearchData(@page)">@page</a>
+        }
+        @{ var nextPage = pager.CurrentPage + 1;
+            var isLastPage = nextPage > pager.EndPage;
+            var disableNextClass = isLastPage ? "disabled" : "";
+        }
+        <a class="paginate_button next @disableNextClass" @disableNextClass onclick="SearchData(@prevPage )">→</a>
+    </div>
+</div>
+

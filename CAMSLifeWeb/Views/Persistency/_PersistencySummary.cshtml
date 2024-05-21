@@ -1,0 +1,164 @@
+﻿
+@model CaliphWeb.ViewModel.PersistencyCalculatorViewModel
+@using CaliphWeb.ViewModel
+
+<div class="row">
+    <div class="col-xl-6">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Payment Mode	</th>
+                    <th> Total Cases</th>
+                    <th>  % </th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @{ var totalCases = Model.AgentPolicies.Count;
+                    var totalMonthly = Model.TotalMonthly;
+                    var totalQuarter = Model.TotalQuarterly;
+                    var totalHalfAnnual = Model.TotalHalfAnnual;
+                    var totalAnnual = Model.TotalAnnual;
+                }
+
+                <tr>
+                    <th>Monthly</th>
+                    <td>@totalMonthly</td>
+                    <td>@((totalCases == 0 ? 0 :( ((double)totalMonthly / totalCases)*100)).ToString("n2")  +"%")</td>
+                </tr>
+                <tr>
+                    <th>Quarterly</th>
+                    <td>@totalQuarter</td>
+                    <td>@((totalCases == 0 ? 0 :( ((double)totalQuarter / totalCases)*100)).ToString("n2")  +"%")</td>
+                </tr>
+                <tr>
+                    <th>Half Annual</th>
+                    <td>@totalHalfAnnual</td>
+                    <td>@((totalCases == 0 ? 0 :( ((double)totalHalfAnnual / totalCases)*100)).ToString("n2")  +"%")</td>
+                </tr>
+                <tr>
+                    <th>Annual</th>
+                    <td>@totalAnnual</td>
+                    <td>@((totalCases == 0 ? 0 :( ((double)totalAnnual / totalCases)*100)).ToString("n2")  +"%")</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-xl-6">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Persistency Report	</th>
+                    <th> Before Repair</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr>
+                    <th>Annualised Premium</th>
+                    @{ var annualPremium = Model.AgentPolicies.Sum(x => x.AnnualisedPremium);}
+                    <td>@annualPremium.ToString("n2")</td>
+                </tr>
+                <tr>
+                    <th>Persistency Premium</th>
+                    <td>
+                        @{ double persistencyPremium = 0;}
+                        @foreach (var policy in Model.AgentPolicies)
+                        {
+                            if (policy.due_date >= Model.PersistencyDate)
+                            {
+                                persistencyPremium += policy.AnnualisedPremium;
+                            }
+                        }
+                        @persistencyPremium.ToString("n2")
+                    </td>
+                </tr>
+                <tr>
+                    <th>Persistency Ratio</th>
+                    <td>
+                        @{ double persistencyRatio = (persistencyPremium / annualPremium) * 100; }
+
+                        @persistencyRatio.ToString("n2") %
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-6">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Target Persistency	</th>
+                    <th class="target-persistency-percent"> </th>
+                    <th> New PR </th>
+                    <th> Balance </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>Target Persistency Premium	</th>
+                    <td class="target-persistency-premium"></td>
+                    <td class="target-plus-new-persistency-premium"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>Balance</th>
+                    <td class="target-minus-existing-persistency-premium">
+                        @*target persistency-target-minus-annual-persistency-premium persistency*@
+                    </td>
+                    <td class="new-persistency-premium">
+                    </td>
+                    <td class="new-minus-target-persistency-premium">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-xl-6">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Persistency Report	</th>
+                    <th> Before Repair</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr>
+                    <th>Annualised Premium</th>
+                    <td id="annual-premium">@annualPremium.ToString("n2")</td>
+                </tr>
+                <tr>
+                    <th>Existing Persistency Premium</th>
+                    <td id="existing-persistency-premium">
+                        @persistencyPremium.ToString("n2")
+                    </td>
+                </tr>
+                <tr>
+                    <th>New Persistency Premium</th>
+                    <td class="new-persistency-premium">
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Total Persistency Premium</th>
+                    <td class="existing-plus-new-persistency-premium">
+                    </td>
+                </tr>
+                <tr>
+                    <th>New Persistency Rato</th>
+                    <td class="new-persistency-ratio">
+                    </td>
+                </tr>
+                <tr>
+                    <th>Amount Collect From Cust</th>
+                    <td class="premium-collect-from-cust">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,1121 @@
+﻿
+@{
+    ViewBag.Title = "Calendar";
+}
+@model CaliphWeb.Models.ViewModel.AddActivityViewModel
+<script src="~/global_assets/js/demo_pages/form_input_groups.js"></script>
+<script src="~/global_assets/js/demo_pages/form_select2.js"></script>
+<script src="~/global_assets/js/demo_pages/form_validation.js"></script>
+<script src="~/global_assets/js/demo_pages/components_collapsible.js"></script>
+<style>
+
+    .fc-event {
+        cursor: pointer;
+    }
+</style>
+
+<style>
+    .weekly-goal {
+        color: #fe8f17 !important;
+        font-weight: 600;
+    }
+
+        .weekly-goal td {
+            white-space: nowrap;
+        }
+
+    .col {
+        flex: 1; /* additionally, equal width */
+    }
+</style>
+<!-- Page header -->
+<div class="page-header page-header-light">
+    <div class="page-header-content header-elements-lg-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-calendar3"></i> <span class="font-weight-semibold"> Calendar</span></h4>
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-stack-plus"></i></a>
+        </div>
+
+
+    </div>
+
+    <div class="breadcrumb-line breadcrumb-line-light header-elements-lg-inline">
+        <div class="d-flex">
+            <div class="breadcrumb">
+                <a class="breadcrumb-item"><i class="icon-calendar3 mr-2"></i>Activity</a>
+                <a class="breadcrumb-item">Calendar</a>
+            </div>
+
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+    </div>
+
+</div>
+<!-- /page header -->
+
+<div class="mb-3 mt-2">
+    <h6 class="mb-0 font-weight-semibold">
+    </h6>
+</div>
+<!-- Content area -->
+<div class="row">
+    <div class="col-lg-12">
+
+        <div class="card">
+            <div class="card-header ">
+
+
+                <div class="row form-group">
+                    <div class="col-md-1">
+                        <h5 class="card-title">
+                            Date
+                        </h5>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <div class="week-picker"></div><br />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-1">
+                        <h5 class="card-title">
+                        </h5>
+                    </div>
+                    <div class="col-md-6">
+                        <span id="startDate"></span> - <span id="endDate"></span>
+
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-1">
+                        <h5 class="card-title">
+                            Agent
+                        </h5>
+                    </div>
+                    <div class="col-md-6">
+                        <select required data-placeholder="Agent Name" onchange="SearchAgent()" id="CreatedBy" name="select2" class="form-control select-search" data-fouc>
+                            <option value="">Select</option>
+                            @foreach (var user in Model.AgentUsers)
+                            {
+                                var selected = user.Username == CaliphWeb.Helper.UserHelper.GetLoginUser() ? "selected" : "";
+                                <option value="@user.UserId" @selected>@user.Username</option>
+                            }
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+
+        <!-- Agenda view -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    Planned Calendar
+                        <button type="button" class="btn btn-primary d-inline ml-4" id="btnAddPlannedActivity" data-toggle="modal" data-target="#modal_addplannedactivity"> <i class="icon-stack-plus"></i> </button>
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <div id="planned-calendar" class="vh-100"></div>
+                <!-- planned Caleder weekly goal view -->
+                <div class="card-group-control card-group-control-right">
+                    <div class="card mb-0">
+                        <div class="card-header">
+                            <h6 class="card-title">
+                                <a data-toggle="collapse" class="collapsed text-body weekly-goal" href="#collapsible-control-right-group1">Weekly Goal & Activity Review</a>
+                            </h6>
+                        </div>
+                        <div id="collapsible-control-right-group1" class="collapse">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 align-content-between">
+                                        <div>
+                                            <label class="col">
+                                                Recruiting Approach
+                                            </label>
+                                            <textarea class="form-control" id="PlannedReviewText1">@Model.ActivityReviews[0].ReviewText1</textarea>
+                                        </div>
+                                        <div>
+                                            <label class="col">
+                                                Prospecting Approach <br />
+                                            </label>
+                                            <textarea class="form-control" id="PlannedReviewText3">@Model.ActivityReviews[0].ReviewText3</textarea>
+                                        </div>
+                                        <div>
+                                            <label class="col">
+                                                Prospect  Leads
+                                            </label>
+                                            <textarea class="form-control" id="PlannedReviewText5">@Model.ActivityReviews[0].ReviewText5</textarea>
+                                        </div>
+                                        <div>
+                                            <label class="col">
+                                                New Recruit Leads
+                                            </label>
+                                            <textarea class="form-control" id="PlannedReviewText7">@Model.ActivityReviews[0].ReviewText7</textarea>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-6 align-content-between">
+                                        <div>
+                                            <label class="col">
+                                                Career Presentation&Need Based Interview
+                                            </label>
+                                            <textarea class="form-control" id="PlannedReviewText2">@Model.ActivityReviews[0].ReviewText2</textarea>
+                                        </div>
+                                        <div>
+                                            <label class="col">
+                                                Fact Find Interview
+                                            </label>
+                                            <textarea class="form-control" id="PlannedReviewText4">@Model.ActivityReviews[0].ReviewText4</textarea>
+                                        </div>
+                                        <div>
+                                            <label class="col">
+                                                In Depth Interview
+                                            </label>
+                                            <textarea class="form-control" id="PlannedReviewText6">@Model.ActivityReviews[0].ReviewText6</textarea>
+                                        </div>
+                                        <div>
+                                            <label class="col">
+                                                New Cases Opened
+                                            </label>
+                                            <textarea class="form-control" id="PlannedReviewText8">@Model.ActivityReviews[0].ReviewText8</textarea>
+                                        </div>
+
+                                    </div>
+                                    <!-- /planned Caleder weekly goal view -->
+                                    <!-- planned review view -->
+                                    <div class="col-md-6 align-content-between">
+                                        <div>
+                                            <label class="col">
+                                                What are the areas I have done well? Why?
+                                            </label>
+                                            <textarea class="form-control" id="PlannedReviewText9">@Model.ActivityReviews[0].ReviewText9</textarea>
+                                        </div>
+                                        <div>
+                                            <label class="col">
+                                                What are the areas for improvement?
+                                            </label>
+                                            <textarea class="form-control" id="PlannedReviewText11">@Model.ActivityReviews[0].ReviewText11</textarea>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-6 align-content-between">
+                                        <div>
+                                            <label class="col">
+                                                How to improve for better?
+                                            </label>
+                                            <textarea class="form-control" id="PlannedReviewText10">@Model.ActivityReviews[0].ReviewText10</textarea>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-12 text-right">
+                                        <input type="hidden" id="EditPlannedWeeklyGoalID" name="EditPlannedWeeklyGoal" value="@Model.ActivityReviews[0].ActivityReviewId">
+                                        <button type="button" class="btn btn-primary" onclick="EditPlannedWeeklyGoal()">Update <i class="icon-paperplane ml-2"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                @*<div class="card-group-control card-group-control-right">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">
+                                <a data-toggle="collapse" class="collapsed text-body weekly-goal" href="#collapsible-control-right-group2">Activty review</a>
+                            </h6>
+                        </div>
+                        <div id="collapsible-control-right-group2" class="collapse">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 align-content-between">
+                                        <div>
+                                            <label class="col">
+                                                What are the areas I have done well? Why?
+                                            </label>
+                                            <textarea class="form-control"></textarea>
+                                        </div>
+                                        <div>
+                                            <label class="col">
+                                                What are the areas for improvement?
+                                            </label>
+                                            <textarea class="form-control"></textarea>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-6 align-content-between">
+                                        <div>
+                                            <label class="col">
+                                                How to improve for better?
+                                            </label>
+                                            <textarea class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                  
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 text-right">
+                                        <button type="button" class="btn btn-primary" onclick="EditPlannedActivityReview()">Update <i class="icon-paperplane ml-2"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>*@
+                <!-- /planned Caleder weekly goal view -->
+            </div>
+        </div>
+        <!-- /agenda view -->
+
+
+    </div>
+    <div class="col-lg-12">
+
+        <!-- Acutal Caleder view -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    Actual Calendar
+                        <button type="button" class="btn btn-primary d-inline ml-4" id="btnAddActualActivity" onclick="ShowAddActualActivity()"> <i class="icon-stack-plus"></i> </button>
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+
+                <div id="actual-calendar"></div>
+
+                <!-- actual Caleder weekly goal view -->
+                <div class="card-group-control card-group-control-right">
+                    <div class="card mb-0">
+                        <div class="card-header">
+                            <h6 class="card-title">
+                                <a data-toggle="collapse" class="collapsed text-body weekly-goal" href="#collapsible-control-right-group1">Weekly Goal & Activty review</a>
+                            </h6>
+                        </div>
+                        <div id="collapsible-control-right-group1" class="collapse">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 align-content-between">
+                                        <div>
+                                            <label class="col">
+                                                Recruiting Approach
+                                            </label>
+                                            <textarea class="form-control" id="ActualReviewText1">@Model.ActivityReviews[1].ReviewText1</textarea>
+                                        </div>
+                                        <div>
+                                            <label class="col">
+                                                Prospecting Approach <br />
+                                            </label>
+                                            <textarea class="form-control" id="ActualReviewText3">@Model.ActivityReviews[1].ReviewText3</textarea>
+                                        </div>
+                                        <div>
+                                            <label class="col">
+                                                Prospect  Leads
+                                            </label>
+                                            <textarea class="form-control" id="ActualReviewText5">@Model.ActivityReviews[1].ReviewText5</textarea>
+                                        </div>
+                                        <div>
+                                            <label class="col">
+                                                New Recruit Leads
+                                            </label>
+                                            <textarea class="form-control" id="ActualReviewText7">@Model.ActivityReviews[1].ReviewText7</textarea>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-6 align-content-between">
+                                        <div>
+                                            <label class="col">
+                                                Career Presentation&Need Based Interview
+                                            </label>
+                                            <textarea class="form-control" id="ActualReviewText2">@Model.ActivityReviews[1].ReviewText2</textarea>
+                                        </div>
+                                        <div>
+                                            <label class="col">
+                                                Fact Find Interview
+                                            </label>
+                                            <textarea class="form-control" id="ActualReviewText4">@Model.ActivityReviews[1].ReviewText4</textarea>
+                                        </div>
+                                        <div>
+                                            <label class="col">
+                                                In Depth Interview
+                                            </label>
+                                            <textarea class="form-control" id="ActualReviewText6">@Model.ActivityReviews[1].ReviewText6</textarea>
+                                        </div>
+                                        <div>
+                                            <label class="col">
+                                                New Cases Opened
+                                            </label>
+                                            <textarea class="form-control" id="ActualReviewText8">@Model.ActivityReviews[1].ReviewText8</textarea>
+                                        </div>
+
+                                    </div>
+                                    <!-- /actual Caleder weekly goal view -->
+                                    <!-- actual review view -->
+                                    <div class="col-md-6 align-content-between">
+                                        <div>
+                                            <label class="col">
+                                                What are the areas I have done well? Why?
+                                            </label>
+                                            <textarea class="form-control" id="ActualReviewText9">@Model.ActivityReviews[1].ReviewText9</textarea>
+                                        </div>
+                                        <div>
+                                            <label class="col">
+                                                What are the areas for improvement?
+                                            </label>
+                                            <textarea class="form-control" id="ActualReviewText11">@Model.ActivityReviews[1].ReviewText11</textarea>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-6 align-content-between">
+                                        <div>
+                                            <label class="col">
+                                                How to improve for better?
+                                            </label>
+                                            <textarea class="form-control" id="ActualReviewText10">@Model.ActivityReviews[1].ReviewText10</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-12 text-right">
+                                                <input type="hidden" id="EditActualWeeklyGoalID" name="EditActualWeeklyGoal" value="@Model.ActivityReviews[1].ActivityReviewId">
+                                            <button type="button" class="btn btn-primary" onclick="EditActualWeeklyGoal()">Update <i class="icon-paperplane ml-2"></i></button>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                @*<div class="card-group-control card-group-control-right">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title">
+                                <a data-toggle="collapse" class="collapsed text-body weekly-goal" href="#collapsible-control-right-group2">Activty review</a>
+                            </h6>
+                        </div>
+                        <div id="collapsible-control-right-group2" class="collapse">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 align-content-between">
+                                        <div>
+                                            <label class="col">
+                                                What are the areas I have done well? Why?
+                                            </label>
+                                            <textarea class="form-control"></textarea>
+                                        </div>
+                                        <div>
+                                            <label class="col">
+                                                What are the areas for improvement?
+                                            </label>
+                                            <textarea class="form-control"></textarea>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-6 align-content-between">
+                                        <div>
+                                            <label class="col">
+                                                How to improve for better?
+                                            </label>
+                                            <textarea class="form-control"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-12 text-right">
+                                            <button type="button" class="btn btn-primary" onclick="EditActualActivityReview()">Update <i class="icon-paperplane ml-2"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>*@
+                <!-- /actual Caleder weekly goal view -->
+
+            </div>
+
+
+        </div>
+        <!-- /Acutal Caleder view -->
+
+    </div>
+</div>
+<!-- /content area -->
+<!-- edit planned activty modal -->
+<div id="modal_editplannedactivity" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header pb-3">
+                <h5 class="modal-title">View Activity</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body py-0" id="edit-planned-activity">
+            </div>
+
+
+            <div class="modal-footer pt-3">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnEditPlannedActivity" onclick="EditPlannedActivity()">Submit <i class="icon-paperplane ml-2"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /edit planned activity modal -->
+<!-- add planned activty modal -->
+<div id="modal_addplannedactivity" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header pb-3">
+                <h5 class="modal-title">Add Activity-(Planned)</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body py-0">
+                @Html.Partial("~/Views/Activity/_AddUserActivity.cshtml", Model)
+            </div>
+
+            <div class="modal-footer pt-3">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="AddUserActivity  ()">Submit <i class="icon-paperplane ml-2"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /add planned activity modal -->
+<!-- Add Actual activty modal -->
+<div id="modal_editActualActivity" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header pb-3">
+                <h5 class="modal-title">Update Activity</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body py-0" id="edit-actual-activity">
+            </div>
+
+            <div class="modal-footer pt-3">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnEditActualActivity" onclick="EditActivity()">Submit <i class="icon-paperplane ml-2"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Add Actual activity modal -->
+<!-- add planned activty modal -->
+<div id="modal_addActualActivity" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header pb-3">
+                <h5 class="modal-title">Add Activity (Actual)</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body py-0">
+                @Html.Partial("~/Views/Activity/_AddActivity.cshtml", Model)
+            </div>
+            <div class="modal-footer pt-3">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="AddActivity  ()">Submit <i class="icon-paperplane ml-2"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /add planned activity modal -->
+
+
+@section Scripts{
+
+    <script src="~/global_assets/js/pages/FullCalender.js"></script>
+    <script src="~/global_assets/js/pages/weekpicker.js"></script>
+
+    <script type="text/javascript">
+        function ChangeTimeTo() {
+            var date = $('#Date').val();
+            var timefrom = $('#timefrom').val();
+            var startDate = new Date(date + " " + timefrom);
+
+            var dateto = startDate.getHours() + 1;
+            var picker = $('#timeto').pickatime().pickatime('picker');
+
+            var dateToMin = startDate.getMinutes();
+            picker.set('select', [dateto, dateToMin]);
+            picker.set('min', [dateto, dateToMin]);
+
+
+        }
+        var swalInit = swal.mixin({
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-light',
+                denyButton: 'btn btn-light',
+                input: 'form-control'
+            }
+        });
+        function SearchAgent() {
+            var login = '@CaliphWeb.Helper.UserHelper.GetLoginUserViewModel().UserId';
+            var createdBy = $('#CreatedBy').val();
+
+            if (login === createdBy) {
+                $('#btnAddActualActivity').attr('style', 'display:inline-flex');
+                $('#btnAddPlannedActivity').attr('style', 'display:inline-flex');
+                $('#btnEditActualActivity').show();
+                $('#btnEditPlannedActivity').show();
+            }
+            else {
+
+                $('#btnAddActualActivity').attr('style', 'display:none!important');
+                $('#btnAddPlannedActivity').attr('style', 'display:none!important');
+                $('#btnEditActualActivity').hide();
+                $('#btnEditPlannedActivity').hide();
+            }
+            BindCalendar();
+        }
+        function ViewActivity(id, type) {
+            $.ajax({
+                url: '@Url.Action("View", "Activity")',
+                type: 'POST',
+                data: { id: id },
+                success: function (response) {
+
+
+                    $('#edit-actual-activity').html(response);
+
+
+                    var startDate = $('#EditActivityStartDate').val();
+                    $('#EditActivityDate').pickadate({
+                        onStart: function () {
+                            var date = new Date(startDate);
+                            this.set('select', [date.getFullYear(), date.getMonth(), date.getDate()])
+                        },
+                    });
+
+                    var startHour = moment(startDate).format('HH');
+                    var startMin = moment(startDate).format('mm');
+                    $('#edit-actual-timefrom').pickatime({
+                        onStart: function () {
+                            this.set('select', [startHour, startMin])
+                        }, min: [8, 00],
+                        max: [23, 30]
+                    });
+                    var endDate = $('#EditActivityEndDate').val();
+                    var endHour = moment(endDate).format('HH');
+                    var endMin = moment(endDate).format('mm');
+                    $('#edit-actual-timeto').pickatime({
+                        onStart: function () {
+                            this.set('select', [endHour, endMin])
+                        }, min: [8, 30],
+                        max: [23, 30]
+
+                    });
+
+
+                    $('#modal_editActualActivity').modal('show'); 1
+
+                }
+            });
+        }
+        function ViewPlannedActivity(id) {
+            $.ajax({
+                url: '@Url.Action("ViewUserActivity", "Activity")',
+                type: 'POST',
+                data: { id: id },
+                success: function (response) {
+                    $('#edit-planned-activity').html(response);
+
+                    var startDate = $('#EditPlannedActivityStartDate').val();
+                    $('#EditPlannedActivityDate').pickadate({
+                        onStart: function () {
+                            var date = new Date(startDate);
+                            this.set('select', [date.getFullYear(), date.getMonth(), date.getDate()])
+                        },
+                    });
+                    var startHour = moment(startDate).format('HH');
+                    var startMin = moment(startDate).format('mm');
+                    $('#edit-planned-timefrom').pickatime({
+                        onStart: function () {
+                            this.set('select', [startHour, startMin])
+                        }, min: [8, 30],
+                        max: [23, 30]
+                    });
+                    var endDate = $('#EditPlannedActivityEndDate').val();
+                    var endHour = moment(endDate).format('HH');
+                    var endMin = moment(endDate).format('mm');
+                    $('#edit-planned-timeto').pickatime({
+                        onStart: function () {
+                            this.set('select', [endHour, endMin])
+                        }, min: [8, 00],
+                        max: [23, 30]
+
+                    });
+
+
+                    $('#modal_editplannedactivity').modal('show');
+
+                }
+            });
+
+        }
+
+        function EditActivity() {
+            var date = $('#EditActivityDate').val();
+            var timefrom = $('#edit-actual-timefrom').val();
+            var startDate = new Date(date + " " + timefrom);
+            var timeto = $('#edit-actual-timeto').val();
+            var endDate = new Date(date + " " + timeto);
+
+            $('#EditActivityStartDate').val(startDate.toJSON());
+            $('#EditActivityEndDate').val(endDate.toJSON());
+            var form = $("#edit-activity-form");
+            form.validate();
+            if (form.valid()) {
+                event.preventDefault();
+                var formData = form.serialize();
+                $.ajax({
+                    url: '@Url.Action("Update", "Activity")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        BindCalendar();
+                        $('#modal_editActualActivity').modal('hide');
+                        swalInit.fire({
+                            title: 'Success!',
+                            text: 'activity updated successfully!',
+                            icon: 'success'
+                        });
+                    }
+                });
+            }
+        }
+
+        function EditPlannedActivity() {
+            var date = $('#EditPlannedActivityDate').val();
+            var timefrom = $('#edit-planned-timefrom').val();
+            var startDate = new Date(date + " " + timefrom);
+            var timeto = $('#edit-planned-timeto').val();
+            var endDate = new Date(date + " " + timeto);
+
+            $('#EditPlannedActivityStartDate').val(startDate.toJSON());
+            $('#EditPlannedActivityEndDate').val(endDate.toJSON());
+            var form = $("#edit-planned-activity-form");
+            form.validate();
+            if (form.valid()) {
+                event.preventDefault();
+                var formData = form.serialize();
+                $.ajax({
+                    url: '@Url.Action("UpdateUserActivity", "Activity")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        BindCalendar();
+                        $('#modal_editplannedactivity').modal('hide');
+                        swalInit.fire({
+                            title: 'Success!',
+                            text: 'activity updated successfully!',
+                            icon: 'success'
+                        });
+                    }
+                });
+            }
+        }
+
+        function BindCalendar() {
+            var date = $('.week-picker').datepicker('getDate');
+            sDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 1);
+            endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 7);
+            var ssdate = formatDate(sDate);
+            plannedeventReview();
+            actualeventReview();
+            FullCalendarBasic.init(ssdate);
+            
+         
+        }
+        $('.activity-time-from').pickatime({
+            onStart: function () {
+                this.set('select', [9, 0])
+            },
+            min: [8, 0],
+            max:[23,30]
+        });
+
+
+        $('.activity-time-to').pickatime({
+            onStart: function () {
+                this.set('select', [9, 0])
+            },
+            min: [8, 30],
+            max: [23, 30]
+        });
+        // Basic options
+        $('.pickadate').pickadate({
+            onStart: function () {
+                var date = new Date();
+                this.set('select', [date.getFullYear(), date.getMonth(), date.getDate()])
+            },
+        });
+
+        function ShowAddActualActivity() {
+            $('#detail').hide();
+            $('#modal_addActualActivity').modal('show');
+        }
+
+        function ShowContact(element) {
+            var id = $(element).val();
+            var contact = $(element).find(':selected').attr('data-contact')
+            $('#contact').text(contact);
+            $.ajax({
+                url: '@Url.Action("GetDealList", "Activity")',
+                type: 'POST',
+                data: { clientid: id },
+                dataType: 'json',
+                success: function (response) {
+                    $('#ClientDealId').html('');
+                    $('#ClientDealId').append('<option value="">Select</option>');
+                    //for (var r of response) {
+                    //    alert(r);
+                    //    $('#ClientDealId').append(`<option value="${r.ClientDealId}"> ${r.DealTitleDesc} - ${r.Name} </option>`);
+                    //}
+                    response.forEach(r => $('#ClientDealId').append(`<option value="${r.ClientDealId}"> ${r.DealTitleDesc} - ${r.Name} </option>`));
+                    }
+                });
+        }
+
+        function AddActivity() {
+            debugger;
+            var date = $('#Date').val();
+            var timefrom = $('#timefrom').val();
+            var startDate = new Date(date + " " + timefrom);
+            var timeto = $('#timeto').val();
+            var endDate = new Date(date + " " + timeto);
+
+            $('#ActivityStartDate').val(startDate.toJSON());
+            $('#ActivityEndDate').val(endDate.toJSON());
+
+
+            var form = $("#add-activity");
+
+            form.validate();
+            if (form.valid()) {
+                event.preventDefault();
+                var formData = form.serialize();
+                $.ajax({
+                    url: '@Url.Action("Add", "Activity")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        $('#modal_addActualActivity').modal('hide');
+                        BindCalendar();
+                        swalInit.fire({
+                            title: 'Success!',
+                            text: 'Activity added successfully!',
+                            icon: 'success'
+                        });
+                    }
+                });
+            }
+        }
+
+        function AddUserActivity() {
+            var date = $('#AddPlannedActivityDate').val();
+            var timefrom = $('#add-planned-timefrom').val();
+            var startDate = new Date(date + " " + timefrom);
+            var timeto = $('#add-planned-timeto').val();
+            var endDate = new Date(date + " " + timeto);
+
+            $('#AddPlannedActivityStartDate').val(startDate.toJSON());
+            $('#AddPlannedActivityEndDate').val(endDate.toJSON());
+
+
+            var form = $("#add-user-activity");
+
+            form.validate();
+            if (form.valid()) {
+                event.preventDefault();
+                var formData = form.serialize();
+                $.ajax({
+                    url: '@Url.Action("AddUserActivity", "Activity")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        $('#modal_addplannedactivity').modal('hide');
+                        BindCalendar();
+                        swalInit.fire({
+                            title: 'Success!',
+                            text: 'Activity added successfully!',
+                            icon: 'success'
+                        });
+                    }
+                });
+            }
+        }
+
+        var plannedevents = function (info, successCallback, failureCallback) {
+
+            info.CreatedBy = $('#CreatedBy').val();
+            $.ajax({
+                url: '@Url.Action("PlannedCalendarEvents", "Activity")',
+                type: 'POST',
+                data: JSON.stringify(info),
+                contentType: "application/json",
+                dataType: "json",
+                success: function (response) {
+                    successCallback(response);
+                }
+            });
+        }
+
+
+        var actualEvents = function (info, successCallback, failureCallback) {
+
+            info.CreatedBy = $('#CreatedBy  option:selected').text();
+
+
+            $.ajax({
+                url: '@Url.Action("CalendarEvents", "Activity")',
+                type: 'POST',
+                data: JSON.stringify(info),
+                contentType: "application/json",
+                dataType: "json",
+                success: function (response) {
+                    successCallback(response);
+                }
+            });
+        }
+
+        function plannedeventReview() {
+
+            var CreatedBy = $('#CreatedBy').val();
+            var date = $('.week-picker').datepicker('getDate');
+            sDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 1);
+            endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 7);
+            var ssdate = formatDate(sDate);
+            var ssendDate = formatDate(endDate);
+            $.ajax({
+                url: '@Url.Action("PlannedCalendarReviewEvents", "Activity")',
+                type: 'POST',
+                data: {
+                    CreatedBy: CreatedBy, ssdate: ssdate, ssendDate: ssendDate
+                },
+                success: function (response) {
+                    console.log
+                    (response)
+                    $('#PlannedReviewText1').val("");
+                    $('#PlannedReviewText2').val("");
+                    $('#PlannedReviewText3').val("");
+                    $('#PlannedReviewText4').val("");
+                    $('#PlannedReviewText5').val("");
+                    $('#PlannedReviewText6').val("");
+                    $('#PlannedReviewText7').val("");
+                    $('#PlannedReviewText8').val("");
+                    $('#PlannedReviewText9').val("");
+                    $('#PlannedReviewText10').val("");
+                    $('#PlannedReviewText11').val("");
+                    $('#EditPlannedWeeklyGoalID').val("-1");
+
+                    plannedReview = response[0];
+                    if (plannedeventReview != null) {
+                        $('#PlannedReviewText1').val(plannedReview.ReviewText1);
+                        $('#PlannedReviewText2').val(plannedReview.ReviewText2);
+                        $('#PlannedReviewText3').val(plannedReview.ReviewText3);
+                        $('#PlannedReviewText4').val(plannedReview.ReviewText4);
+                        $('#PlannedReviewText5').val(plannedReview.ReviewText5);
+                        $('#PlannedReviewText6').val(plannedReview.ReviewText6);
+                        $('#PlannedReviewText7').val(plannedReview.ReviewText7);
+                        $('#PlannedReviewText8').val(plannedReview.ReviewText8);
+                        $('#PlannedReviewText9').val(plannedReview.ReviewText9);
+                        $('#PlannedReviewText10').val(plannedReview.ReviewText10);
+                        $('#PlannedReviewText11').val(plannedReview.ReviewText11);
+
+                        $('#EditPlannedWeeklyGoalID').val(plannedReview.ActivityReviewId);
+                    }
+
+                }
+            });
+        }
+
+        function actualeventReview() {
+
+            var CreatedBy = $('#CreatedBy').val();
+            var date = $('.week-picker').datepicker('getDate');
+            sDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 1);
+            endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 7);
+            var ssdate = formatDate(sDate);
+            var ssendDate = formatDate(endDate);
+            $.ajax({
+                url: '@Url.Action("ActualCalendarReviewEvents", "Activity")',
+                type: 'POST',
+                data: {
+                    CreatedBy: CreatedBy, ssdate: ssdate, ssendDate: ssendDate
+                },
+                success: function (response) {
+                    $('#ActualReviewText1').val("");
+                    $('#ActualReviewText2').val("");
+                    $('#ActualReviewText3').val("");
+                    $('#ActualReviewText4').val("");
+                    $('#ActualReviewText5').val("");
+                    $('#ActualReviewText6').val("");
+                    $('#ActualReviewText7').val("");
+                    $('#ActualReviewText8').val("");
+                    $('#ActualReviewText9').val("");
+                    $('#ActualReviewText10').val("");
+                    $('#ActualReviewText11').val("");
+                    $('#EditActualWeeklyGoalID').val("-1");
+
+                    plannedReview = response[0];
+
+                    if (plannedReview != null) {
+                        $('#ActualReviewText1').val(plannedReview.ReviewText1);
+                        $('#ActualReviewText2').val(plannedReview.ReviewText2);
+                        $('#ActualReviewText3').val(plannedReview.ReviewText3);
+                        $('#ActualReviewText4').val(plannedReview.ReviewText4);
+                        $('#ActualReviewText5').val(plannedReview.ReviewText5);
+                        $('#ActualReviewText6').val(plannedReview.ReviewText6);
+                        $('#ActualReviewText7').val(plannedReview.ReviewText7);
+                        $('#ActualReviewText8').val(plannedReview.ReviewText8);
+                        $('#ActualReviewText9').val(plannedReview.ReviewText9);
+                        $('#ActualReviewText10').val(plannedReview.ReviewText10);
+                        $('#ActualReviewText11').val(plannedReview.ReviewText11);
+
+
+                        $('#EditActualWeeklyGoalID').val(plannedReview.ActivityReviewId);
+                    }
+
+                }
+            });
+        }
+
+        function EditPlannedWeeklyGoal() {
+            var date = $('.week-picker').datepicker('getDate');
+            sDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 1);
+            endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 7);
+            var ssdate = formatDate(sDate);
+            var ReviewText1 = $('#PlannedReviewText1').val();
+            var ReviewText2 = $('#PlannedReviewText2').val();
+            var ReviewText3 = $('#PlannedReviewText3').val();
+            var ReviewText4 = $('#PlannedReviewText4').val();
+            var ReviewText5 = $('#PlannedReviewText5').val();
+            var ReviewText6 = $('#PlannedReviewText6').val();
+            var ReviewText7 = $('#PlannedReviewText7').val();
+            var ReviewText8 = $('#PlannedReviewText8').val();
+            var ReviewText9 = $('#PlannedReviewText9').val();
+            var ReviewText10 = $('#PlannedReviewText10').val();
+            var ReviewText11 = $('#PlannedReviewText11').val();
+            var LoginId = $('#CreatedBy').val();
+            var ActivityReviewId = $('#EditPlannedWeeklyGoalID').val();
+            if (ReviewText1 == "" && ReviewText2 == "" && ReviewText3 == "" && ReviewText4 == "" && ReviewText5 == "" && ReviewText6 == "" && ReviewText7 == "" &&
+                ReviewText8 == "" && ReviewText9 == "" && ReviewText10 == "" && ReviewText11 == "") {
+                $('#modal_addplannedactivity').modal('hide');
+                BindCalendar();
+                swalInit.fire({
+                    title: 'Fail!',
+                    text: 'All the textbox is Empty!',
+                    icon: 'fail'
+                });
+            }
+            else {
+                $.ajax({
+                    url: '@Url.Action("EditPlannedWeeklyGoal", "Activity")',
+                    type: 'POST',
+                    data: {
+                        ssdate: ssdate, ReviewText1: ReviewText1, ReviewText2: ReviewText2, ReviewText3: ReviewText3, ReviewText4: ReviewText4,
+                        ReviewText5: ReviewText5, ReviewText6: ReviewText6, ReviewText7: ReviewText7, ReviewText8: ReviewText8,
+                        ReviewText9: ReviewText9, ReviewText10: ReviewText10, ReviewText11: ReviewText11, LoginId: LoginId, ActivityReviewId: ActivityReviewId
+                    },
+                    success: function (response) {
+                        $('#modal_addplannedactivity').modal('hide');
+                        BindCalendar();
+                        swalInit.fire({
+                            title: 'Success!',
+                            text: 'Activity added successfully!',
+                            icon: 'success'
+                        });
+                    }
+                });
+            }
+        }
+
+        //function EditPlannedActivityReview() {
+        //    swalInit.fire({
+        //        title: 'Success!',
+        //        text: 'activity updated successfully!',
+        //        icon: 'success'
+        //    });
+        //}
+
+        function EditActualWeeklyGoal() {
+            var date = $('.week-picker').datepicker('getDate');
+            sDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 1);
+            endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 7);
+            var ssdate = formatDate(sDate);
+            var ReviewText1 = $('#ActualReviewText1').val();
+            var ReviewText2 = $('#ActualReviewText2').val();
+            var ReviewText3 = $('#ActualReviewText3').val();
+            var ReviewText4 = $('#ActualReviewText4').val();
+            var ReviewText5 = $('#ActualReviewText5').val();
+            var ReviewText6 = $('#ActualReviewText6').val();
+            var ReviewText7 = $('#ActualReviewText7').val();
+            var ReviewText8 = $('#ActualReviewText8').val();
+            var ReviewText9 = $('#ActualReviewText9').val();
+            var ReviewText10 = $('#ActualReviewText10').val();
+            var ReviewText11 = $('#ActualReviewText11').val();
+            var LoginId = $('#CreatedBy').val();
+            var ActivityReviewId = $('#EditActualWeeklyGoalID').val();
+            if (ReviewText1 == "" && ReviewText2 == "" && ReviewText3 == "" && ReviewText4 == "" && ReviewText5 == "" && ReviewText6 == "" && ReviewText7 == "" &&
+                ReviewText8 == "" && ReviewText9 == "" && ReviewText10 == "" && ReviewText11 == "") {
+                $('#modal_addplannedactivity').modal('hide');
+                BindCalendar();
+                swalInit.fire({
+                    title: 'Fail!',
+                    text: 'All the textbox is Empty!',
+                    icon: 'fail'
+                });
+            }
+            else {
+                $.ajax({
+                    url: '@Url.Action("EditActualWeeklyGoal", "Activity")',
+                    type: 'POST',
+                    data: {
+                        ssdate: ssdate, ReviewText1: ReviewText1, ReviewText2: ReviewText2, ReviewText3: ReviewText3, ReviewText4: ReviewText4,
+                        ReviewText5: ReviewText5, ReviewText6: ReviewText6, ReviewText7: ReviewText7, ReviewText8: ReviewText8,
+                        ReviewText9: ReviewText9, ReviewText10: ReviewText10, ReviewText11: ReviewText11, LoginId: LoginId, ActivityReviewId: ActivityReviewId
+                    },
+                    success: function (response) {
+                        $('#modal_addplannedactivity').modal('hide');
+                        BindCalendar();
+                        swalInit.fire({
+                            title: 'Success!',
+                            text: 'Activity added successfully!',
+                            icon: 'success'
+                        });
+                    }
+                });
+            }
+        }
+
+/*        function EditActualActivityReview() {*/
+        //    swalInit.fire({
+        //        title: 'Success!',
+        //        text: 'activity updated successfully!',
+        //        icon: 'success'
+        //    });
+        //}
+    </script>
+
+}

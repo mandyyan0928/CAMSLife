@@ -1,0 +1,96 @@
+﻿
+@model CaliphWeb.Models.ViewModel.EditActivityViewModel
+<form id="edit-activity-form" class="form-validate-jquery">
+    <input type="hidden" name="ClientDealActivityId" value="@Model.ClientDealActivityId" />
+    <fieldset class="mb-3">
+        <div class="form-group row">
+            <label class="col-form-label col-lg-3">Deal<span class="text-danger">*</span></label>
+            <div class="col-lg-8">
+                @{ var dealDesc = Model.Deals.Where(x => x.ClientDealId == Model.ClientDealId).FirstOrDefault();}
+                <label class="form-control">@dealDesc.DealTitleDesc</label>
+                <select readonly="true" required data-placeholder="Deal Title" name="ClientDealId" id="ClientDealId" class="form-control select-search d-none" data-fouc>
+                    <option value="">Select</option>
+                    @foreach (var deal in Model.Deals)
+                    {
+                        var selected = Model.ClientDealId == deal.ClientDealId ? "selected" : "";
+
+                        <option value="@deal.ClientDealId" @selected> @deal.DealTitleDesc - @deal.Name </option>
+
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-form-label col-lg-3">Activity<span class="text-danger">*</span></label>
+            <div class="col-lg-8">
+                <select required class="custom-select" name="ActivityPointId">
+                    <option value="">Please Select</option>
+                    @foreach (var activity in Model.Activities)
+                    {
+                        var selected = Model.ActivityPointId == activity.ActivityPointId ? "selected" : "";
+                        <option value="@activity.ActivityPointId" @selected>@activity.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-lg-3">Date<span class="text-danger">*</span></label>
+            <div class="col-lg-8">
+                <div class="input-group">
+                    <span class="input-group-prepend">
+                        <span class="input-group-text"><i class="icon-calendar5"></i></span>
+                    </span>
+                    @{ var startDate = Model.ActivityStartDate.HasValue ? Model.ActivityStartDate.Value.ToString("yyyy-MM-dd") : "";}
+                    <input type="text" id="EditActivityDate" value="@startDate" class="form-control pickadate rounded-right">
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-lg-3">Time<span class="text-danger">*</span></label>
+            <div class="col-lg-8 text-center">
+                <div class="input-group">
+                    <span class="input-group-prepend">
+                        <span class="input-group-text"><i class="icon-alarm"></i></span>
+                    </span>
+                    @{ var startTime = Model.ActivityStartDate.HasValue ? Model.ActivityStartDate.Value.ToString("hh:mm tt") : "";}
+                    <input type="text" id="edit-actual-timefrom" value="@startTime" class="form-control rounded-right activity-time-from">
+                    <i class="icon-minus3 text-center  align-items-center" style="display:grid"></i>
+
+                    <span class="input-group-prepend">
+                        <span class="input-group-text"><i class="icon-alarm"></i></span>
+                    </span>
+                    @{ var endTime = Model.ActivityEndDate.HasValue ? Model.ActivityEndDate.Value.ToString("hh:mm tt") : "";}
+                    <input type="text" id="edit-actual-timeto" value="@endTime" class="form-control rounded-right activity-time-to">
+                </div>
+            </div>
+
+            <input type="hidden" name="EditActivityStartDate" id="EditActivityStartDate" value="@Model.ActivityStartDate.Value">
+            <input type="hidden" name="EditActivityEndDate" id="EditActivityEndDate" value="@Model.ActivityEndDate.Value"> 
+        </div>
+
+        @*<div class="form-group row">
+            <label class="col-form-label col-lg-3">Add To Google Calendar<span class="text-danger">*</span></label>
+            <div class="col-lg-8">
+                <select required data-placeholder="Please Select" class="form-control select" name="AddToGoogle">
+                    <option value="0">No</option>
+                    <option value="1" selected="@Model.GoogleLinked">Yes</option>
+                </select>
+            </div>
+        </div>*@
+
+        <div class="form-group row">
+            <label class="col-form-label col-lg-3">Notes</label>
+            <div class="col-lg-8">
+                <textarea name="Remarks" class="form-control">@Model.Remarks</textarea>
+            </div>
+        </div>
+        <input type="hidden" id="EventId" name="EventId" value="@Model.EventId">
+        <input type="hidden" id="ClientId" name="ClientId" value="@Model.ClientId">
+
+    </fieldset>
+
+
+
+
+</form>

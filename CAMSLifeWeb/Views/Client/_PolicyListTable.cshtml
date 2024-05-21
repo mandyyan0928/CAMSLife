@@ -1,0 +1,62 @@
+﻿
+@using CaliphWeb.Models.API.Client.Response
+@model List<ClientPolicy>
+
+
+<table class="table datatable-colvis-restore dataTable no-footer">
+    <thead>
+        <tr>
+            <th> Company</th>
+            <th> Policy Number</th>
+            <th> Type of Policy</th>
+            <th> Sum Covered</th>
+            <th> Annual Premium</th>
+            <th>%</th>
+            <th> Critical Illness</th>
+            <th> Personal Accident</th>
+            <th> Medical Card</th>
+            <th> Coverage Terms</th>
+            <th> Date In-forced</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var policy in Model)
+        {
+            var percent = (policy.Premium / policy.SumAssured) * 100;
+        <tr>
+            <td>@policy.CompanyDesc</td>
+            <td>@policy.PolicyNo</td>
+            <td>@policy.PolicyTypeDesc</td>
+            <td>@policy.SumAssured.ToString("n2")</td>
+            <td>@policy.Premium.ToString("n2")</td>
+            <td>@percent.ToString("n2")   %</td>
+            <td>@policy.CriticaIIllnessVal.ToString("n2")</td>
+            <td>@policy.PersonalAccidentVal.ToString("n2")</td>
+            <td>@policy.MedicalCardVal.ToString("n2")</td>
+            <td>@policy.CoverageTerms</td>
+            <td>@policy.DateInForced</td>
+            <td>
+                <a onclick="DeletePolicy(@policy.ClientPolicyId, @policy.ClientId)" data-popup="tooltip" title="delete" data-placement="right" href="#" class="list-icons-item">
+                    <i class="icon-trash"></i>
+                </a>
+            </td>
+        </tr>
+        }
+
+
+    <tr>
+        <td colspan="3"><b>Total :</b></td>
+
+        <td>@Model.Sum(x => x.SumAssured).ToString("n2")</td>
+        <td>@Model.Sum(x => x.Premium).ToString("n2")</td>
+        <td>@Model.Sum(x => x.CriticaIIllnessVal).ToString("n2")</td>
+        <td>@Model.Sum(x => x.PersonalAccidentVal).ToString("n2")</td>
+        <td>@Model.Sum(x => x.MedicalCardVal).ToString("n2")</td>
+
+        <td colspan="3"> </td>
+
+    </tr>
+    </tbody>
+</table>

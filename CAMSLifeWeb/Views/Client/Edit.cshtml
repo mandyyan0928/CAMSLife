@@ -1,0 +1,817 @@
+﻿
+@{
+    ViewBag.Title = "Profile";
+}
+@using CaliphWeb.Models.ViewModel;
+@model EditClientViewModel
+ 
+<script src="~/global_assets/js/demo_pages/form_input_groups.js"></script>
+<script src="~/global_assets/js/demo_pages/form_controls_extended.js"></script>
+<!-- Page header -->
+<div class="page-header page-header-light">
+    <div class="page-header-content header-elements-lg-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-user-plus"></i> <span class="font-weight-semibold">Client Profile</span></h4>
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+
+    </div>
+
+    <div class="breadcrumb-line breadcrumb-line-light header-elements-lg-inline">
+        <div class="d-flex">
+            <div class="breadcrumb">
+                <a class="breadcrumb-item"><i class="icon-users4 mr-2"></i> Client</a>
+                <a href="@Url.Action("List","Client")" class="breadcrumb-item">Client List</a>
+                <a class="breadcrumb-item">Profile</a>
+            </div>
+
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+    </div>
+</div>
+<!-- /page header -->
+
+<div class="mb-3">
+    <h6 class="mb-0 font-weight-semibold">
+    </h6>
+</div>
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <!-- Form inputs -->
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="card-title">Basic Info</h5>
+            </div>
+
+            <div class="card-body">
+                <form id="basic-info" class="form-validate-jquery">
+                        <div class="row">
+                            <div class="col-lg-6">
+
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Name<span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="text" value="@Model.Name" required id="Name" name="Name" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Contact<span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="text" id="ContactNo" required value="@Model.ContactNo" name="ContactNo" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Source<span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <select class="custom-select" name="SourceId" required>
+                                            <option value="">Please Select</option>
+                                            @foreach (var source in Model.Source)
+                                            {
+                                                var selected = source.MasterDataId == Model.SourceId ? "selected" : "";
+                                                <option value="@source.MasterDataId" @selected>@source.Name</option>
+                                            }
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Annual Income<span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <select class="custom-select" name="AnnualIncomeId" required>
+                                            <option value="">Please Select</option>
+                                            @foreach (var source in Model.AnnualIncome)
+                                            {
+                                                var selected = source.MasterDataId == Model.AnnualIncomeId ? "selected" : "";
+                                                <option value="@source.MasterDataId" @selected>@source.Name</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Age<span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <select class="custom-select" name="AgeId" required>
+                                            <option value="">Please Select</option>
+                                            @foreach (var source in Model.AgeRange)
+                                            {
+                                                var selected = source.MasterDataId == Model.AgeId ? "selected" : "";
+                                                <option value="@source.MasterDataId" @selected>@source.Name</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Occupation<span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <select class="custom-select" name="OccupationId" required>
+                                            <option value="">Please Select</option>
+                                            @foreach (var source in Model.Occupation)
+                                            {
+                                                var selected = source.MasterDataId == Model.OccupationId ? "selected" : "";
+                                                <option value="@source.MasterDataId" @selected>@source.Name</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Marital Status<span class="text-danger">*</span></label>
+                                    <div class="col-lg-8">
+                                        <select class="custom-select" name="MaritalId" required>
+                                            <option value="">Please Select</option>
+                                            @foreach (var source in Model.MaritalStatus)
+                                            {
+                                                var selected = source.MasterDataId == Model.MaritalId ? "selected" : "";
+                                                <option value="@source.MasterDataId" @selected>@source.Name</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Other Source Of Income</label>
+                                    <div class="col-lg-8">
+                                        <input type="text" name="OtherSourceofIncomeDesc" id="OtherSourceofIncomeDesc" value="@Model.OtherSourceofIncomeDesc" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Gender</label>
+                                    <div class="col-lg-8">
+                                        <div class="border p-3 rounded">
+                                            @foreach (var gender in Model.Genders)
+                                            {
+                                                var genChecked = gender.MasterDataId == Model.GenderId ? "checked" : "";
+                                                <div class="custom-control custom-radio custom-control-inline">
+                                                    <input type="radio" @genChecked value="@gender.MasterDataId" class="custom-control-input" name="GenderId" id="@gender.MasterDataId">
+                                                    <label class="custom-control-label" for="@gender.MasterDataId">@gender.Name</label>
+                                                </div>
+                                            }
+                                         
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Address</label>
+                                    <div class="col-lg-8">
+                                        <textarea id="CurrentAddress" name="CurrentAddress" class="form-control">@Model.CurrentAddress</textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">IC</label>
+                                    <div class="col-lg-8">
+                                        <input type="text" value="@Model.ICNo" class="form-control" id="ICNo" name="ICNo">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Birthday</label>
+                                    <div class="col-lg-8">
+                                        @{ var dob = Model.DOB.HasValue ? Model.DOB.Value.ToString("yyyy-MM-dd") : ""; }
+                                        <input type="date" value="@dob" name="DOB" id="DOB" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Email</label>
+                                    <div class="col-lg-8">
+                                        <input type="text" value="@Model.EmailAdd" id="EmailAdd" name="EmailAdd" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Education</label>
+                                    <div class="col-lg-8">
+                                        <input type="text" value="@Model.EducationDesc" id="EducationDesc" name="EducationDesc" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Carrer</label>
+                                    <div class="col-lg-8">
+                                        <textarea id="CareerDesc" name="CareerDesc" class="form-control">@Model.CareerDesc</textarea>
+                                    </div>
+                                </div>
+                                <div class="row form-group m-2">
+                                    <div class="col-lg-12">
+                                        <div class="text-right float-right">
+                                            <input type="hidden" id="ClientId" name="ClientId" value="@Model.ClientId" />
+                                            <button type="button" class="btn btn-primary" onclick="UpdateBasicInfo()">Update <i class="icon-paperplane ml-2"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                </form>
+            </div>
+        </div>
+        <!-- /form inputs -->
+    </div>
+
+
+</div>
+
+<div class="row mt-2">
+    <div class="col-lg-12">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="card-title">Relationship</h5>
+            </div>
+            <div class="card-body">
+                <form id="relationship-info" class="form-validate-jquery">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-lg-4">Filling Date</label>
+                                <div class="col-lg-7">
+                                    @{ var fillingDate = Model.FilingDate.HasValue ? Model.FilingDate.Value.ToString("yyyy-MM-dd") : ""; }
+                                    <input type="date" readonly="readonly" value="@fillingDate" name="FilingDate" id="FilingDate" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-lg-4">
+                                    Length Of Time Known<span class="text-danger">*</span>
+                                </label>
+                                <div class="col-lg-7">
+                                    <select class="custom-select" name="LengthOfTimeKnownId" required>
+                                        <option value="">Please Select</option>
+                                        @foreach (var source in Model.LengthOfTimeKnown)
+                                        {
+                                            var selected = source.MasterDataId == Model.LengthOfTimeKnownId ? "selected" : "";
+                                            <option value="@source.MasterDataId" @selected>@source.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-lg-4">
+                                    How Well Known<span class="text-danger">*</span>
+                                </label>
+                                <div class="col-lg-7">
+                                    <select class="custom-select" name="HowWellKnownId" required>
+                                        <option value="">Please Select</option>
+                                        @foreach (var source in Model.HowWellKnown)
+                                        {
+                                            var selected = source.MasterDataId == Model.HowWellKnownId ? "selected" : "";
+                                            <option value="@source.MasterDataId" @selected>@source.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-lg-5">
+                                    How Often Seen In A Year<span class="text-danger">*</span>
+                                </label>
+                                <div class="col-lg-6">
+                                    <select class="custom-select" name="HowOftenSeenInAYearId" required>
+                                        <option value="">Please Select</option>
+                                        @foreach (var source in Model.HowOftenSeenInAYear)
+                                        {
+                                            var selected = source.MasterDataId == Model.HowOftenSeenInAYearId ? "selected" : "";
+                                            <option value="@source.MasterDataId" @selected>@source.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-lg-5">
+                                    Could Approach On Business<span class="text-danger">*</span>
+                                </label>
+                                <div class="col-lg-6">
+                                    <select class="custom-select" name="CouldApproachOnBusinessId" required>
+                                        <option value="">Please Select</option>
+                                        @foreach (var source in Model.CouldApproachOnBusiness)
+                                        {
+                                            var selected = source.MasterDataId == Model.CouldApproachOnBusinessId ? "selected" : "";
+                                            <option value="@source.MasterDataId" @selected>@source.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-lg-5">
+                                    Ability To Provide Referrals<span class="text-danger">*</span>
+                                </label>
+                                <div class="col-lg-6">
+                                    <select class="custom-select" name="AbilityToProvideRefId" required>
+                                        <option value="">Please Select</option>
+                                        @foreach (var source in Model.AbilityToProvideReferrals)
+                                        {
+                                            var selected = source.MasterDataId == Model.AbilityToProvideRefId ? "selected" : "";
+                                            <option value="@source.MasterDataId" @selected>@source.Name</option>
+                                        }
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="row form-group m-2">
+                                <div class="col-lg-12">
+                                    <div class="text-right float-right">
+                                        <input type="hidden" id="ClientId" name="ClientId" value="@Model.ClientId" />
+                                        <button type="button" class="btn btn-primary" onclick="UpdateRelationshipInfo()">Update <i class="icon-paperplane ml-2"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="row mt-2">
+    <div class="col-lg-12">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="card-title">Family Info</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 text-right">
+                        <button type="button" class="btn btn-primary d-inline" id="bootbox_form" data-toggle="modal" data-target="#modal_family"> <i class="icon-user-plus"></i> </button>
+                    </div>
+                </div>
+                <div class="table-responsive" id="family-list">
+                   @Html.Partial("_FamilyListTable", Model.ClientFamilies)
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="row mt-2">
+    <div class="col-lg-12">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="card-title">Current Protection</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 text-right">
+                        <button type="button" class="btn btn-primary d-inline" id="bootbox_form" data-toggle="modal" data-target="#modal_policy"> <i class="icon-user-plus"></i> </button>
+                    </div>
+                </div>
+                <div class=" table-responsive" id="policy-list">
+                    @Html.Partial("_PolicyListTable", Model.ClientPolicies)
+                </div>
+                </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- family modal -->
+<div id="modal_family" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header pb-3">
+                <h5 class="modal-title">Add Family</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body py-0">
+                <form id="add-family">
+                    <fieldset class="mb-3">
+                        <input type="hidden" id="ClientId" name="ClientId" value="@Model.ClientId">
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Relationship<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <select class="custom-select" id="RelationId" name="RelationId" required>
+                                    <option value="">Please Select</option>
+                                    @foreach (var source in Model.FamilyRelation)
+                                    {
+                                        <option value="@source.MasterDataId">@source.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Name<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <input type="text" id="Name" name="Name" required class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Contact</label>
+                            <div class="col-lg-8">
+                                <input type="text" id="HPDesc" name="HPDesc" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Hobby</label>
+                            <div class="col-lg-8">
+                                <textarea id="HobbyDesc" name="HobbyDesc" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">School</label>
+                            <div class="col-lg-8">
+                                <textarea id="SchoolDesc" name="SchoolDesc" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Gender</label>
+                            <div class="col-lg-8">
+                                <div class="border p-3 rounded">
+                                    @foreach (var gender in Model.Genders)
+                                    {
+                                        var genChecked = gender.MasterDataId == Model.GenderId ? "checked" : "";
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input type="radio" @genChecked value="@gender.MasterDataId" class="custom-control-input" name="GenderId" id="familyGender_@gender.MasterDataId">
+                                            <label class="custom-control-label" for="familyGender_@gender.MasterDataId">@gender.Name</label>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Birthday</label>
+                            <div class="col-lg-8">
+                                <input type="date" id="DOB" name="DOB" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Remarks</label>
+                            <div class="col-lg-8">
+                                <textarea id="Remarks" name="Remarks" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+
+            <div class="modal-footer pt-3">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                <button type="button" onclick="AddFamily()" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /family modal -->
+<!-- policy modal -->
+<div id="modal_policy" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header pb-3">
+                <h5 class="modal-title">Add Policy</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body py-0">
+                <form id="add-policy">
+                    <fieldset class="mb-3">
+                        <input type="hidden" id="ClientId" name="ClientId" value="@Model.ClientId">
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Company<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <input type="text" required id="CompanyDesc" name="CompanyDesc" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Policy Number<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <input type="text" required id="PolicyNo" name="PolicyNo" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Type of Policy<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <input type="text" required id="PolicyTypeDesc" name="PolicyTypeDesc" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Sum Covered</label>
+                            <div class="col-lg-8">
+                                <input type="number" id="SumAssured" name="SumAssured" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Annual Premium</label>
+                            <div class="col-lg-8">
+                                <input type="number" id="Premium" name="Premium" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Critical Illness </label>
+                            <div class="col-lg-8">
+                                <input type="number" id="Critical Illness" name="CriticaIIllnessVal" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Personal Accident </label>
+                            <div class="col-lg-8">
+                                <input type="number" id="PersonalAccident" name="PersonalAccidentVal" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Medical Card </label>
+                            <div class="col-lg-8">
+                                <input type="number" id="MedicalCard" name="MedicalCardVal" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Coverage Terms </label>
+                            <div class="col-lg-8">
+                                <input type="text" id="CoverageTerms" name="CoverageTerms" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Date In-forced</label>
+                            <div class="col-lg-8">
+                                <input type="date" name="DateInForced" id="DateInForced" class="form-control">
+                            </div>
+                        </div>
+                    </fieldset>
+
+
+
+
+                </form>
+            </div>
+
+            <div class="modal-footer pt-3">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                <button type="button" onclick="AddPolicy()" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /policy modal -->
+@section Scripts{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('form').each(function () {   // <- selects every <form> on page
+                $(this).validate({
+                    ignore: 'input[type=hidden], .select2-search__field', // ignore hidden fields
+                    errorClass: 'validation-invalid-label',
+                    successClass: 'validation-valid-label',
+                    validClass: 'validation-valid-label',
+                    highlight: function (element, errorClass) {
+                        $(element).removeClass(errorClass);
+                    },
+                    unhighlight: function (element, errorClass) {
+                        $(element).removeClass(errorClass);
+                    },
+                    //success: function (label) {
+                    //   // label.hide();
+                    //    label.addClass('validation-valid-label').text('Success.'); // remove to hide Success message
+                    //},
+
+                    // Different components require proper error label placement
+                    errorPlacement: function (error, element) {
+                        debugger;
+                        if (element.parents().hasClass('form-check')) {
+                            error.appendTo(element.closest('.form-check').parent());
+                        }
+
+                        // Input with icons and Select2
+                        else if (element.parents().hasClass('form-group-feedback') || element.hasClass('select2-hidden-accessible')) {
+                            error.appendTo(element.parent());
+                        }
+
+                        // Input group and custom controls
+                        else if (element.parent().is('.custom-file, .custom-control') || element.parents().hasClass('input-group')) {
+                            error.appendTo(element.parent().parent());
+                        }
+
+                        // Other elements
+                        else {
+                            error.insertAfter(element);
+                        }
+                    },
+                    rules: {
+                        password: {
+                            minlength: 5
+                        },
+                        repeat_password: {
+                            equalTo: '#password'
+                        },
+                        email: {
+                            email: true
+                        },
+                        repeat_email: {
+                            equalTo: '#email'
+                        },
+                        minimum_characters: {
+                            minlength: 10
+                        },
+                        maximum_characters: {
+                            maxlength: 10
+                        },
+                        minimum_number: {
+                            min: 10
+                        },
+                        maximum_number: {
+                            max: 10
+                        },
+                        number_range: {
+                            range: [10, 20]
+                        },
+                        url: {
+                            url: true
+                        },
+                        date: {
+                            date: true
+                        },
+                        date_iso: {
+                            dateISO: true
+                        },
+                        numbers: {
+                            number: true
+                        },
+                        digits: {
+                            digits: true
+                        },
+                        creditcard: {
+                            creditcard: true
+                        },
+                        basic_checkbox: {
+                            minlength: 2
+                        },
+                        styled_checkbox: {
+                            minlength: 2
+                        },
+                        switch_group: {
+                            minlength: 2
+                        }
+                    },
+                    messages: {
+                        custom: {
+                            required: 'This is a custom error message'
+                        },
+                        basic_checkbox: {
+                            minlength: 'Please select at least {0} checkboxes'
+                        },
+                        styled_checkbox: {
+                            minlength: 'Please select at least {0} checkboxes'
+                        },
+                        switch_group: {
+                            minlength: 'Please select at least {0} switches'
+                        },
+                        agree: 'Please accept our policy'
+                    }
+                });
+            });
+
+        })
+
+        var swalInit = swal.mixin({
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-light',
+                denyButton: 'btn btn-light',
+                input: 'form-control'
+            }
+        });
+
+        function AddFamily() {
+             var form = $("#add-family");
+            form.validate();
+            if (form.valid()) {
+                var formData = form.serialize();
+                $.ajax({
+                    url: '@Url.Action("AddFamily", "Client")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        form.trigger('reset');
+                        $('#family-list').html(response);
+                        ShowSuccessFamily();
+                    }
+                });
+            }
+        }
+         function UpdateRelationshipInfo() {
+             var form = $("#relationship-info");
+            form.validate();
+            if (form.valid()) {
+                var formData = form.serialize();
+                $.ajax({
+                    url: '@Url.Action("UpdateRelationship", "Client")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        ShowSuccess();
+                    }
+                });
+            }
+        }
+        function UpdateBasicInfo() {
+             var form = $("#basic-info");
+            form.validate();
+            if (form.valid()) {
+                var formData = form.serialize();
+                $.ajax({
+                    url: '@Url.Action("UpdateBasic", "Client")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        ShowSuccess();
+                    }
+                });
+            }
+        }
+        function DeletePolicy(id, clientId) {
+
+              $.ajax({
+                url: '@Url.Action("DeletePolicy", "Client")',
+                type: 'POST',
+                  data: { id: id, clientId: clientId},
+                success: function (response) {
+                    $('#policy-list').html(response);
+                    swalInit.fire({
+                        title: 'Deleted!',
+                        text: 'Policy deleted',
+                        icon: 'success'
+                    });
+                }
+            });
+           
+        }
+        function AddPolicy() {
+              var form = $("#add-policy");
+            form.validate();
+            if (form.valid()) {
+                var formData = form.serialize();
+                $.ajax({
+                    url: '@Url.Action("AddPolicy", "Client")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        form.trigger('reset');
+                        $('#policy-list').html(response);
+                        ShowSuccessPolicy();
+                    }
+                });
+            }
+        }
+
+
+
+        function DeleteFamily(id, clientId) {
+            $.ajax({
+                url: '@Url.Action("DeleteFamily", "Client")',
+                type: 'POST',
+                data: { clientFamilyId: id, clientId: clientId},
+                success: function (response) {
+                    $('#family-list').html(response);
+                    swalInit.fire({
+                        title: 'Deleted!',
+                        text: 'Family deleted',
+                        icon: 'success'
+                    });
+                }
+            });
+
+        }
+
+
+        function ShowSuccess() {
+            swalInit.fire({
+                title: 'Success!',
+                text: 'Client profile updated successfully!',
+                icon: 'success'
+            });
+        }
+
+        function ShowSuccessFamily() {
+            swalInit.fire({
+                title: 'Success!',
+                text: 'Family member added!',
+                icon: 'success'
+            });
+            $('#modal_family').modal('hide');
+        }
+
+        function ShowSuccessPolicy() {
+            swalInit.fire({
+                title: 'Added!',
+                text: 'Policy added',
+                icon: 'success'
+            });
+            $('#modal_policy').modal('hide');
+        }
+    </script>
+}

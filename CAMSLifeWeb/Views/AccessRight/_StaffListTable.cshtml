@@ -1,0 +1,81 @@
+﻿@using CaliphWeb.Helper
+@using System.Globalization;
+@model  CaliphWeb.Models.ViewModel.UserListDataViewModel
+
+@{ var pager = new Pager(pageSize: Model.Paging.PageSize, currentPage: Model.Paging.CurrentPage, totalItems: Model.Paging.ItemCount);}
+
+<table class="table datatable-basic">
+    <thead>
+        <tr>
+            <th>Staff Id</th>
+            <th>Staff Name</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.UserList)
+        {
+            <tr>
+                <td>@item.Username</td>
+                <td>@item.DisplayName</td>
+                <td>@item.RoleName</td>
+                <td>
+                    @if (item.StatusId == 1)
+                    {
+                        <a href="#" class="badge badge-success dropdown-toggle" data-toggle="dropdown">@item.StatusDesc</a>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-item" onclick="UpdateStatus('@item.Username', '2')"><span class="badge badge-warning">InActive</span></a>
+                            <a href="#" class="dropdown-item" onclick="UpdateStatus('@item.Username', '14')"><span class="badge badge-danger">Suspend</span></a>
+                        </div>
+                    }
+                    else if (item.StatusId == 2)
+                    {
+                        <a href="#" class="badge badge-warning dropdown-toggle" data-toggle="dropdown">@item.StatusDesc</a>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-item" onclick="UpdateStatus('@item.Username', '1')"><span class="badge badge-success">Active</span></a>
+                            <a href="#" class="dropdown-item" onclick="UpdateStatus('@item.Username', '14')"><span class="badge badge-danger">Suspend</span></a>
+                        </div>
+                    }
+                    else if (item.StatusId == 14)
+                    {
+                        <a href="#" class="badge badge-danger dropdown-toggle" data-toggle="dropdown">@item.StatusDesc</a>
+                        <div class="dropdown-menu">
+                            <a href="#" class="dropdown-item" onclick="UpdateStatus('@item.Username', '1')"><span class="badge badge-success">Active</span></a>
+                            <a href="#" class="dropdown-item" onclick="UpdateStatus('@item.Username', '2')"><span class="badge badge-warning">InActive</span></a>
+                        </div>
+                    }
+                </td>
+                <td>@item.CreatedDate</td>
+                <td>
+                    <a href="#" data-toggle="modal" data-target="#modal_default" class="btn btn-primary" onclick="OpenModal('@item.Username');">
+                        Change Password
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="datatable-footer">
+    <div class="dataTables_info">
+        Showing @pager.StartIndex to @pager.EndIndex  of @pager.TotalItems entries
+    </div>
+    <div class="dataTables_paginate paging_simple_numbers">
+        @{ var prevPage = pager.CurrentPage - 1;
+            var disableClass = prevPage == 0 ? "disabled" : "";}
+        <a class="paginate_button previous @disableClass" onclick="SearchData(@prevPage )">←</a>
+
+        @foreach (var page in pager.Pages)
+        {
+            var current = page == pager.CurrentPage ? "current" : "";
+            <a class="paginate_button @current" onclick="SearchData(@page)">@page</a>}
+        @{ var nextPage = pager.CurrentPage + 1;
+            var isLastPage = nextPage > pager.EndPage;
+            var disableNextClass = isLastPage ? "disabled" : ""; }
+        <a class="paginate_button next @disableNextClass" @disableNextClass onclick="SearchData(@prevPage )">→</a>
+    </div>
+</div>
+

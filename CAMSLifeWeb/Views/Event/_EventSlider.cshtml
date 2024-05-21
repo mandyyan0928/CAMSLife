@@ -1,0 +1,64 @@
+﻿@model List<CaliphWeb.Models.ViewModel.EventAttachmentViewModel>
+
+<style>
+    .center {
+        position: relative;
+        top: 50%;
+        left: 25%;
+    }
+
+    .poster-img {
+        width: 500px;
+        height: 800px
+    }
+</style>
+
+<div class=" d-flex aligns-items-center justify-content-center">
+    <div class="card h-100">
+        <div class="card-body poster-img">
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    @foreach (var item in Model)
+                    {
+                        var classActive = "";
+
+                        if (Model.IndexOf(item) == 0)
+                        {
+                            classActive = "active";
+                        }
+                        <li data-target="#carouselExampleIndicators" data-slide-to="@Model.IndexOf(item)" class="@classActive"></li>
+                    }
+                </ol>
+                <div class="carousel-inner">
+                    @foreach (var item in Model)
+                    {
+                        var classActive = "";
+
+                        if (Model.IndexOf(item) == 0)
+                        {
+                            classActive = "active";
+                        }
+                        <div class="carousel-item @classActive">
+                            <img class="d-block w-100" src="@item.EventAttachmentFullName" alt="@item.EventAttachmentName">
+                        </div>
+                    }
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.carousel').carousel();
+    });
+
+</script>

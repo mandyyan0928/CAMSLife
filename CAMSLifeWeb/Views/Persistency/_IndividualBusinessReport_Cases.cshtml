@@ -1,0 +1,49 @@
+﻿
+@model CaliphWeb.ViewModel.PersistencyCalculatorViewModel
+@using CaliphWeb.ViewModel
+
+<div class=" table-responsive">
+    <table class="table datatable-button-html5-basic">
+        <thead>
+            <tr>
+                <th> Life Assured</th>
+                <th> Certificate </th>
+
+                <th> Plan Name </th>
+                <th> PayMode </th>
+                <th> Term </th>
+                <th> Issue Date</th>
+                <th> Submission Date</th>
+                <th> Due Date  </th>
+                <th> Contribution Amount </th>
+                <th> Payment Method </th>
+                <th> Status Updated Date </th>
+                <th> Annualised Premium </th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var policy in Model.AgentPolicies)
+            {
+                <tr>
+                    <td> @policy.life_assured</td>
+                    <td>
+                        @policy.certificate_no <br />
+                        @policy.certificate_status
+                    </td>
+                    <td> @policy.pay_mode</td>
+                    <td> @policy.product_name</td>
+                    <td> @policy.term</td>
+                    <td> @policy.issue_date</td>
+                    <td> @policy.summission_date</td>
+                    <td> @policy.due_date  </td>
+                    <td> @policy.contribution_amount.ToString("n2") </td>
+                    <td> @policy.payment_method_code </td>
+                    <td> @policy.status_updated_date </td>
+                    <td> @policy.AnnualisedPremium.ToString("n2") </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+    </div>

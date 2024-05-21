@@ -1,0 +1,110 @@
+﻿
+@model CaliphWeb.Models.ViewModel.MapaCalculatorViewModel
+ 
+<div class="row form-group">
+
+    <table class="table table-bordered" id="tblincome">
+        <thead>
+            <tr class="trhead">
+                <th>Quarter </th>
+                <th></th>
+                <th>Budget @Model.Year</th>
+                <th>Achieved @Model.Year</th>
+                <th>% Achieved <br /> From Budget</th>
+                <th>@(Model.Year-1)</th>
+                <th> Actual @(Model.Year-1) VS Actual @Model.Year</th>
+                <th> ACE  Actual @(Model.Year-1) VS Actual @Model.Year</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{decimal totalBudgetACE = 0, totalAchieveACE = 0, totalPreviousYearACE = 0, averagePercentAchieved = 0;}
+            @{decimal totalQuarterBudgetACE = 0, totalQuarterAchieveACE = 0, totalQuarterPreviousYearACE = 0;
+                int quarter = 1;}
+            @for (int i = 1; i <= 12; i++)
+            {
+            <tr>
+                @{
+
+                    var budgetSummary = Model.PlannedMapa[i - 1] ?? new CaliphWeb.Models.ViewModel.MapaPlanning();
+                    var previousYearAchieved = Model.PreviousYearActualMapa[i - 1] ?? new CaliphWeb.Models.ViewModel.MapaPlanning();
+                    var currentYearAchieved = Model.CurrentYearActualMapa[i - 1] ?? new CaliphWeb.Models.ViewModel.MapaPlanning();
+                    var percent = budgetSummary.ACE == 0 ? 0 : (currentYearAchieved.ACE / budgetSummary.ACE) * 100;
+                    var percentACEGrowth = previousYearAchieved.ACE == 0 ? 0 : ((currentYearAchieved.ACE - previousYearAchieved.ACE) / previousYearAchieved.ACE) * 100;
+
+                    DateTime date = new DateTime(DateTime.Now.Year, i, 1); ;
+                    totalBudgetACE += budgetSummary.ACE;
+                    totalAchieveACE += currentYearAchieved.ACE;
+                    totalPreviousYearACE += previousYearAchieved.ACE;
+
+                    totalQuarterBudgetACE += budgetSummary.ACE;
+                    totalQuarterAchieveACE += currentYearAchieved.ACE;
+                    totalQuarterPreviousYearACE += previousYearAchieved.ACE;
+
+                    averagePercentAchieved = totalBudgetACE == 0 ? 0 : totalAchieveACE / totalBudgetACE;
+                }
+                @if (i == 4 || i == 7 || i == 10 || 1 == i)
+                {
+                    <td rowspan="4">Quarter @quarter</td>
+                    quarter++;
+                }
+                <td>@date.ToString("MMMM")</td>
+                <td id="budgetsummary_@i"> @budgetSummary.ACE.ToString("n2")</td>
+                <td id="achievesummary_@i">@currentYearAchieved.ACE.ToString("n2")</td>
+                <td id="percentsummary_@i">  @percent.ToString("n2") %</td>
+                <td>  @previousYearAchieved.ACE.ToString("n2")</td>
+                
+                @{ var classText = percentACEGrowth <= 0 ? "text-danger" : "";} 
+                <td class="@classText">  @percentACEGrowth.ToString("n2") %</td>
+                <td>@((currentYearAchieved.ACE- previousYearAchieved.ACE).ToString("n2"))  </td>
+            </tr>
+
+                    if (i % 3 == 0)
+                    {
+        <tr>
+            @{
+                var percentACEQuarterGrowth = totalQuarterPreviousYearACE == 0 ? 0 : ((totalQuarterAchieveACE - totalQuarterPreviousYearACE) / totalQuarterPreviousYearACE) * 100;
+            }
+            <td><b>Total</b></td>
+            <td class="total_quarter_ace_@(quarter - 1) font-weight-bold"> @totalQuarterBudgetACE.ToString("n2")</td>
+            <td id="total_quarter_achieved_ace_@(quarter-1)" class="font-weight-bold">@totalQuarterAchieveACE.ToString("n2")</td>
+            <td id="quarter_ace_percent_@(quarter-1)" class="font-weight-bold">  @averagePercentAchieved.ToString("n2") %</td>
+            <td class="font-weight-bold">  @totalQuarterPreviousYearACE.ToString("n2")</td>
+            @{   classText = percentACEQuarterGrowth <= 0 ? "text-danger" : "";}
+            <td class="font-weight-bold @classText">  @percentACEQuarterGrowth.ToString("n2") %</td>
+            <td class="font-weight-bold">@((totalQuarterAchieveACE - totalQuarterPreviousYearACE).ToString("n2")) </td>
+            @{ totalQuarterAchieveACE = 0;
+                totalQuarterPreviousYearACE = 0;
+            }
+        </tr>
+
+                                }
+                            }
+
+        <tr>
+            @{
+                var percentACETotalGrowth = totalPreviousYearACE == 0 ? 0 : ((totalBudgetACE - totalPreviousYearACE) / totalPreviousYearACE) * 100;
+                var percentAchievedACETotalGrowth = totalPreviousYearACE == 0 ? 0 : ((totalAchieveACE - totalPreviousYearACE) / totalPreviousYearACE) * 100;
+            }
+            <td>  </td>
+
+            <td><b>Grand Total</b></td>
+            <td class="total_ace"> @totalBudgetACE.ToString("n2")</td>
+            <td id="total_achieved_ace">@totalAchieveACE.ToString("n2")</td>
+            <td id="total_ace_percent">  @averagePercentAchieved.ToString("n2") %</td>
+
+            <td id="previous_year_ace">  @totalPreviousYearACE.ToString("n2")</td>
+            @{ var classText1 = percentAchievedACETotalGrowth <= 0 ? "text-danger" : "";}
+
+            <td class="@classText1">@percentAchievedACETotalGrowth.ToString("n2") %  </td>
+            <td> @((totalAchieveACE - totalPreviousYearACE).ToString("n2")) </td>
+        </tr>
+        <tr>
+            <td>  </td>
+
+            <td> <b>Target Growth @Model.Year VS @(Model.Year-1)</b></td>
+            <td id="summary_yearly_growth">@percentACETotalGrowth.ToString("n2") %</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+

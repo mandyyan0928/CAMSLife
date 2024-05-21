@@ -1,0 +1,376 @@
+﻿@model CaliphWeb.Models.ViewModel.Project100ViewModel
+<style>
+    .table {
+        width: 100%;
+        table-layout: fixed;
+    }
+    .pagebreak {
+        page-break-after: always;
+    }
+    .vertical-text {
+        text-align: left!important;
+        width: 20px;
+        margin: 0px;
+        padding: 0px;
+        padding-left: 3px;
+        padding-right: 3px;
+        padding-top: 10px;
+        white-space: nowrap;
+        -webkit-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+
+    }
+
+    table {
+        border-collapse: collapse;
+    }
+
+    .table-bordered {
+        border: 2px solid black;
+    }
+
+    .text-left {
+        text-align: left !important;
+    }
+
+    .table-bordered td {
+        border: 1px solid black;
+        text-align: center;
+        font-size: 16px
+    }
+
+    .mb-5 {
+        margin-bottom: 10%
+    }
+</style>
+
+@{
+
+    var count = 10;
+
+    if (Model.Clients == null || Model.Clients.Count == 0)
+    {
+        <div>No Client Data Found</div>
+        return;
+    }
+
+    var loopCount = (Model.Clients.Count + count - 1) / count;
+
+    for(int i =1;i<= loopCount; i++)
+    {
+        var skip = (i-1)*10;
+        var loopClientData = Model.Clients.Skip(skip).Take(count).ToList();
+
+        var ct = count - loopClientData.Count;
+        for (int c = 1; c <= ct; c++)
+        {
+            loopClientData.Add(new CaliphWeb.ViewModel.Client());
+        }
+
+        @*<img src=@server.mappath("~/global_assets/images/project100_banner.png") style="width:100%;" object-fit:cover" />*@
+        <div style="background-color: #FE8F17; height: 80px; width: 100%;margin-bottom:10px ">
+            <img style=" width: 30%; background-color: white; height: 100%; object-fit:contain" src="@Server.MapPath("~/global_assets/images/logo_new.png")"/>
+        </div>
+        <table class="table table-bordered pagebreak">
+            <thead>
+                <tr>
+                    <td colspan="2" style="width:37%">
+                        Source Of Name
+
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tr>
+                <td colspan="2" style="width:30%" class="text-left">
+                    A. Relatives<br />
+                    B. School Friend<br />
+                    C. Neighbors<br />
+                    D. Colleagues/Former Colleagues<br />
+                    E. Known through spouse<br />
+                    F. Known through children<br />
+                    G. Known through hobbies/games<br />
+                    H. Known through religious activities<br />
+                    I. Known through social groups<br />
+                    J. Known through public service<br />
+                    K. Newly married couples<br />
+                    L. New job or promotion<br />
+                    M. New homeowners<br />
+                    N. People with whom you do business<br />
+                </td>
+                @foreach (var client in loopClientData)
+                {
+                    <td class="vertical-text"  text-rotate="45">
+                        HP:@client.ContactNo <br />
+                        Name: @client.Name
+
+                    </td>
+                }
+            </tr>
+            <tr>
+                @{ var annualIncome = Model.AnnualIncomes.FirstOrDefault();}
+                <td rowspan="@Model.AnnualIncomes.Count">
+                    <b> Annual Income</b>
+                </td>
+                <td class="text-left">
+                    @annualIncome.Name
+                </td>
+                @foreach (var client in loopClientData)
+                {
+                    <td>@(client.AnnualIncomeId == annualIncome.MasterDataId ? "X" : "")</td>
+                }
+            </tr>
+            @foreach (var masterdata in Model.AnnualIncomes.Skip(1))
+            {
+                <tr>
+                    <td class="text-left">
+                        @masterdata.Name
+                    </td>
+                    @foreach (var client in loopClientData)
+                    {
+                        <td>@(client.AnnualIncomeId == masterdata.MasterDataId ? "X" : "")</td>
+                    }
+                </tr>
+            }
+            <tr>
+                @{ var age = Model.Ages.FirstOrDefault();}
+                <td rowspan="@Model.Ages.Count">
+                    <b>Ages</b>
+                </td>
+                <td class="text-left">
+                    @age.Name
+                </td>
+                @foreach (var client in loopClientData)
+                {
+                    <td>@(client.AgeId == age.MasterDataId ? "X" : "")</td>
+                }
+            </tr>
+            @foreach (var masterdata in Model.Ages.Skip(1))
+            {
+                <tr>
+                    <td class="text-left">
+                        @masterdata.Name
+                    </td>
+                    @foreach (var client in loopClientData)
+                    {
+                        <td>@(client.AgeId == masterdata.MasterDataId ? "X" : "")</td>
+                    }
+                </tr>
+            }
+            <tr>
+                @{ var firstdata = Model.Occupations.FirstOrDefault();}
+                <td rowspan="@Model.Occupations.Count">
+                    <b>Occupation</b>
+                </td>
+                <td class="text-left">
+                    @firstdata.Name
+                </td>
+                @foreach (var client in loopClientData)
+                {
+                    <td>@(client.OccupationId == firstdata.MasterDataId ? "X" : "")</td>
+                }
+            </tr>
+            @foreach (var masterdata in Model.Occupations.Skip(1))
+            {
+                <tr>
+                    <td class="text-left">
+                        @masterdata.Name
+                    </td>
+                    @foreach (var client in loopClientData)
+                    {
+                        <td>@(client.OccupationId == masterdata.MasterDataId ? "X" : "")</td>
+                    }
+                </tr>
+            }
+            <tr>
+                @{ firstdata = Model.MaritalStatuses.FirstOrDefault();}
+                <td rowspan="@Model.MaritalStatuses.Count">
+                    <b>Marital Status</b>
+                </td>
+                <td class="text-left">
+                    @firstdata.Name
+                </td>
+                @foreach (var client in loopClientData)
+                {
+                    <td>@(client.MaritalId == firstdata.MasterDataId ? "X" : "")</td>
+                }
+            </tr>
+            @foreach (var masterdata in Model.MaritalStatuses.Skip(1))
+            {
+                <tr>
+                    <td class="text-left">
+                        @masterdata.Name
+                    </td>
+                    @foreach (var client in loopClientData)
+                    {
+                        <td>@(client.MaritalId == masterdata.MasterDataId ? "X" : "")</td>
+                    }
+                </tr>
+            }
+
+
+            <tr>
+                @{ firstdata = Model.LengthOfTimeKnowns.FirstOrDefault();}
+                <td rowspan="@Model.LengthOfTimeKnowns.Count">
+                    <b>
+                        Length Of Time
+                        Known
+                    </b>
+                </td>
+                <td class="text-left">
+                    @firstdata.Name
+                </td>
+                @foreach (var client in loopClientData)
+                {
+                    <td>@(client.LengthOfTimeKnownId == firstdata.MasterDataId ? "X" : "")</td>
+                }
+            </tr>
+            @foreach (var masterdata in Model.LengthOfTimeKnowns.Skip(1))
+            {
+                <tr>
+                    <td class="text-left">
+                        @masterdata.Name
+                    </td>
+                    @foreach (var client in loopClientData)
+                    {
+                        <td>@(client.LengthOfTimeKnownId == masterdata.MasterDataId ? "X" : "")</td>
+                    }
+                </tr>
+            }
+
+
+            <tr>
+                @{ firstdata = Model.HowWellKnowns.FirstOrDefault();}
+                <td rowspan="@Model.HowWellKnowns.Count">
+                    <b>
+                        How Well
+                        Known
+                    </b>
+                </td>
+                <td class="text-left">
+                    @firstdata.Name
+                </td>
+                @foreach (var client in loopClientData)
+                {
+                    <td>@(client.HowWellKnownId == firstdata.MasterDataId ? "X" : "")</td>
+                }
+            </tr>
+            @foreach (var masterdata in Model.HowWellKnowns.Skip(1))
+            {
+                <tr>
+                    <td class="text-left">
+                        @masterdata.Name
+                    </td>
+                    @foreach (var client in loopClientData)
+                    {
+                        <td>@(client.HowWellKnownId == masterdata.MasterDataId ? "X" : "")</td>
+                    }
+                </tr>
+            }
+
+            <tr>
+                @{ firstdata = Model.HowOftenSeenInAYears.FirstOrDefault();}
+                <td rowspan="@Model.HowOftenSeenInAYears.Count">
+                    <b>
+                        How Often
+                        Seen
+                        In A Year
+                    </b>
+                </td>
+                <td class="text-left">
+                    @firstdata.Name
+                </td>
+                @foreach (var client in loopClientData)
+                {
+                    <td>@(client.HowOftenSeenInAYearId == firstdata.MasterDataId ? "X" : "")</td>
+                }
+            </tr>
+            @foreach (var masterdata in Model.HowOftenSeenInAYears.Skip(1))
+            {
+                <tr>
+                    <td class="text-left">
+                        @masterdata.Name
+                    </td>
+                    @foreach (var client in loopClientData)
+                    {
+                        <td>@(client.HowOftenSeenInAYearId == masterdata.MasterDataId ? "X" : "")</td>
+                    }
+                </tr>
+            }
+
+            <tr>
+                @{ firstdata = Model.CouldApproachBusinesses.FirstOrDefault();}
+                <td rowspan="@Model.CouldApproachBusinesses.Count">
+                    <b>
+                        Could Approach
+                        On Business
+                    </b>
+                </td>
+                <td class="text-left">
+                    @firstdata.Name
+                </td>
+                @foreach (var client in loopClientData)
+                {
+                    <td>@(client.CouldApproachOnBusinessId == firstdata.MasterDataId ? "X" : "")</td>
+                }
+            </tr>
+            @foreach (var masterdata in Model.CouldApproachBusinesses.Skip(1))
+            {
+                <tr>
+                    <td class="text-left">
+                        @masterdata.Name
+                    </td>
+                    @foreach (var client in loopClientData)
+                    {
+                        <td>@(client.CouldApproachOnBusinessId == masterdata.MasterDataId ? "X" : "")</td>
+                    }
+                </tr>
+            }
+
+            <tr>
+                @{ firstdata = Model.AbilityToProvideReferrals.FirstOrDefault();}
+                <td rowspan="@Model.AbilityToProvideReferrals.Count">
+                    <b>
+                        Ability To
+                        Provide
+                        Referrals
+                    </b>
+                </td>
+                <td class="text-left">
+                    @firstdata.Name
+                </td>
+                @foreach (var client in loopClientData)
+                {
+                    <td>@(client.AbilityToProvideRefId == firstdata.MasterDataId ? "X" : "")</td>
+                }
+            </tr>
+            @foreach (var masterdata in Model.AbilityToProvideReferrals.Skip(1))
+            {
+                <tr>
+                    <td class="text-left">
+                        @masterdata.Name
+                    </td>
+                    @foreach (var client in loopClientData)
+                    {
+                        <td>@(client.AbilityToProvideRefId == masterdata.MasterDataId ? "X" : "")</td>
+                    }
+                </tr>
+            }
+        </table>
+
+                        skip++;
+                    }
+}
+
+
+
+

@@ -1,0 +1,149 @@
+﻿
+@model CaliphWeb.ViewModel.AgentBonusDetailsViewModel
+
+
+<!-- Basic datatable -->
+@{ var policyGroup = Model.AgentPolicies.GroupBy(x => x.certificate_no).Select(grp => grp.First()).ToList();
+}
+
+
+<div class="row mt-5">
+    <div class="col-md-12 text-center">
+        <h5>
+            Bonus Tracker for @Model.AgentId , @Model.AgentName for year
+            <label>
+                @Model.Year.ToString()
+            </label>
+        </h5>
+    </div>
+
+    <div class="form-group row col-md-5">
+        @{ double persistencyPremium = 0;
+            var annualPremium = Model.AgentPolicies.Sum(x => x.AnnualisedPremium);
+        }
+        @foreach (var policy in Model.AgentPolicies)
+        {
+            if (policy.due_date >= Model.PersistencyDate)
+            {
+                persistencyPremium += policy.AnnualisedPremium;
+            }
+        }
+        @{ double persistencyRatio = annualPremium == 0 ? 0 : (persistencyPremium / annualPremium) * 100; }
+        <label class="col-form-label col-lg-6">  D0 Persistency Ratio </label>
+        <div class="col-lg-6">
+            @persistencyRatio.ToString("n2") %
+        </div>
+    </div>
+    <div class="form-group row col-md-7">
+
+        <label class="col-form-label col-lg-6"> Cases</label>
+        <div class="col-lg-6">
+            <span class="">@policyGroup.Count()</span>
+
+        </div>
+    </div>
+
+    <div class="form-group row col-md-5">
+        <label class="col-form-label col-lg-6"> ACE</label>
+        <div class="col-lg-6">
+            @annualPremium.ToString("n2")
+        </div>
+    </div>
+    <div class="form-group row col-md-7">
+        <label class="col-form-label col-lg-6"> Net ACE</label>
+        <div class="col-lg-6">
+            @Model.AgentPolicies.Sum(x => x.NetAnnualisedPremium).ToString("n2")
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        @Html.Partial("~/Views/Home/_BonusTrackerDashboard.cshtml", Model.BonusTrackerDashboard)
+
+    </div>
+</div>
+<div class="row mt-5">
+    <div class="col-md-12">
+        <div class=" table-responsive">
+            <table class="table datatable-basic">
+                <thead>
+                    <tr>
+                        <th> Policy  </th>
+                        <th> In Force Date</th>
+                        <th> Payment Term </th>
+                        <th> Product </th>
+                        <th> ACE </th>
+                        <th> Basic </th>
+                        <th> Rider </th>
+                        <th> Top Up </th>
+                        <th>Net ACE </th>
+                        <th>FYC </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                    @foreach (var policy in policyGroup)
+                    {
+                        var policiesData = Model.AgentPolicies.Where(x => x.certificate_no == policy.certificate_no).ToList();
+                        var basic = policiesData.Where(x => x.product_type.ToLower() == "basic").Sum(x => x.contribution_amount);
+                        var rider = policiesData.Where(x => x.product_type.ToLower() == "rider").Sum(x => x.contribution_amount);
+                        var toptup = policiesData.Where(x => x.product_type.ToLower() == "topup").Sum(x => x.contribution_amount);
+
+                        <tr>
+                            <td style="width:250px; white-space:nowrap">
+                                @policy.certificate_no  <br />
+                                @*@policy.issue_date<br />
+                                @policy.due_date<br />
+                                @policy.PayUpTo<br />
+                                @policy.Factor<br />*@
+
+                                @if (policy.certificate_status.ToLower() == "in force")
+                                {
+                                    <span class="badge badge-success-100 text-success">
+                                        @policy.certificate_status
+
+                                    </span>
+                                }
+                                else if (policy.certificate_status.ToLower() == "lapsed")
+                                {
+                                    <span class="badge badge-danger-100 text-danger">
+
+                                        @policy.certificate_status
+
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-warning-100 text-warning">
+
+                                        @policy.certificate_status
+
+                                    </span>
+                                }
+                                <br />  @policy.life_assured
+                            </td>
+
+                            <td> @policy.selling_agent_coded_date</td>
+                            <td> @policy.term 
+                            <br />
+                            @policy.pay_mode
+                            </td>
+                            <td> @policy.plan_name <br /> @policy.product_name </td>
+                            <td> @policy.AnnualisedPremium.ToString("n2") </td>
+                            <td> @basic.ToString("n2")  </td>
+                            <td> @rider.ToString("n2") </td>
+                            <td> @toptup.ToString("n2")</td>
+                            <td> @policy.NetAnnualisedPremium.ToString("n2") </td>
+                            <td> @policy.fyc.ToString("n2") </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- /basic datatable -->

@@ -1,0 +1,565 @@
+﻿
+@model CaliphWeb.ViewModel.PersistencyCalculatorViewModel
+@using CaliphWeb.ViewModel
+@{
+    ViewBag.Title = "Persistency Calculator";
+}
+<script src="~/global_assets/js/plugins/visualization/echarts/echarts.min.js"></script>
+<script src="~/global_assets/js/demo_pages/form_validation.js"></script>
+<script src="~/global_assets/js/demo_pages/form_select2.js"></script>
+<script src="~/global_assets/js/plugins/tables/datatables/datatables.min.js"></script>
+<script src="~/global_assets/js/demo_pages/datatables_basic.js"></script>
+<script src="~/global_assets/js/demo_charts/echarts/light/pies/pie_basic.js"></script>
+
+ 
+<!-- Page header -->
+<div class="page-header page-header-light">
+    <div class="page-header-content header-elements-lg-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-list"></i> <span class="font-weight-semibold">Persistency Calculator</span> </h4>
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+    </div>
+
+    <div class="breadcrumb-line breadcrumb-line-light header-elements-lg-inline">
+        <div class="d-flex">
+            <div class="breadcrumb">
+                <a class="breadcrumb-item"><i class="icon-users4 mr-2"></i> Persistency Calculator</a>
+                <a class="breadcrumb-item"> Persistency Calculator</a>
+            </div>
+
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+    </div>
+</div>
+<!-- /page header -->
+<!-- Basic datatable -->
+<div class="card" id="search">
+    <div class="card-header">
+    </div>
+    <div class="card-body">
+        <div class=" table-responsive">
+            <div class="table datatable-header">
+                <div class="row">
+                </div>
+                <div class="row">
+                    <div class="col-md-12 d-flex align-content-between">
+
+                        <div class="col-md-5 m-1">
+                            <span> Date:</span>
+                            <div class="input-group">
+                                <span class="input-group-prepend">
+                                    <span class="input-group-text"><i class="icon-calendar22"></i></span>
+                                </span>
+                                <input type="text" disabled id="CreatedDate" class="form-control daterange-basic">
+                            </div>
+                        </div>
+                        <div class="col-md-5 m-1">
+                            <span>Persistency Date:</span>
+                            <div class="input-group">
+                                <span class="input-group-prepend">
+                                    <span class="input-group-text"><i class="icon-calendar22"></i></span>
+                                </span>
+                                <input type="text" disabled id="PersistencyDate" class="form-control daterange-single" value="@Model.PersistencyDate">
+                            </div>
+                        </div>
+                       
+                    </div>
+
+                </div>
+                <div class="row mt-5">
+                    <div class="col-md-12 text-center">
+                        <h5>
+                            Persistency Calculator for @Model.AgentId , @Model.AgentName as at
+                            <label>
+                                @Model.PersistencyDate.ToString("dd/MM/yyyy")
+                            </label>
+                        </h5>
+                    </div>
+
+                    <div class="form-group row col-md-5">
+                        @{ double persistencyPremium = 0;
+                            var annualPremium = Model.AgentPolicies.Sum(x => x.AnnualisedPremium);
+                        }
+                        @foreach (var policy in Model.AgentPolicies)
+                        {
+                            if (policy.due_date >= Model.PersistencyDate)
+                            {
+                                persistencyPremium += policy.AnnualisedPremium;
+                            }
+                        }
+                        @{ double persistencyRatio = annualPremium == 0 ? 0 : (persistencyPremium / annualPremium) * 100; }
+                        <label class="col-form-label col-lg-6">  Your Current Persistency </label>
+                        <div class="col-lg-6">
+                            <span class="form-control">
+                                @persistencyRatio.ToString("n2") %
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group row col-md-7">
+
+                        <label class="col-form-label col-lg-6"> Persistency After Repair</label>
+                        <div class="col-lg-6">
+                            <span class="new-persistency-ratio form-control"></span>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group row col-md-5">
+                        <label class="col-form-label col-lg-6"> Your Target Persistency</label>
+                        <div class="col-lg-6">
+                            <input type="number" class="form-control" onchange="TargetPercentChange()" id="target-percent" value="@Model.TargetRatio" />
+
+                        </div>
+                    </div>
+                    <div class="form-group row col-md-7">
+                        <label class="col-form-label col-lg-6"> Premium To Be Collect From Customer</label>
+                        <div class="col-lg-6">
+                            <span class="premium-collect-from-cust form-control"></span>
+
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row col-md-5">
+                        <label class="col-form-label col-lg-6"> ACE</label>
+                        <div class="col-lg-6">
+                            @annualPremium.ToString("n2")
+                        </div>
+                    </div>
+                    <div class="form-group row col-md-7"></div>
+                        <div class="form-group row col-md-5">
+                            <label class="col-form-label col-lg-6">Target Persistency Premium</label>
+                            <div class="col-lg-6">
+                                <span class="target-persistency-premium"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row col-md-7">
+                            <label class="col-form-label col-lg-6">Persistency Premium</label>
+                            <div class="col-lg-6">
+
+                                @persistencyPremium.ToString("n2")
+                            </div>
+                        </div>
+
+                        <div class="form-group row col-md-5">
+                            <label class="col-form-label col-lg-6"> Balance ACE</label>
+                            <div class="col-lg-6">
+                                <span class="new-minus-target-persistency-premium"></span>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group row col-md-7">
+                            <label class="col-form-label col-lg-6">Repaired ACE</label>
+                            <div class="col-lg-6">
+                                <span class="new-persistency-premium"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-5">
+                        <div class="col-md-12">
+                            <ul class="nav nav-tabs nav-tabs-highlight nav-justified">
+                                <li class="nav-item"><a href="#justified-left-tab1" class="nav-link active" data-toggle="tab"><i class="icon-calculator2"></i> Calculator</a></li>
+                                <li class="nav-item"><a href="#justified-left-tab2" onclick="InitGraph()" class="nav-link " data-toggle="tab"><i class="icon-stats-bars2"></i> Dashboard</a></li>
+                                <li class="nav-item"><a href="#justified-left-tab3" class="nav-link " data-toggle="tab"><i class="icon-table"></i> Dashboard2</a></li>
+                            </ul>
+                            <div class="tab-content" id="content">
+
+
+                                <!--Calculator-->
+                                <div class="tab-pane fade show active" id="justified-left-tab1">
+                                    @Html.Partial("~/Views/Persistency/_PersistencyCalculator.cshtml", Model)
+                                </div>
+                                <!--Dashboard-->
+                                <div class="tab-pane fade" id="justified-left-tab2">
+                                    @Html.Partial("~/Views/Persistency/_PersistencyPaymentMethodSummary.cshtml", Model)
+
+                                    @Html.Partial("~/Views/Persistency/_PersistencySummary.cshtml", Model)
+                                </div>
+                                <!--Dashboard 2-->
+                                <div class="tab-pane fade" id="justified-left-tab3">
+                                    @Html.Partial("~/Views/Persistency/_PersistencyProductTermSummary.cshtml", Model)
+                                </div>
+                                <!--Planning-->
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+
+                    </div>
+                </div>
+
+            </div>
+    </div>
+</div>
+<!-- /basic datatable -->
+<!-- Scrollable modal -->
+<div id="modal_scrollable" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl">
+        <div class="modal-content">
+            <div class="modal-header pb-3">
+                <h5 class="modal-title" id="modal-title">Direct Group</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body py-0" id="modal-body">
+                <ul id="direct-group-agent">
+                </ul>
+            </div>
+
+            <div class="modal-footer pt-3">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /scrollable modal -->
+
+
+@section Scripts{
+
+    <script type="text/javascript">
+
+function LoadPayModePie() {
+    var pie_donut_element = echarts.init(document.getElementById('paymode_pie'));
+    var option = {
+
+        // Colors
+        color: [
+            '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80',
+            '#8d98b3', '#e5cf0d', '#97b552', '#95706d', '#dc69aa',
+            '#07a2a4', '#9a7fd1', '#588dd5', '#f5994e', '#c05050',
+            '#59678c', '#c9ab00', '#7eb00a', '#6f5553', '#c14089'
+        ],
+
+        // Global text styles
+        textStyle: {
+            fontFamily: 'Roboto, Arial, Verdana, sans-serif',
+            fontSize: 13
+        },
+
+        // Add title
+        title: {
+            text: 'Pay Mode Summary',
+            left: 'center',
+            textStyle: {
+                fontSize: 17,
+                fontWeight: 500
+            },
+            subtextStyle: {
+                fontSize: 12
+            }
+        },
+
+        // Add tooltip
+        tooltip: {
+            trigger: 'item',
+            backgroundColor: 'rgba(0,0,0,0.75)',
+            padding: [10, 15],
+            textStyle: {
+                fontSize: 13,
+                fontFamily: 'Roboto, sans-serif'
+            },
+            formatter: "{b}: {c} ({d}%)"
+        },
+
+        // Add legend
+        legend: {
+            orient: 'vertical',
+            top: 'bottom',
+            left: 0,
+            data: ['Monthly', 'Quarterly', 'Half Annual', 'Annual'],
+            itemHeight: 8,
+            itemWidth: 8
+        },
+
+        // Add series
+        series: [{
+            name: 'Browsers',
+            type: 'pie',
+
+            itemStyle: {
+                normal: {
+                    borderWidth: 1,
+                    borderColor: '#fff'
+                }
+            },
+            data: [
+                { value: @Model.TotalMonthly, name: 'Monthly'
+},
+{ value: @Model.TotalQuarterly, name: 'Quarterly' },
+{ value: @Model.TotalHalfAnnual, name: 'Half Annual' },
+{ value: @Model.TotalAnnual, name: 'Annual' },
+                    ]
+                }]
+            };
+pie_donut_element.setOption(option);
+
+        }
+
+function LoadStatusPie() {
+    var pie_donut_element = echarts.init(document.getElementById('status_pie'));
+    var option = {
+
+        // Colors
+        color: [
+            '#f5994e', '#c05050', '#07a2a4', '#9a7fd1', '#588dd5',
+            '#e5cf0d', '#b6a2de', '#5ab1ef', '#ffb980',
+
+            '#8d98b3', '#97b552', '#95706d', '#dc69aa', '#d87a80',
+
+            '#59678c', '#c9ab00', '#2ec7c9', '#7eb00a', '#6f5553', '#c14089'
+        ],
+
+
+        // Global text styles
+        textStyle: {
+            fontFamily: 'Roboto, Arial, Verdana, sans-serif',
+            fontSize: 13
+        },
+
+        // Add title
+        title: {
+            text: 'Certifcate Summary',
+            left: 'center',
+            textStyle: {
+                fontSize: 17,
+                fontWeight: 500,
+
+            },
+            subtextStyle: {
+                fontSize: 12
+            }
+        },
+
+        // Add tooltip
+        tooltip: {
+            trigger: 'item',
+            backgroundColor: 'rgba(0,0,0,0.75)',
+            padding: [10, 15],
+            textStyle: {
+                fontSize: 13,
+                fontFamily: 'Roboto, sans-serif'
+            },
+            formatter: "{b}: {c} ({d}%)"
+        },
+
+        // Add legend
+        legend: {
+            orient: 'vertical',
+            top: 'bottom',
+            left: 0,
+            data: ['In Force', 'Lapsed', 'Freelook Cancellation', 'Contract Surrendered'],
+            itemHeight: 8,
+            itemWidth: 8
+        },
+
+        // Add series
+        series: [{
+            name: 'Browsers',
+            type: 'pie',
+
+            itemStyle: {
+                normal: {
+                    borderWidth: 1,
+                    borderColor: '#fff',
+
+                }
+            },
+            data: [
+                { value: @Model.TotalInForce, name: 'In Force'
+},
+{ value: @Model.TotalLapsed, name: 'Lapsed' },
+@*{ value: @Model.TotalFreelookCancellation, name: 'Freelook Cancellation' },*@
+{ value: @Model.TotalContractSurrendereds, name: 'Contract Surrendered' },
+                    ]
+                }]
+            };
+pie_donut_element.setOption(option);
+
+        }
+
+        function ReplaceNumberWithCommas(yourNumber) {
+            //Seperates the components of the number
+            var n = yourNumber.toString().split(".");
+            //Comma-fies the first part
+            n[0] = n[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            //Combines the two sections
+            return n.join(".");
+        }
+
+        $(document).ready(function () {
+            TargetPercentChange();
+        })
+
+        function InitGraph() {
+            LoadPayModePie();
+            LoadStatusPie();
+        }
+
+        var newPersistencyPremium = 0;
+        var amountToCollect = 0;
+        function TargetPercentChange() {
+            var targetPercent = parseFloat($('#target-percent').val());
+            var targetPercentDecimal = (targetPercent / 100);
+            var annualisedPremium = parseFloat($('#annual-premium').text().replaceAll(',', ''));
+            var existingPremium = parseFloat($('#existing-persistency-premium').text().replaceAll(',', ''));
+            var targetPersistencyPremium = annualisedPremium * targetPercentDecimal;
+
+            $('.target-persistency-premium').text(ReplaceNumberWithCommas(targetPersistencyPremium.toFixed(2)));
+            $('.target-plus-new-persistency-premium').text(ReplaceNumberWithCommas((existingPremium + newPersistencyPremium).toFixed(2)));
+            $('.target-persistency-percent').text(targetPercent + '%');
+
+
+
+            var existingTargetBalancePremium = targetPersistencyPremium - existingPremium;
+            $('.target-minus-existing-persistency-premium').text(ReplaceNumberWithCommas((existingTargetBalancePremium).toFixed(2)))
+            $('.new-persistency-premium').text(ReplaceNumberWithCommas((newPersistencyPremium).toFixed(2)))
+
+            var balancePremiumToCollect = existingTargetBalancePremium - newPersistencyPremium;
+            $('.new-minus-target-persistency-premium').text(ReplaceNumberWithCommas((balancePremiumToCollect).toFixed(2)))
+
+
+            var totalPersistencyPremium = existingPremium + newPersistencyPremium;
+            $('.existing-plus-new-persistency-premium').text(ReplaceNumberWithCommas((totalPersistencyPremium).toFixed(2)))
+
+            var newPersistencyRatio = (totalPersistencyPremium / annualisedPremium)*100;
+            $('.new-persistency-ratio').text(ReplaceNumberWithCommas((newPersistencyRatio).toFixed(2))+'%')
+
+
+            $('.premium-collect-from-cust').text(ReplaceNumberWithCommas((amountToCollect).toFixed(2)))
+
+        }
+
+
+        function RepairChange(element) {
+            var repairChange = element.value;
+            var opt = element.options[element.selectedIndex];
+            var counter = opt.dataset.counterpolicy
+            var annualPremium = opt.dataset.anuualpremium;
+            var collectAmount = parseFloat(opt.dataset.amounttocollect.replaceAll(',',''));
+
+            if (repairChange === '1') {
+                $('#repair_persistency_permium_' + counter).text(annualPremium)
+                newPersistencyPremium = newPersistencyPremium + parseFloat(annualPremium.replaceAll(',', ''));
+                amountToCollect = amountToCollect + collectAmount;
+            }
+            else if (repairChange === '0'){
+                $('#repair_persistency_permium_' + counter).text('0.00')
+                newPersistencyPremium = newPersistencyPremium - parseFloat(annualPremium.replaceAll(',', ''));;
+                amountToCollect = amountToCollect - collectAmount;
+            }
+
+            TargetPercentChange();
+        }
+
+
+        function ChangeType(type) {
+
+            if (type === 0)// whole group
+            {
+                $('#whole-group').removeClass();
+                $('#direct-group').removeClass();
+                $('#whole-group').addClass('btn btn-primary');
+                $('#direct-group').addClass('btn btn-outline-primary');
+            }
+            else if (type === 1)//direct group
+            {
+
+                var generation = 0;
+                var agent_id = '@Model.AgentId';
+                $("#direct-group-agent").html('');
+                $("#direct-group-agent").html('Loading...');
+                BlockUIHelper.blockUI('search')
+                $.ajax({
+                    url: '@Url.Action("GetAgentByGenerationAndID", "Agent")',
+                    type: 'POST',
+                    data: { generation: generation, agent_id: agent_id },
+                    success: function (response) {
+                        $("#direct-group-agent").html('');
+
+                        if (response.length == 0) {
+                            $("#direct-group-agent").append('<li>No Direct Group Founds</li>');
+                        }
+                        response.forEach(agent => {
+                            var data = {
+                                id: agent.agent_id,
+                                text: agent.agent_id + '-' + agent.agent_name
+                            };
+
+                            $("#direct-group-agent").append('<li><a href="/Persistency/Calculator/' + data.id + '"> ' + data.id + ' - ' + data.text + '</a></li>');
+                            console.log(data);
+
+                        })
+                        BlockUIHelper.unblockUI('search')
+
+                    }
+                });
+
+                $('#modal_scrollable').modal('show');
+
+
+            }
+        }
+
+        var swalInit = swal.mixin({
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-light',
+                denyButton: 'btn btn-light',
+                input: 'form-control'
+            }
+        });
+
+        let startOfMonth = new Date('@Model.StartDate.ToString("yyyy-MM-dd")');
+        let endOfMonth =new Date('@Model.EndDate.ToString("yyyy-MM-dd")');
+        // Basic initialization
+        $('#CreatedDate').daterangepicker({
+            parentEl: '.content-inner',
+            startDate: startOfMonth,
+            endDate: endOfMonth,
+
+        });
+        function SearchData(page) {
+            @{ var filter = new CaliphWeb.ViewModel.PersistencyCalculatorViewModel
+                {
+                   AgentId = Model.AgentId,
+                   AgentName= Model.AgentName
+                };
+}
+            var searchFilter = @Html.Raw(Json.Encode(filter));
+            searchFilter.StartDate = $('#CreatedDate').data().daterangepicker.startDate._d.toJSON();
+            searchFilter.EndDate = $('#CreatedDate').data().daterangepicker.endDate._d.toJSON();
+
+            BlockUIHelper.blockUI('search')
+            //save to tempdata
+            // reload
+
+            // grab from tempdata when page load
+            $.ajax({
+                url: '@Url.Action("Search", "Persistency")',
+                type: 'POST',
+                data: { req: searchFilter},
+                success: function (response) {
+                    //$('#client-table').html(response);
+                    location.reload();
+                }
+            });
+
+        }
+
+
+        function generateFileName() {
+            // Your logic to generate the filename dynamically
+            var currentDate = new Date().toISOString().slice(0, 10); // Example: Current date
+            var fileName = 'Persistency_' + currentDate;
+            return fileName;
+        }
+
+    </script>
+}

@@ -1,0 +1,28 @@
+﻿@using CaliphWeb.ViewModel
+@model  GenerationGroupPolicy
+
+<table class="table table-border-dashed">
+    <thead>
+        <tr id="action">
+           
+            <td>Agent</td>
+            <td>ACE</td>
+          
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var agentHierarchyPolicy in Model.AgentHierarchyPolicies)
+        {
+            <tr>
+                <td>
+                    <a  href="#"  onclick="DisplayCalculator('@agentHierarchyPolicy.Agent.agent_id', 'p', '@agentHierarchyPolicy.Agent.agent_name')">
+                        @agentHierarchyPolicy.Agent.agent_id (  @agentHierarchyPolicy.Agent.role )<br />
+                        @agentHierarchyPolicy.Agent.agent_name
+                    </a>
+                </td>
+                <td id="ace_@agentHierarchyPolicy.Agent.agent_id">@agentHierarchyPolicy.ACE.ToString("n2")</td>
+               
+            </tr>
+        }
+    </tbody>
+</table>

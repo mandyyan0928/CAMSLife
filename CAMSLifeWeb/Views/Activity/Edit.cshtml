@@ -1,0 +1,308 @@
+﻿
+@{
+    ViewBag.Title = "Add";
+}
+
+<script src="~/global_assets/js/demo_pages/form_input_groups.js"></script>
+<script src="~/global_assets/js/demo_pages/picker_date.js"></script>
+<!-- Page header -->
+<div class="page-header page-header-light">
+    <div class="page-header-content header-elements-lg-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-plus-circle2"></i> <span class="font-weight-semibold">Edit Activity</span></h4>
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+
+    </div>
+
+    <div class="breadcrumb-line breadcrumb-line-light header-elements-lg-inline">
+        <div class="d-flex">
+            <div class="breadcrumb">
+                <a class="breadcrumb-item"><i class="icon-calendar3 mr-2"></i> Activity</a>
+                <a href="@Url.Action("List","Activity")" class="breadcrumb-item">Activity List</a>
+                <a class="breadcrumb-item">Edit Activity</a>
+            </div>
+
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+    </div>
+</div>
+<!-- /page header -->
+<!-- Tabs with top line -->
+<div class="mb-3 mt-2">
+    <h6 class="mb-0 font-weight-semibold">
+    </h6>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+            </div>
+
+            <div class="card-body">
+                <ul class="nav nav-tabs nav-tabs-top">
+                    <li class="nav-item"><a href="#top-tab1" class="nav-link active" data-toggle="tab">Sales Activity</a></li>
+                    <li class="nav-item"><a href="#top-tab2" class="nav-link" data-toggle="tab">Referral Leads</a></li>
+
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="top-tab1">
+                        <form action="#">
+                            <fieldset class="mb-3">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Activity</label>
+                                    <div class="col-lg-8">
+                                        <select class="custom-select">
+                                            <option value="opt1">Please Select</option>
+                                            <option value="opt2" selected>Sales Call</option>
+                                            <option value="opt2">Appt Secured</option>
+                                            <option value="opt3">Survey</option>
+                                            <option value="opt4">Approach In Person</option>
+                                            <option value="opt4">Closing Interview</option>
+                                            <option value="opt4">Servicing / Follow up</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Date</label>
+                                    <div class="col-lg-8">
+                                        <div class="input-group">
+                                            <span class="input-group-prepend">
+                                                <span class="input-group-text"><i class="icon-calendar5"></i></span>
+                                            </span>
+                                            <input type="text" value="2021-08-18" class="form-control pickadate rounded-right">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Time</label>
+                                    <div class="col-lg-8 text-center">
+                                        <div class="input-group">
+                                            <span class="input-group-prepend">
+                                                <span class="input-group-text"><i class="icon-alarm"></i></span>
+                                            </span>
+                                            <input type="text" id="timefrom" value="08" class="form-control rounded-right">
+                                            <i class="icon-minus3 text-center  align-items-center" style="display:grid"></i>
+
+                                            <span class="input-group-prepend">
+                                                <span class="input-group-text"><i class="icon-alarm"></i></span>
+                                            </span>
+                                            <input type="text" id="timeto" value="09" class="form-control rounded-right">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-3">Notes</label>
+                                    <div class="col-lg-8">
+                                        <textarea id="notes" class="form-control">
+Busy at the moment , prefer to call back after working hours 
+will arrange for second call
+
+</textarea>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+
+
+
+                            <div class="row form-group m-2">
+                                <div class="col-lg-12">
+                                    <div class="text-right float-right">
+                                        <button type="button" class="btn btn-primary" onclick="ShowSuccess()">Submit <i class="icon-paperplane ml-2"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="tab-pane fade" id="top-tab2">
+                        @*<div class="card-header">
+                                <h5 class="card-title">Leads</h5>
+                            </div>*@
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <table class="table table-responsive datatable-colvis-restore dataTable no-footer">
+                                    <thead>
+                                        <tr>
+                                            <th> Name</th>
+                                            <th> Contact</th>
+                                            <th> Status</th>
+                                            <th> Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Aimee Pearce</td>
+                                            <td>011-30927121</td>
+                                            <td><span class="badge badge-warning">leads</span></td>
+                                            <td class="text-center">
+                                                <a href="#" data-popup="tooltip" onclick="ShowEdit()" title="Edit" class="list-icons-item">
+                                                    <i class="icon-pencil7"></i>
+                                                </a>
+                                                <a href="@Url.Action("Add", "Client")" data-popup="tooltip" title="Convert to client" class="list-icons-item">
+                                                    <i class="icon-sync"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tiffany Yoder</td>
+                                            <td>014-56987741</td>
+                                            <td><span class="badge badge-warning">leads</span></td>
+                                            <td class="text-center">
+                                                <a href="#" data-popup="tooltip" data-toggle="modal" data-target="#modal_leads" title="Edit" class="list-icons-item">
+                                                    <i class="icon-pencil7"></i>
+                                                </a>
+                                                <a href="@Url.Action("Add", "Client")" data-popup="tooltip" title="Convert to client" class="list-icons-item">
+                                                    <i class="icon-sync"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Evie Barr</td>
+                                            <td>019-772102841</td>
+                                            <td><span class="badge badge-success">converted to client</span></td>
+                                            <td class="text-center">
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<!-- /tabs with top line -->
+<!-- leads modal -->
+<div id="modal_leads" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header pb-3">
+                <h5 class="modal-title">Add Leads</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body py-0">
+                <form action="#">
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Name</label>
+                        <div class="col-lg-8">
+                            <input type="text" id="name" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Contact</label>
+                        <div class="col-lg-8">
+                            <input type="text" id="contact" class="form-control">
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer pt-3">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                <button type="button" onclick="ShowSuccessLeads()" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /leads modal -->
+<!-- edit leads modal -->
+<div id="modal_editleads" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header pb-3">
+                <h5 class="modal-title">Edit Leads</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body py-0">
+                <form action="#">
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Name</label>
+                        <div class="col-lg-8">
+                            <input type="text" id="name" value="Aimee Pearce" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Contact</label>
+                        <div class="col-lg-8">
+                            <input type="text" value="011-30927121" id="contact" class="form-control">
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer pt-3">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                <button type="button" onclick="ShowSuccessEditLeads()" class="btn btn-primary">Edit </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--  edit  modal -->
+
+@section Scripts{
+
+    <script type="text/javascript">
+        $('#timefrom').pickatime({
+            onStart: function () {
+                var date = new Date();
+                this.set('select', [8, 0])
+            },
+        });
+
+        $('#timeto').pickatime({
+            onStart: function () {
+                var date = new Date();
+                this.set('select', [9, 0])
+            },
+        });
+
+        var swalInit = swal.mixin({
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-light',
+                denyButton: 'btn btn-light',
+                input: 'form-control'
+            }
+        });
+        function ShowSuccess() {
+
+            swalInit.fire({
+                title: 'Success!',
+                text: 'Activity added successfully!',
+                icon: 'success'
+            });
+        }
+        function ShowSuccessLeads() {
+            ShowSuccess();
+            $('#modal_leads').modal('hide');
+        }
+        function ShowSuccessEditLeads() {
+            ShowSuccess();
+            $('#modal_editleads').modal('hide');
+        }
+
+        function ShowEdit() {
+            $('#modal_editleads').modal('show');
+        }
+    </script>
+}

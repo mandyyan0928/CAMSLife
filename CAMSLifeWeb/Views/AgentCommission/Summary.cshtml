@@ -1,0 +1,388 @@
+﻿@{
+    ViewBag.Title = "Summary";
+}
+@model CaliphWeb.Models.API.AgentCommissionTable
+<script src="~/global_assets/js/plugins/visualization/echarts/echarts.min.js"></script>
+<script src="~/global_assets/js/demo_pages/form_select2.js"></script>
+<script src="~/global_assets/js/demo_pages/components_modals.js"></script>
+
+
+<script src="~/global_assets/js/demo_pages/form_input_groups.js"></script>
+
+
+
+<!-- Basic area -->
+<div class="card h-100">
+    <div class="card-body">
+        <div class=" table-responsive">
+            <div class="table datatable-header">
+                <div class="row">
+                    <div class="col-md-10 d-flex align-content-between">
+                        <label class="m-1">
+                            <span>Year 1:</span>
+                            <select required data-placeholder="Start Year" id="year1" name="year1" class="form-control select-search" data-fouc>
+                                <option value="">Select</option>
+                                @{
+                                    var thisYear = (int)DateTime.Today.Year;
+                                    int startYear = 2019;
+                                    while (thisYear >= startYear)
+                                    {
+                                        var selected = @Model.LastYear == startYear.ToString() ? "selected" : "";
+                                        <option value="@startYear" @selected>@startYear</option>
+                                        startYear++;
+                                    }
+                                }
+                            </select>
+                        </label>
+                        <label class="m-1">
+                            <span>Year 2:</span>
+                            <select required data-placeholder="End Year" id="year2" name="year2" class="form-control select-search" data-fouc>
+                                <option value="">Select</option>
+                                @{
+                                    startYear = 2019;
+                                    while (thisYear >= startYear)
+                                    {
+                                        var selected = @Model.CurrentYear == startYear.ToString() ? "selected" : "";
+                                        <option value="@startYear" @selected>@startYear</option>
+                                        startYear++;
+                                    }
+                                }
+                            </select>
+                        </label>
+
+                        @{ var user = CaliphWeb.Helper.UserHelper.GetLoginUserViewModel();}
+
+                        @if (!user.IsAgent && !user.IsPotentialAgent)
+                        {
+                            <label class="m-1">
+                                <span>Generation:</span>
+
+                                <select required data-placeholder="Generation" id="Generation" name="select2" class="form-control select-search" onchange="GetAgentByGeneration()" data-fouc>
+                                    <option value="">Select</option>
+
+
+                                    @for (int i = 0; i <= 6; i++)
+                                    {
+                                        var text = i == 0 ? "Direct Group" : "Group " + i.ToString();
+                                        <option value="@i">@text</option>
+                                    }
+
+                                </select>
+                            </label>
+                        }
+
+                        <label class="m-1">
+                            <span>Agent:</span>
+                            <select required data-placeholder="Agent" id="CreatedBy" name="select2" class="form-control select-search" data-fouc>
+
+                                @if (user.IsAgent || user.IsPotentialAgent)
+                                {
+                                    var selected = user.Username == CaliphWeb.Helper.UserHelper.GetLoginUser() ? "selected" : "";
+                                    <option value="@user.Username" selected>@user.Username - @user.Fullname</option>
+                                }
+                                else
+                                {
+                                    <option value="@user.Username" selected>@user.Username - @user.Fullname</option>
+                                }
+
+                            </select>
+                        </label>
+
+
+
+
+                        <!--<label class="m-1">
+                            <span>Agent:</span>
+                            <select required data-placeholder="Agent Name" id="CreatedBy" name="select2" class="form-control select-search" data-fouc>
+                                <option value="">Select</option>-->
+                                @*@foreach (var user in Model.Agents)
+                                {
+                                    var selected = user.Username == CaliphWeb.Helper.UserHelper.GetLoginUser() ? "selected" : "";
+                                    <option value="@user.Username" @selected>@user.Username</option>
+                                }*@
+                            <!--</select>
+                        </label>-->
+                        <label class="m-1">
+                            <br />
+                            <button type="button" onclick="SearchData()" class="btn btn-primary d-inline" id="bootbox_form"> <i class="icon-search4"></i> </button>
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+        <div class="chart-container">
+            <div class="chart has-fixed-height" id="area_basic"></div>
+        </div>
+        <!-- /table area -->
+        <div id="user-table" class="card text-center" style="border: none; box-shadow: none; ">
+           
+            
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/template" id="loading">
+        <div class="text-center mt-2 mb-3">
+            <div class="pace-demo">
+                <div class="theme_xbox_lg">
+                    <div class="pace_progress" data-progress-text="60%" data-progress="60" style="width: 60%;"></div>
+                    <div class="pace_activity"></div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script>
+    var EchartsAreaBasicLight = function () {
+        //
+        // Setup module components
+        //
+
+        // Basic area chart
+        var _areaBasicLightExample = function () {
+            if (typeof echarts == 'undefined') {
+                console.warn('Warning - echarts.min.js is not loaded.');
+                return;
+            }
+
+            // Define element
+            var area_basic_element = document.getElementById('area_basic');
+
+
+            //
+            // Charts configuration
+            //
+            if (area_basic_element) {
+
+                // Initialize chart
+                var area_basic = echarts.init(area_basic_element);
+
+
+                //
+                // Chart config
+                //
+
+                // Options
+                area_basic.setOption({
+                    //#FFA500- Orange
+                    //#FFFF00- Yellow
+                    // Define colors
+                    color: ['#FFFF00', '#FFA500'],
+
+                    title: {
+                        text: "Total of OR by Month",
+                        left: "center",
+                    },
+
+                    // Global text styles
+                    textStyle: {
+                        fontFamily: 'Roboto, Arial, Verdana, sans-serif',
+                        fontSize: 13
+                    },
+
+                    // Chart animation duration
+                    animationDuration: 750,
+
+
+                    // Add legend
+                    legend: {
+                        data: [$('#year1').val(),$('#year2').val()],
+                        top: "bottom",
+                    },
+
+                    // Add tooltip
+                    tooltip: {
+                        trigger: 'axis',
+                        backgroundColor: 'rgba(0,0,0,0.75)',
+                        padding: [10, 15],
+                        textStyle: {
+                            fontSize: 13,
+                            fontFamily: 'Roboto, sans-serif'
+                        }
+                    },
+
+                    // Horizontal axis
+                    xAxis: [{
+                        name: 'Month',
+                        nameLocation: 'center',
+                        type: 'category',
+
+                        data: [
+                            'January',
+                            'February',
+                            'March',
+                            'April',
+                            'May',
+                            'June',
+                            'July',
+                            'August',
+                            'September',
+                            'October',
+                            'November',
+                            'December'
+                        ],
+                    }],
+
+                    // Vertical axis
+                    yAxis: [{
+                        type: 'value'
+                    }],
+
+                    // Add series
+                    series: [
+                        {
+                            name: $('#year1').val(),
+                            type: 'bar',
+                            data:
+                                [formatCommaTextToFloat($('#year1_1').text()),
+                                    formatCommaTextToFloat($('#year1_2').text()),
+                                    formatCommaTextToFloat($('#year1_3').text()),
+                                    formatCommaTextToFloat($('#year1_4').text()),
+                                    formatCommaTextToFloat($('#year1_5').text()),
+                                    formatCommaTextToFloat($('#year1_6').text()),
+                                    formatCommaTextToFloat($('#year1_7').text()),
+                                    formatCommaTextToFloat($('#year1_8').text()),
+                                    formatCommaTextToFloat($('#year1_9').text()),
+                                    formatCommaTextToFloat($('#year1_10').text()),
+                                    formatCommaTextToFloat($('#year1_11').text()),
+                                    formatCommaTextToFloat($('#year1_12').text())]
+                        },
+                        {
+                            name: $('#year2').val(),
+                            type: 'bar',
+                            data:
+                                [formatCommaTextToFloat($('#year2_1').text()),
+                                    formatCommaTextToFloat($('#year2_2').text()),
+                                    formatCommaTextToFloat($('#year2_3').text()),
+                                    formatCommaTextToFloat($('#year2_4').text()),
+                                    formatCommaTextToFloat($('#year2_5').text()),
+                                    formatCommaTextToFloat($('#year2_6').text()),
+                                    formatCommaTextToFloat($('#year2_7').text()),
+                                    formatCommaTextToFloat($('#year2_8').text()),
+                                    formatCommaTextToFloat($('#year2_9').text()),
+                                    formatCommaTextToFloat($('#year2_10').text()),
+                                    formatCommaTextToFloat($('#year2_11').text()),
+                                    formatCommaTextToFloat($('#year2_12').text())]
+                        }
+                    ]
+                });
+            }
+
+            console.log([formatCommaTextToFloat($('#year2_1').text()),
+            formatCommaTextToFloat($('#year2_2').text()),
+            formatCommaTextToFloat($('#year2_3').text()),
+            formatCommaTextToFloat($('#year2_4').text()),
+            formatCommaTextToFloat($('#year2_5').text()),
+            formatCommaTextToFloat($('#year2_6').text()),
+            formatCommaTextToFloat($('#year2_7').text()),
+            formatCommaTextToFloat($('#year2_8').text()),
+            formatCommaTextToFloat($('#year2_9').text()),
+            formatCommaTextToFloat($('#year2_10').text()),
+            formatCommaTextToFloat($('#year2_11').text())])
+            //
+            // Resize charts
+            //
+
+            // Resize function
+            var triggerChartResize = function () {
+                area_basic_element && area_basic.resize();
+            };
+
+            // On sidebar width change
+            var sidebarToggle = document.querySelectorAll('.sidebar-control');
+            if (sidebarToggle) {
+                sidebarToggle.forEach(function (togglers) {
+                    togglers.addEventListener('click', triggerChartResize);
+                });
+            }
+
+            // On window resize
+            var resizeCharts;
+            window.addEventListener('resize', function () {
+                clearTimeout(resizeCharts);
+                resizeCharts = setTimeout(function () {
+                    triggerChartResize();
+                }, 200);
+            });
+        };
+
+
+        //
+        // Return objects assigned to module
+        //
+
+        return {
+            init: function () {
+                _areaBasicLightExample();
+            }
+        }
+    }();
+
+
+    // Initialize module
+    // ------------------------------
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+    });
+
+        function GetAgentByGeneration() {
+            var generation = $('#Generation').val();
+            BlockUIHelper.blockUI('search')
+            $.ajax({
+                url: '@Url.Action("GetAgentByGeneration", "Agent")',
+                type: 'POST',
+                data: { generation: generation },
+                success: function (response) {
+                    $('#CreatedBy').val(null).trigger('change');
+                    $('#CreatedBy').val(null).empty()
+                    $('#CreatedBy').select2('data', null);
+                    response.forEach(agent => {
+                        var data = {
+                            id: agent.agent_id,
+                            text: agent.agent_id + '-' + agent.agent_name
+                        };
+
+                        var newOption = new Option(data.text, data.id, false, false);
+                        $('#CreatedBy').append(newOption).trigger('change');
+                        console.log(data);
+
+                    })
+                    BlockUIHelper.unblockUI('search')
+                }
+            });
+        }
+        $(document).ready(function () {
+            SearchData();
+       // EchartsAreaBasicLight.init();
+    })
+
+        function SearchData() {
+            @{
+                var filter = new CaliphWeb.Models.API.AgentCommissionFilter();
+                }
+                var searchFilter = @Html.Raw(Json.Encode(filter));
+                searchFilter.Year1 = $('#year1').val();
+                searchFilter.Year2 = $('#year2').val();
+                searchFilter.AgentId = $('#CreatedBy').val();
+
+                var loading = $('#loading').html();
+                $('#user-table').html(loading);
+
+                $.ajax({
+                    url: '@Url.Action("NewSummary", "AgentCommission")',
+                    type: 'POST',
+                    data: searchFilter,
+                    success: function (response) {
+                        $('#user-table').html(response);
+                        EchartsAreaBasicLight.init();
+                    }
+                });
+            }
+
+    </script>
+    }

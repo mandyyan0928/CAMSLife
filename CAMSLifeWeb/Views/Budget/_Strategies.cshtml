@@ -1,0 +1,264 @@
+﻿@using CaliphWeb.ViewModel.Data;
+@using CaliphWeb.Helper
+@model CaliphWeb.Models.API.Budget.BudgetModel
+<form id="frmstrategy">
+    <div id="strategies">
+
+        <div class="table table-responsive">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-7">
+
+              
+                    <input type="hidden"  value="@Model.Strategy.BudgetStrategy.BudgetStrategyId" id="BudgetStrategyId" name="BudgetStrategyId"/>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Number Of Cases For The Year
+                                </th>
+                                <th colspan="2" id="strategytotalcase">
+                                </th>
+
+
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    Goal ACE
+                                </td>
+                                <td colspan="2" id="strategyace">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Customer Segments
+                                </td>
+                                <td>
+                                    High End
+                                </td>
+                                <td>
+                                    Low End
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    High End / Low End %
+                                </td>
+                                <td>
+                                    <input type="number" name="HighEndPercentage" class="form-control" id="highendpercent" onchange="onStrategyPercentChange('high' )"  value="@Model.Strategy.BudgetStrategy.HighEndPercentage.ToString("n2")"/>
+                                </td>
+                                <td>
+                                    <input type="number" name="LowEndPercentage" class="form-control" id="lowendpercent" onchange="onStrategyPercentChange('low' )"  value="@Model.Strategy.BudgetStrategy.LowEndPercentage.ToString("n2")"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    ACE
+                                </td>
+                                <td id="strategyhighendace">
+                                </td>
+                                <td id="strategylowendace">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Average Yearly Premium
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" name="HighEndAveragePremium" id="highendpremium" onchange="CalStrategy()" value="@Model.Strategy.BudgetStrategy.HighEndAveragePremium.ToString("n2")" />
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" name="LowEndAveragePremium" id="lowendpremium" onchange="CalStrategy()" value="@Model.Strategy.BudgetStrategy.LowEndAveragePremium.ToString("n2")" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Cases
+                                </td>
+                                <td id="highendcase">
+                                </td>
+                                <td id="lowendcase">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="mt-3 mb-3 text-right">
+                        <button type="button" class="btn btn-primary" onclick="UpdateStrategy()">Update <i class="icon-paperplane ml-2"></i></button>
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+
+            </div>
+        </div>
+
+        <div class="table table-responsive">
+            <div class="row mt-3">
+
+                <div class="col-md-2"></div>
+                <div class="col-md-7">
+                    <h5>Quarter</h5>
+                  
+                    <table class="table table-bordered" style="width:606px">
+                        <thead>
+                            <tr>
+                                <th class="strategy-quarter-1">
+
+                                </th>
+                                <th class="strategy-quarter-1" colspan="3">
+                                    1st Quarter
+                                </th>
+                                <th class="strategy-quarter-2" colspan="3">
+                                    2nd Quarter
+                                </th>
+
+
+                            </tr>
+
+                        </thead>
+                        @{
+
+                            var months = new List<DateTime>();
+                            var startMonth = Model.Income.IncomeData.ProductStartMonth == 0 ? 1 : Model.Income.IncomeData.ProductStartMonth;
+                            var startYear = Model.Income.IncomeData.BudgetYear.HasValue ? Model.Income.IncomeData.BudgetYear.Value : DateTime.Now.Year;
+
+                            for (int i = 0; i <= 11; i++)
+                            {
+                                var month = startMonth + i;
+                                var year = startYear;
+                                if (month > 12)
+                                {
+                                    month = month - 12;
+                                    year = year + 1;
+                                }
+
+                                var date = new DateTime(year, month, 1);
+                                months.Add(date);
+                            }
+                        }
+                        <tbody>
+                            <tr>
+                                <td class="strategy-quarter-1"></td>
+                                <td class="strategy-quarter-1">@months[0].ToString("MMM yyyy")</td>
+                                <td class="strategy-quarter-1">@months[1].ToString("MMM yyyy")</td>
+                                <td class="strategy-quarter-1">@months[2].ToString("MMM yyyy")</td>
+                                <td class="strategy-quarter-2">@months[3].ToString("MMM yyyy")</td>
+                                <td class="strategy-quarter-2">@months[4].ToString("MMM yyyy")</td>
+                                <td class="strategy-quarter-2">@months[5].ToString("MMM yyyy")</td>
+                            </tr>
+                            <tr>
+                                <td class="strategy-quarter-1">Per Month</td>
+                                <td class="strategy-quarter-1" id="quartbudgetmonth1"></td>
+                                <td class="strategy-quarter-1" id="quartbudgetmonth2"></td>
+                                <td class="strategy-quarter-1" id="quartbudgetmonth3"></td>
+                                <td class="strategy-quarter-2" id="quartbudgetmonth4"></td>
+                                <td  class="strategy-quarter-2"id="quartbudgetmonth5"></td>
+                                <td  class="strategy-quarter-2"id="quartbudgetmonth6"></td>
+                            </tr>
+                            <tr>
+                                <td class="strategy-quarter-1">Per Quarter</td>
+                                <td class="strategy-quarter-1" colspan="3" class="text-center" id="quartbudgetsum3"></td>
+                                <td  class="strategy-quarter-2" colspan="3" class="text-center" id="quartbudgetsum6"></td>
+
+                            </tr>
+                            <tr>
+                                <td class="strategy-quarter-1">Achieved</td>
+                                <td class="strategy-quarter-1" id="quartachievemonth1"></td>
+                                <td class="strategy-quarter-1" id="quartachievemonth2"></td>
+                                <td class="strategy-quarter-1" id="quartachievemonth3"></td>
+                                <td  class="strategy-quarter-2" id="quartachievemonth4"></td>
+                                <td  class="strategy-quarter-2" id="quartachievemonth5"></td>
+                                <td  class="strategy-quarter-2" id="quartachievemonth6"></td>
+                            </tr>
+                            <tr>
+                                <td class="strategy-quarter-1">% Achieved</td>
+                                <td class="strategy-quarter-1" id="quartachievepercent1"></td>
+                                <td class="strategy-quarter-1" id="quartachievepercent2"></td>
+                                <td class="strategy-quarter-1" id="quartachievepercent3"></td>
+                                <td  class="strategy-quarter-2" id="quartachievepercent4"></td>
+                                <td  class="strategy-quarter-2" id="quartachievepercent5"></td>
+                                <td class="strategy-quarter-2" id="quartachievepercent6"></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-7">
+
+
+                    <table class="table table-bordered" style="width:606px">
+                        <thead>
+                            <tr>
+                                <th class="strategy-quarter-3">
+
+                                </th>
+                                <th class="strategy-quarter-3" colspan="3">
+                                    3rd Quarter
+                                </th>
+                                <th  class="strategy-quarter-4" colspan="3">
+                                    4th Quarter
+                                </th>
+
+
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="strategy-quarter-3"></td>
+                                <td class="strategy-quarter-3">@months[6].ToString("MMM yyyy")</td>
+                                <td class="strategy-quarter-3">@months[7].ToString("MMM yyyy")</td>
+                                <td class="strategy-quarter-3">@months[8].ToString("MMM yyyy")</td>
+                                <td class="strategy-quarter-4">@months[8].ToString("MMM yyyy")</td>
+                                <td class="strategy-quarter-4">@months[10].ToString("MMM yyyy")</td>
+                                <td class="strategy-quarter-4">@months[11].ToString("MMM yyyy")</td>
+                            </tr>
+                            <tr>
+                                <td class="strategy-quarter-3">Per Month</td>
+                                <td  class="strategy-quarter-3" id="quartbudgetmonth7"></td>
+                                <td  class="strategy-quarter-3" id="quartbudgetmonth8"></td>
+                                <td  class="strategy-quarter-3" id="quartbudgetmonth9"></td>
+                                <td  class="strategy-quarter-4" id="quartbudgetmonth10"></td>
+                                <td  class="strategy-quarter-4" id="quartbudgetmonth11"></td>
+                                <td  class="strategy-quarter-4" id="quartbudgetmonth12"></td>
+                            </tr>
+                            <tr>
+                                <td class="strategy-quarter-3">Per Quarter</td>
+                                <td  class="strategy-quarter-3" colspan="3" class="text-center" id="quartbudgetsum9"></td>
+                                <td   class="strategy-quarter-4"colspan="3" class="text-center" id="quartbudgetsum12"></td>
+
+                            </tr>
+                            <tr>
+                                <td class="strategy-quarter-3">Achieved</td>
+                                <td class="strategy-quarter-3" id="quartachievemonth7"></td>
+                                <td class="strategy-quarter-3"  id="quartachievemonth8"></td>
+                                <td class="strategy-quarter-3"  id="quartachievemonth9"></td>
+                                <td class="strategy-quarter-4"  id="quartachievemonth10"></td>
+                                <td class="strategy-quarter-4"  id="quartachievemonth11"></td>
+                                <td class="strategy-quarter-4"  id="quartachievemonth12"></td>
+                            </tr>
+                            <tr>
+                                <td class="strategy-quarter-3">% Achieved</td>
+                                <td class="strategy-quarter-3"  id="quartachievepercent7"></td>
+                                <td class="strategy-quarter-3"  id="quartachievepercent8"></td>
+                                <td class="strategy-quarter-3"  id="quartachievepercent9"></td>
+                                <td class="strategy-quarter-4"  id="quartachievepercent10"></td>
+                                <td class="strategy-quarter-4"  id="quartachievepercent11"></td>
+                                <td  class="strategy-quarter-4" id="quartachievepercent12"></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-2"></div>
+
+            </div>
+        </div>
+    </div>
+</form>

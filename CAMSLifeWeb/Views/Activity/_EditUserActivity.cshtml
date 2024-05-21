@@ -1,0 +1,78 @@
+﻿
+@model CaliphWeb.Models.ViewModel.EditActivityViewModel
+<form id="edit-planned-activity-form" class="form-validate-jquery">
+    <input type="hidden" name="UserActivityId" value="@Model.UserActivityId" />
+    <input type="hidden" name="UserId" value="@Model.UserId" />
+    <fieldset class="mb-3">
+
+
+        <div class="form-group row">
+            <label class="col-form-label col-lg-3">Activity<span class="text-danger">*</span></label>
+            <div class="col-lg-8">
+                <select required class="custom-select" name="ActivityPointId">
+                    <option value="">Please Select</option>
+                    @foreach (var activity in Model.Activities)
+                    {
+                        var selected = Model.ActivityPointId == activity.ActivityPointId ? "selected" : "";
+                        <option value="@activity.ActivityPointId" @selected>@activity.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-lg-3">Date<span class="text-danger">*</span></label>
+            <div class="col-lg-8">
+                <div class="input-group">
+                    <span class="input-group-prepend">
+                        <span class="input-group-text"><i class="icon-calendar5"></i></span>
+                    </span>
+                    @{ var startDate = Model.ActivityStartDate.HasValue ? Model.ActivityStartDate.Value.ToString("yyyy-MM-dd") : "";}
+                    <input type="text" id="EditPlannedActivityDate" value="@startDate" class="form-control pickadate rounded-right">
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-lg-3">Time<span class="text-danger">*</span></label>
+            <div class="col-lg-8 text-center">
+                <div class="input-group">
+                    <span class="input-group-prepend">
+                        <span class="input-group-text"><i class="icon-alarm"></i></span>
+                    </span>
+                    @{ var startTime = Model.ActivityStartDate.HasValue ? Model.ActivityStartDate.Value.ToString("hh:mm tt") : "";}
+                    <input type="text" id="edit-planned-timefrom" value="@startTime" class="form-control rounded-right activity-time-from">
+                    <i class="icon-minus3 text-center  align-items-center" style="display:grid"></i>
+
+                    <span class="input-group-prepend">
+                        <span class="input-group-text"><i class="icon-alarm"></i></span>
+                    </span>
+                    @{
+
+                        var endTime = "";
+
+                        if (Model.ActivityEndDate.HasValue)
+                        {
+                            endTime = Model.ActivityEndDate.Value.ToString("hh:mm tt");
+                        }
+
+                    }
+                    <input type="text" id="edit-planned-timeto" value="@endTime" class="form-control rounded-right activity-time-to">
+                </div>
+            </div>
+
+            <input type="hidden" name="ActivityStartDate" id="EditPlannedActivityStartDate" value="@Model.ActivityStartDate.Value">
+            <input type="hidden" name="ActivityEndDate" id="EditPlannedActivityEndDate" value="@Model.ActivityEndDate.Value">
+        </div>
+
+        <div class="form-group row">
+            <label class="col-form-label col-lg-3">Notes</label>
+            <div class="col-lg-8">
+                <textarea name="Remarks" class="form-control">@Model.Remarks</textarea>
+            </div>
+        </div>
+
+    </fieldset>
+
+
+
+
+</form>

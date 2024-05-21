@@ -1,0 +1,176 @@
+﻿
+@{ ViewBag.Title = "KIV"; }
+@using CaliphWeb.Helper
+
+@model  CaliphWeb.Models.ViewModel.ClientListViewModel
+<script src="~/global_assets/js/demo_pages/picker_date.js"></script>
+
+<!-- Page header -->
+<div class="page-header page-header-light">
+    <div class="page-header-content header-elements-lg-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-list"></i> <span class="font-weight-semibold"> KIV Client</span> </h4>
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+
+    </div>
+
+
+    <div class="breadcrumb-line breadcrumb-line-light header-elements-lg-inline">
+        <div class="d-flex">
+            <div class="breadcrumb">
+                <a class="breadcrumb-item"><i class="icon-users4 mr-2"></i> Client</a>
+                <a class="breadcrumb-item"> KIV List</a>
+            </div>
+
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+    </div>
+</div>
+<!-- /page header -->
+<!-- Basic datatable -->
+<div class="card">
+    <div class="card-header">
+        @*<h5 class="card-title">Basic datatable</h5>*@
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div class="datatable-header">
+                <div class="row">
+                    <div class="col-lg-2 col-12">
+                        <span>Name:</span>
+                        <input type="text" id="name" class="form-control">
+                    </div>
+                    <div class="col-lg-3 col-12">
+                        <span class="d-block">KIV Date:</span>
+                        <button type="button" class="btn btn-light daterange-predefined">
+                            <i class="icon-calendar2 mr-2"></i>
+                            <span></span>
+                        </button>
+                    </div>
+                    @*<div class="col-md-2 col-12">
+                            <label class="text-left">
+                                <span>Filter Days:</span>
+                                <select id="show-days" class="custom-select">
+                                    <option value="">Select</option>
+                                    <option value="30">Last 30 days</option>
+                                    <option value="60">Last 60 days</option>
+                                </select>
+                            </label>
+                        </div>*@
+                    <div class="col-lg-2 col-12">
+                        <label>
+                            <br />
+                            <button type="button" onclick="SearchData(1)" class="btn btn-primary d-inline" id="bootbox_form"> <i class="icon-search4"></i> </button>
+                        </label>
+                    </div>
+                    <div class="col-lg-5 col-12 text-center text-md-right">
+                        <label class="text-left">
+                            <span>Show:</span>
+                            <select onchange="SearchData(1)" id="show-entries" class="custom-select">
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                        </label>
+
+
+                    </div>
+                </div>
+            </div>
+            <div id="kiv-table">
+                @Html.Partial("_KIVListTable", Model.ClientData)
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /basic datatable -->
+
+<div id="modal_kivList" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header pb-3">
+                <h5 class="modal-title">Activity List</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body py-0">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>Name</td>
+                            <td>Date</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>*Activity Name*</td>
+                            <td>1/1/1111</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer pt-3">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                @*<button type="button" class="btn btn-primary" onclick="EditActivity()">Edit <i class="icon-paperplane ml-2"></i></button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        var swalInit = swal.mixin({
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-light',
+                denyButton: 'btn btn-light',
+                input: 'form-control'
+            }
+        });
+
+
+         function SearchData(page) {
+            @{ var filter = new CaliphWeb.ViewModel.Data.ClientFilterRequest();
+                }
+            var searchFilter = @Html.Raw(Json.Encode(filter));
+            searchFilter.PageNumber = page;
+            searchFilter.Name = $('#name').val();
+            searchFilter.PageSize = $('#show-entries').val();
+
+            $.ajax({
+                url: '@Url.Action("KIV", "Client")',
+                type: 'POST',
+                data: searchFilter,
+                success: function (response) {
+                    $('#kiv-table').html(response);
+                }
+            });
+
+        }
+        function RevertKIV(id ,page) {
+             $.ajax({
+                url: '@Url.Action("RevertKIV", "Client")',
+                type: 'POST',
+                 data: { clientId: id},
+                success: function (response) {
+
+                    swalInit.fire({
+                        title: 'Revert Success!',
+                        text: 'Added back to client list!',
+                        icon: 'success'
+                    });
+
+                    SearchData(page);
+                }
+            });
+
+        }
+
+    </script>
+}

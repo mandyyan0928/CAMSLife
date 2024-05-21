@@ -1,0 +1,375 @@
+﻿@model CaliphWeb.Models.ViewModel.EditEventViewModel
+@using System.Globalization;
+@using CaliphWeb.Helper;
+
+@{
+    ViewBag.Title = "Info";
+    var user = UserHelper.GetLoginUserViewModel();
+}
+
+<script src="~/global_assets/js/plugins/tables/datatables/datatables.min.js"></script>
+<script src="~/global_assets/js/demo_pages/datatables_basic.js"></script>
+
+<!-- Page header -->
+<div class="page-header page-header-light">
+    <div class="page-header-content header-elements-lg-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-list"></i> <span class="font-weight-semibold">Training/Event Info</span></h4>
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+
+    </div>
+
+    <div class="breadcrumb-line breadcrumb-line-light header-elements-lg-inline">
+        <div class="d-flex">
+            <div class="breadcrumb">
+                <a class="breadcrumb-item"><i class="icon-calendar2 mr-2"></i>Training/Event</a>
+                @if (user.IsAdmin)
+                {
+            <a href="@Url.Action("List", "Event")" class="breadcrumb-item">Training/Event List</a>
+                }
+                else
+                {
+            <a href="@Url.Action("UpcomingEvent", "Event")" class="breadcrumb-item">Upcoming Training/Event</a>
+                }
+                <a class="breadcrumb-item">Event Info</a>
+            </div>
+
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+    </div>
+</div>
+<!-- /page header -->
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title">Event Info</h5>
+    </div>
+    <div class="card-body">
+        <ul class="nav nav-tabs nav-tabs-top">
+            <li class="nav-item"><a href="#top-tab1" class="nav-link active" data-toggle="tab">Training/Event Info</a></li>
+            @if (Model.EventAttachments.Count > 0)
+            {
+                <li class="nav-item"><a href="#top-tab3" class="nav-link" data-toggle="tab">Training/Event Poster</a></li>
+            }
+
+            @if (user.IsAdmin)
+            {
+                <li class="nav-item"><a href="#top-tab2" class="nav-link" data-toggle="tab" onclick="SearchData(1);">Attendant Listing</a></li>
+            }
+        </ul>
+        <div class="tab-content">
+            <!-- event info-->
+            <div class="tab-pane fade show active" id="top-tab1">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5 class="card-title">Event Info</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-4">Name</label>
+                                    <div class="col-lg-8">
+                                        <div class="form-control-plaintext">@Model.EventName</div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-4">Type</label>
+                                    <div class="col-lg-8">
+                                        <div class="form-control-plaintext">@Model.EventTypeDesc</div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-4">Host</label>
+                                    <div class="col-lg-8">
+                                        <div class="form-control-plaintext">@Model.EventHostDesc</div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-4">Channel</label>
+                                    <div class="col-lg-8">
+                                        <div class="form-control-plaintext">@Model.EventChannelDesc</div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-4">Channel Location</label>
+                                    <div class="col-lg-8">
+                                        <div class="form-control-plaintext">@Model.EventChannelLocation</div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-4">Event Fees</label>
+                                    <div class="col-lg-8">
+                                        <div class="form-control-plaintext">@Model.EventFees.ToString("f2")</div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-4">Date &amp; Time (Reg Closed Date)</label>
+                                    <div class="col-lg-8" id="date-select">
+                                        @foreach (var item in Model.EventDates)
+                                        {
+                                            var eventDate = item.EventDateFrom.ToString("g", CultureInfo.GetCultureInfo("en-US")) + " - "
+                                                + item.EventDateTo.ToString("g", CultureInfo.GetCultureInfo("en-US"))
+                                                + " ( " + item.RegClosingDate.ToString("MM/dd/yyyy") + " )";
+                                            <div class="form-control-plaintext">@eventDate</div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-4">Remarks<span class="text-danger"></span></label>
+                                    <div class="col-lg-8">
+                                        <div class="form-control-plaintext">@Model.Remarks</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5 class="card-title">Attendant Info</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-4">Pax Limit</label>
+                                    <div class="col-lg-8">
+                                        <div class="form-control-plaintext">@Model.PaxLimit</div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-4">CPD Point</label>
+                                    <div class="col-lg-8">
+                                        <div class="form-control-plaintext">@Model.CPDPoint</div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-lg-4">Type</label>
+                                    <div class="col-form-label col-lg-8">
+                                        <div class="form-control-plaintext">@Model.AttendantTypeDesc</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /event info -->
+            <!-- Attendant info -->
+            <div class="tab-pane fade" id="top-tab2">
+                <div class="tab-content">
+                    <div class="table datatable-header">
+                        <div class="row">
+                            <div class="col-md-10 d-flex align-content-between">
+                                <label class="m-1">
+                                    <span>Date: </span>
+                                    <select class="custom-select" id="date">
+                                        <option value="">All</option>
+                                        @foreach (var item in Model.EventDates)
+                                        {
+                                            var eventDate = item.EventDateFrom.ToString("g", CultureInfo.GetCultureInfo("en-US")) + " - " + item.EventDateTo.ToString("g", CultureInfo.GetCultureInfo("en-US"));
+                                            <option value="@item.EventDateId">@eventDate</option>
+                                        }
+                                    </select>
+                                </label>
+                                <label class="m-1">
+                                    <br />
+                                    <button type="button" onclick="SearchData(1)" class="btn btn-primary d-inline" id="bootbox_form"> <i class="icon-search4"></i> </button>
+                                </label>
+                            </div>
+                            <div class="col-md-2 d-flex align-content-between">
+                                <label class="m-1">
+                                    <span>Show:</span>
+                                    <select onchange="SearchData(1)" id="show-entries" class="custom-select">
+                                        <option value="10">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="attendanceList-table"></div>
+                </div>
+            </div>
+            <!-- /Attendant info -->
+            <!-- /Event Poster -->
+            <div class="tab-pane fade" id="top-tab3">
+                @if (Model.EventAttachments.Count > 0)
+                {
+                    @Html.Partial("_EventSlider", Model.EventAttachments);
+                }
+            </div>
+            <!-- /Event Poster -->
+            <div class="form-group row m-2">
+                <div class="col-lg-12">
+                    <div class="text-left float-left">
+                        @if (user.IsAdmin)
+                        {
+                            <a href="@Url.Action("List", "Event")" class="btn btn-primary"><i class="icon-arrow-left12"></i>Back</a>
+                        }
+                        else
+                        {
+                            if (Model.IsFromCPD)
+                            {
+                                <a href="@Url.Action("CPDEarned", "Event")" class="btn btn-primary"><i class="icon-arrow-left12"></i>Back</a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("UpcomingEvent", "Event")" class="btn btn-primary"><i class="icon-arrow-left12"></i>Back</a>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Attendant info modal -->
+<div id="modal_default" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Attendant Info</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input hidden name="mUserEventId" id="mUserEventId" />
+                <input hidden name="mEventDateId" id="mEventDateId" />
+                <input hidden name="mCPDPoint" id="mCPDPoint" />
+                <div class="form-group row">
+                    <label class="col-form-label col-lg-4">Agent</label>
+                    <div class="col-lg-8">
+                        <div class="form-control-plaintext">
+                            <label id="mUsername"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-lg-4">Attendance Status</label>
+                    <div class="col-lg-8">
+                        <select class="custom-select" id="mAttendance" name="mAttendance">
+                            <option value="157">Attended</option>
+                            <option value="158">Missed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-lg-4">Quiz Status</label>
+                    <div class="col-lg-8">
+                        <select class="custom-select" id="mQuiz" name="mQuiz">
+                            <option value="162">Pass</option>
+                            <option value="163">Failed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-lg-4">Remarks</label>
+                    <div class="col-lg-8">
+                        <textarea name="mRemarks" id="mRemarks" rows="6" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="UpdateInfo();">Update</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Attendant info modal -->
+
+@section Scripts{
+    <script type="text/template" id="loading">
+        <div class="text-center mt-2 mb-3">
+            <div class="pace-demo">
+                <div class="theme_xbox_lg">
+                    <div class="pace_progress" data-progress-text="60%" data-progress="60" style="width: 60%;"></div>
+                    <div class="pace_activity"></div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        function OpenModal(userEvent, att, quiz, username, eventDate, cpd, remarks) {
+            $('#mUsername').html(username);
+            $('#mUserEventId').val(userEvent);
+            $('#mEventDateId').val(eventDate);
+            $('#mAttendance').val(att);
+            $('#mQuiz').val(quiz);
+            $('#mCPDPoint').val(cpd);
+            $('#mRemarks').val(remarks);
+        }
+
+        var swalInit = swal.mixin({
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-light',
+                denyButton: 'btn btn-light',
+                input: 'form-control'
+            }
+        });
+
+        function UpdateInfo() {
+            @{
+                var info = new CaliphWeb.Models.ViewModel.EventUserViewModel();
+                }
+
+            var updateInfo = @Html.Raw(Json.Encode(info));
+            updateInfo.UserEventId = $('#mUserEventId').val();
+            updateInfo.EventDateId = $('#mEventDateId').val();
+            updateInfo.AttendanceId = $('#mAttendance').val();
+            updateInfo.QuizScoreId = $('#mQuiz').val();
+            updateInfo.CPDPoint = $('#mCPDPoint').val();
+            updateInfo.Remarks = $('#mRemarks').val();
+
+            $.ajax({
+                url: '@Url.Action("UpdateUserEvent", "Event")',
+                type: 'POST',
+                data: updateInfo,
+                success: function (response) {
+                    SearchData(1);
+                    swalInit.fire({
+                        title: 'Updated!',
+                        text: 'Attendance updated',
+                        icon: 'success'
+                    });
+                }
+            });
+        }
+
+        function SearchData(page) {
+            @{
+                var filter = new CaliphWeb.Models.ViewModel.EventFilterViewModel();
+                }
+
+            var searchFilter = @Html.Raw(Json.Encode(filter));
+            searchFilter.PageNumber = page;
+            searchFilter.EventId = @Model.EventId;
+            searchFilter.EventDateId = $('#date').val();
+            searchFilter.PageSize = $('#show-entries').val();
+
+            var loading = $('#loading').html();
+            $('#attendanceList-table').html(loading);
+
+            $.ajax({
+                url: '@Url.Action("ViewFullAttendanceList", "Event")',
+                type: 'POST',
+                data: searchFilter,
+                success: function (response) {
+                    $('#attendanceList-table').html(response);
+                }
+            });
+        }
+    </script>
+}

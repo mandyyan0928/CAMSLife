@@ -1,0 +1,135 @@
+﻿@using CaliphWeb.ViewModel.Data
+@using CaliphWeb.Helper
+@model  CaliphWeb.Models.ViewModel.DealData
+
+
+
+<table class="table datatable-basic">
+    <thead>
+        <tr>
+            <th> Title</th>
+            <th> Name</th>
+            <th> Contact</th>
+            <th> Next Activity</th>
+            <th> Activity Date</th>
+            <th> Owner  </th>
+            <th class="text-center">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var deal in Model.Deals)
+        {
+
+            var activityDate =
+            deal.NextActivityDate.HasValue ? deal.NextActivityDate.Value.ToString("dd/MM/yyyy hh:mm tt") : "";
+
+            <tr>
+                <td data-toggle="collapse" class="text-body" href="#accordion-control-@deal.ClientDealId" style="cursor:pointer">@deal.DealTitleDesc</td>
+                <td data-toggle="collapse" class="text-body" href="#accordion-control-@deal.ClientDealId" style="cursor:pointer">@deal.ClientName</td>
+                <td data-toggle="collapse" class="text-body" href="#accordion-control-@deal.ClientDealId" style="cursor:pointer">@deal.ContactNo</td>
+                <td data-toggle="collapse" class="text-body" href="#accordion-control-@deal.ClientDealId" style="cursor:pointer">@deal.NextActivityDesc</td>
+                <td data-toggle="collapse" class="text-body" href="#accordion-control-@deal.ClientDealId" style="cursor:pointer">@activityDate</td>
+                <td data-toggle="collapse" class="text-body" href="#accordion-control-@deal.ClientDealId" style="cursor:pointer">@deal.CreatedBy</td>
+                <td>
+                    @{
+                        var activeDealStatus = (int)MasterDataEnum.Status.Active;
+                        var closedDealStatus = (int)MasterDataEnum.Status.Closed;
+                        var lostDealStatus = (int)MasterDataEnum.Status.Lost;
+                        if (deal.StatusId == activeDealStatus)
+                        {
+                            <div class="list-icons">
+                                <div class="dropdown">
+                                    <a href="#" class="badge badge-warning dropdown-toggle" data-toggle="dropdown"> active</a>
+                                    <div class="dropdown-menu">
+                                        <a href="#" class="dropdown-item" onclick="ConfirmUpdate(@deal.ClientDealId, @closedDealStatus)"><i class="icon-checkmark-circle text-success"></i><span class="badge badge-success">closed</span></a>
+                                        <a href="#" class="dropdown-item" onclick="ConfirmUpdate(@deal.ClientDealId,@lostDealStatus)"><i class="icon-cancel-circle2 text-danger"></i><span class="badge badge-danger">lost</span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else if (deal.StatusId == closedDealStatus)
+                        {
+                            <span class="badge badge-success">closed</span>
+                        }
+                        else if (deal.StatusId == lostDealStatus)
+                        {
+                            <span class="badge badge-danger">lost</span>
+                        }
+
+                    }
+                </td>
+                <td class="text-center">
+                    <a href="@Url.Action("Edit", "Deal", new { id=deal.ClientDealId})" data-popup="tooltip" title="Edit Deal" class="list-icons-item">
+                        <i class="icon-pencil7"></i>
+                    </a>
+                    @if (deal.StatusId == activeDealStatus)
+                    {
+
+                        <a  onclick="ShowAddActivity(@deal.ClientDealId, @deal.ClientId)" href="#" data-popup="tooltip" title="Add Activity" class="list-icons-item">
+                            <i class="icon-add"></i>
+                        </a>
+
+                    }
+                </td>
+            </tr>
+            <tr id="accordion-control-@deal.ClientDealId" class="collapse" data-parent="#accordion-control">
+                <td colspan="6">
+                    <div class="alert alert-primary border-0 alert-dismissible">
+                        <span class="font-weight-semibold"> Activity Details</span>
+                        <table class="table datatable-basic">
+                            <thead>
+                                <tr>
+                                    <th> Activity</th>
+                                    <th> Date</th>
+                                    <th> Agent</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var activity in deal.Activities)
+                                {
+                                    <tr>
+                                        <td> @activity.ActivityPointsDesc</td>
+                                        <td>  @activity.ActivityStartDate</td>
+                                        <td>@activity.CreatedBy</td>
+                                    </tr>
+
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        }
+
+
+
+    </tbody>
+</table>
+
+
+
+@{ var pager = new Pager(pageSize: Model.Paging.PageSize, currentPage: Model.Paging.CurrentPage, totalItems: Model.Paging.ItemCount);}
+
+<div class="datatable-footer">
+    <div class="dataTables_info">
+        Showing @pager.StartIndex to @pager.EndIndex  of @pager.TotalItems entries
+    </div>
+    <div class="dataTables_paginate paging_simple_numbers">
+        @{ var prevPage = pager.CurrentPage - 1;
+            var disableClass = prevPage == 0 ? "disabled" : "";}
+        <a class="paginate_button previous @disableClass" onclick="SearchData(@prevPage )">←</a>
+
+        @foreach (var page in pager.Pages)
+        {
+            var current = page == pager.CurrentPage ? "current" : "";
+            <a class="paginate_button @current" onclick="SearchData(@page)">@page</a>
+        }
+        @{ var nextPage = pager.CurrentPage + 1;
+            var isLastPage = nextPage > pager.EndPage;
+            var disableNextClass = isLastPage ? "disabled" : "";
+        }
+        <a class="paginate_button next @disableNextClass" @disableNextClass onclick="SearchData(@prevPage )">→</a>
+    </div>
+</div>
+

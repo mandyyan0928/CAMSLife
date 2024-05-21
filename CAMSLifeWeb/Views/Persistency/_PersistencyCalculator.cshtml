@@ -1,0 +1,119 @@
+﻿
+@model CaliphWeb.ViewModel.PersistencyCalculatorViewModel
+@using CaliphWeb.ViewModel
+<script src="~/global_assets/js/plugins/tables/datatables/extensions/pdfmake/pdfmake.min.js"></script>
+<script src="~/global_assets/js/plugins/tables/datatables/extensions/pdfmake/vfs_fonts.min.js"></script>
+<script src="~/global_assets/js/plugins/tables/datatables/extensions/buttons.min.js"></script>
+<script src="~/global_assets/js/demo_pages/datatables_extension_buttons_html5.js"></script>
+<div class=" table-responsive">
+    <table class="table datatable-button-html5-basic">
+        <thead>
+            <tr>
+                <th> Selling Agent</th>
+                <th> Life Assured</th>
+                <th> Certificate </th>
+                <th> Issue Date</th>
+                <th> Due Date  </th>
+                <th> Contribution Amount </th>
+                <th> Pay Up To </th>
+                <th> Factor </th>
+                <th> Annualised Premium </th>
+                <th>Total Premium Collected </th>
+                <th>Persistency Premium </th>
+                <th>Balance Month To Collect </th>
+                <th>Need To Repair? </th>
+                <th>Amount To Collect  </th>
+                <th class="exclude">Repair? </th>
+                <th> Repair Persistency Premium  </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ var counter = 1;}
+
+            @foreach (var policy in Model.AgentPolicies)
+            {
+
+
+                <tr>
+                    <td>
+                        @policy.selling_agent_code<br />
+                        @policy.selling_agent_name
+                    </td>
+                    <td> @policy.life_assured</td>
+                    <td>
+                        @policy.certificate_no <br />@policy.certificate_status
+                    </td>
+                    <td> @policy.issue_date</td>
+                    <td> @policy.due_date  </td>
+                    <td> @policy.contribution_amount.ToString("n2") </td>
+                    <td> @policy.PayUpTo </td>
+                    <td> @policy.Factor </td>
+                    <td> @policy.AnnualisedPremium.ToString("n2") </td>
+                    <td> @policy.TotalPremiumCollected.ToString("n2")</td>
+                    <td>
+
+                        @if (policy.due_date >= Model.PersistencyDate)
+                        {
+                            @policy.AnnualisedPremium.ToString("n2")
+                        }
+                        else
+                        {
+                            <span>0.00</span>
+                        }
+                    </td>
+
+
+                    <td>
+                        @{ var dateDiff = (Model.PersistencyDate - policy.due_date).TotalDays;
+                            var monthDiff = dateDiff / (365 / 12);
+                            var needRepair = "";
+                            var balanceMonthToCollect = 0;
+                        }
+                        @if (monthDiff > 0)
+                        {
+                            balanceMonthToCollect = (int)Math.Ceiling(monthDiff / (12 / policy.Factor));
+                            @balanceMonthToCollect.ToString("n0")
+                            needRepair = "Yes";
+                        }
+                        else
+                        {
+                            <span>
+                                0
+
+                            </span>
+
+                            needRepair = "No";
+                        }
+                    </td>
+
+
+                    <td> @needRepair</td>
+
+
+                    <td>
+                        @{ var amountToCollect = balanceMonthToCollect * policy.contribution_amount;}
+                        @( amountToCollect.ToString("n2"))
+
+                    </td>
+                    <td  class="exclude">
+                        @if (monthDiff > 0)
+                        {
+                            <select class="form-control" onchange="RepairChange(this)">
+                                <option value="0" data-amounttocollect="@amountToCollect" data-counterpolicy="@counter" data-amount="@policy.contribution_amount" data-anuualpremium="@policy.AnnualisedPremium">No</option>
+                                <option value="1" data-amounttocollect="@amountToCollect" data-counterpolicy="@counter" data-amount="@policy.contribution_amount" data-anuualpremium="@policy.AnnualisedPremium">Yes</option>
+                            </select>
+                        }
+                        else
+                        {
+                            <span>-</span>
+                        }
+                    </td>
+                    <td id="repair_persistency_permium_@counter"> 0.00  </td>
+
+                </tr>
+                counter++;
+            }
+
+        </tbody>
+    </table>
+</div>

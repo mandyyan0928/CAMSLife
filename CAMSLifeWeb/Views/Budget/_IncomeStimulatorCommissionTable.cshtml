@@ -1,0 +1,147 @@
+﻿
+@model CaliphWeb.Models.API.Budget.Income
+<h5> Commission</h5>
+
+<table class="table table-bordered" id="tblcommission">
+    <thead>
+        <tr>
+            <th> </th>
+            <th> Total Group</th>
+            <th> Total Cases</th>
+            <th> Monthly Premium</th>
+            <th> Commission (%)</th>
+            <th> Total Commission</th>
+            <th> Total Accumulated Commission</th>
+            <th> Total ACE</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+        @{ var countGroup = 0;
+            var i = 1;
+        }
+
+
+        @foreach (var item in Model.IncomeData.BudgetGroupList)
+        {
+
+            var disable = item.BudgetTitle == "Personal Producer" ? "readonly" : "";
+            <tr class="commission-group">
+                <th>@item.BudgetTitle</th>
+                <td>
+                    <input type="hidden" name="BudgetGroupId" value="@item.BudgetGroupId" />
+                    <input type="hidden" name="BudgetId" value="@item.BudgetId" />
+                    <input type="hidden" name="BudgetTitle" value="@item.BudgetTitle" />
+                    <input type="hidden" name="UserId" value="@item.UserId" />
+                    <input type="hidden" name="Remarks" value="@item.Remarks" />
+                    <input type="number" class="form-control" id="commCount-@i" name="TargetCount" value="@item.TargetCount" onchange="CalComm()" @disable />
+                </td>
+                <td>
+                    <input type="number" class="form-control commCase" id="commCase-@i" name="TotalCase" value="@item.TotalCase" onchange="CalComm()" />
+
+                </td>
+                <td class="commPrice">@Model.IncomeData.ProductPricePlan</td>
+                <td><input type="number" class="form-control" id="commPercent-@i" name="TargetComm" value="@item.TargetComm.ToString("n2")" onchange="CalIncome(@i)" /></td>
+                <td id="ttlCom-@i"></td>
+                <td id="accCom-@i">
+                </td>
+                <td id="totalACECommission-@i">
+                </td>
+                <td>
+
+                    @if (item.BudgetTitle != "Personal Producer")
+                    {
+                        <a onclick="DeleteGroup(@item.BudgetGroupId)" href="#">
+                            <i class="icon-trash"></i>
+                        </a>
+                    }
+
+
+                </td>
+            </tr>
+
+            //personal producer remakrs = no repeat
+            // direct group remarks = 0
+            // group 1,2,3 onwards remarks = 1,2,3
+            i++;
+            if (item.BudgetTitle != "Personal Producer")
+            {
+                countGroup++;
+            }
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th colspan="7">Total ACE</th>
+            <th id="totalAce">  </th>
+
+        </tr>
+
+    </tfoot>
+
+
+</table>
+<div class="row form-group">
+    <div class="col-md-12 text-right mt-3 mb-3">
+        <button type="button" class="btn btn-primary d-inline" id="bootbox_form" data-toggle="modal" data-target="#modal_group"> <i class="icon-plus-circle2"></i> </button>
+        @*<button type="button" class="btn btn-primary" onclick="AddCommission()">Update <i class="icon-paperplane ml-2"></i></button>*@
+
+        <button type="button" class="btn btn-primary" onclick="UpdateGroup()">Update <i class="icon-paperplane ml-2"></i></button>
+    </div>
+</div>
+
+
+<!-- group commission modal -->
+<div id="modal_group" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header pb-3">
+                @{var groupTitle = "";
+                    if (countGroup == 0)
+                    {
+                        groupTitle = "Direct Group";
+                    }
+                    else
+                    {
+                        groupTitle = "Group " + countGroup.ToString();
+                    }
+
+                }
+                <h5 class="modal-title" id="groupName">@groupTitle</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body py-0">
+                <form id="add-group">
+                    <fieldset>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Total Group</label>
+                            <div class="col-lg-8">
+                                <input type="number" id="Commission" name="TargetCount" class="form-control">
+                                <input type="hidden" value="@groupTitle" name="BudgetTitle" />
+                                <input type="hidden" value="@Model.IncomeData.BudgetId" name="BudgetId" />
+                                <input type="hidden" value="@countGroup" name="Remarks" />
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Commission %</label>
+                            <div class="col-lg-8">
+                                <input type="number" id="Commission" name="TargetComm" class="form-control">
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+
+            <div class="modal-footer pt-3">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                <button type="button" onclick="AddGroup()" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /group modal -->

@@ -1,0 +1,1520 @@
+﻿<script src="~/global_assets/js/plugins/visualization/echarts/echarts.min.js"></script>
+<script src="~/global_assets/js/demo_pages/form_validation.js"></script>
+<script src="~/global_assets/js/demo_pages/form_select2.js"></script>
+
+<script src="~/global_assets/js/demo_pages/form_input_groups.js"></script>
+
+
+
+  
+@*<script src="~/global_assets/js/pages/budget.js?v1"></script>*@
+<!-- Page header -->
+@using Newtonsoft.Json
+@using CaliphWeb.ViewModel.Data;
+@using CaliphWeb.Helper
+@model CaliphWeb.Models.API.Budget.BudgetModel
+
+<div class="page-header page-header-light">
+    <div class="page-header-content header-elements-lg-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-list"></i> <span class="font-weight-semibold">Agent Budget</span> </h4>
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+    </div>
+
+    <div class="breadcrumb-line breadcrumb-line-light header-elements-lg-inline">
+        <div class="d-flex">
+            <div class="breadcrumb">
+                <a href="@Url.Action("Index","Home")" class="breadcrumb-item"><i class="icon-calculator mr-2"></i> Home</a>
+                <a class="breadcrumb-item">Agent Budget</a>
+            </div>
+
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+    </div>
+</div>
+<!-- /page header -->
+<!-- Basic datatable -->
+<div class="card">
+    <div class="card-header">
+    </div>
+    <div class="card-body" id="body">
+        <div class="row form-group">
+            <div class="col-md-3">
+                Year
+            </div>
+            <div class="col-md-2">
+                <select required data-placeholder="Year" id="incomeYear" name="incomeYear" class="form-control" onchange="IncomeYear()">
+                    @foreach (var item in DateTimeExtensions.Years())
+                    {
+                        var years = Model.Income.IncomeData != null ? Model.Income.IncomeData.BudgetYear : null;
+                        var selected = string.Empty;
+                        if (years != null)
+                        {
+                            selected = years == item ? "selected" : "";
+                        }
+
+                        <option value="@item" @selected>@item</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-3">
+                Start Month
+            </div>
+            <div class="col-md-2">
+                <select required data-placeholder="StartMonth" id="startMonth" name="ProductStartMonth" class="form-control" onchange="RefreshStartMonth()">
+
+                    @{int month = 1;}
+
+                    @while (month <= 12)
+                    {
+                        var date = new DateTime(DateTime.Now.Year, month, 1);
+                        var years = Model.Income.IncomeData != null ? Model.Income.IncomeData.BudgetYear : null;
+                        var selected = month == Model.Income.IncomeData.ProductStartMonth ? "selected" : "";
+
+
+                        <option value="@month" @selected>@date.ToString("MMMM")</option>
+
+                        month++;
+                    }
+                </select>
+
+            </div>
+
+        </div>
+        <div class="row form-group">
+            <div class="col-md-3">
+                Months
+            </div>
+            <div class="col-md-2">
+                <select required data-placeholder="Month" onchange="IncomeMonthChange(this.value)" id="incomeMonth" name="BudgetMonth" class="form-control">
+                    @foreach (var item in DateTimeExtensions.QuarterMonths())
+                    {
+                        var months = Model.Income.IncomeData != null ? Model.Income.IncomeData.BudgetMonth : null;
+                        // var months = Model.IncomeData.BudgetView.Where(p => p.BudgetYear == year).OrderByDescending(p => p.BudgetMonth).FirstOrDefault();
+                        var selected = string.Empty;
+                        if (months != null)
+                        {
+                            selected = months == item ? "selected" : "";
+                        }
+                        //if (months != null)
+                        //{
+                        //    selected = months.BudgetMonth == item ? "selected" : "";
+                        //    month = months.BudgetMonth;
+                        //}
+                        <option value="@item" @selected>@item</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <ul class="nav nav-tabs nav-tabs-highlight nav-justified">
+            <li class="nav-item"><a href="#justified-left-tab1" class="nav-link active" data-toggle="tab"><i class="icon-calculator2"></i> Income Stimulator</a></li>
+            <li class="nav-item"><a href="#justified-left-tab4" class="nav-link" data-toggle="tab" onclick="CalStrategy()"><i class="icon-tree6"></i> Budget Strategies</a></li>
+            <li class="nav-item"><a href="#justified-left-tab2" class="nav-link " data-toggle="tab" onclick="LoadCharts()"><i class="icon-stats-bars2"></i> Budget Propotion</a></li>
+            <li class="nav-item"><a href="#justified-left-tab3" class="nav-link " data-toggle="tab" onclick="MonthlyBudget()"><i class="icon-table"></i> Monthly Budget</a></li>
+            <li class="nav-item"><a href="#justified-left-tab5" class="nav-link " data-toggle="tab" onclick="CalSalesApptEstimate()"><i class="icon-table"></i> Target Appt</a></li>
+
+        </ul>
+        <div class="tab-content">
+
+            <!--Income Simulator-->
+            <div class="tab-pane fade show active" id="justified-left-tab1">
+                @*@Html.Partial("_IncomeSimulator")*@
+                @Html.Partial("_IncomeSimulator2", Model.Income)
+            </div>
+
+            <!--Propotion-->
+            <div class="tab-pane fade" id="justified-left-tab2">
+                @Html.Partial("_Propotion", Model)
+            </div>
+
+            <!--Monthly Budget-->
+            <div class="tab-pane fade" id="justified-left-tab3">
+                @Html.Partial("_MonthlyBudget", Model)
+            </div>
+
+            <!--Strategies-->
+            <div class="tab-pane fade" id="justified-left-tab4">
+                @Html.Partial("_Strategies", Model)
+            </div>
+            <!--Strategies-->
+            <div class="tab-pane fade" id="justified-left-tab5">
+                @Html.Partial("_SalesApptEstimate", Model.Income)
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- /basic datatable -->
+<script type="text/template" id="loading">
+    <div class="text-center mt-2 mb-3">
+        <div class="pace-demo">
+            <div class="theme_xbox_lg">
+                <div class="pace_progress" data-progress-text="60%" data-progress="60" style="width: 60%;"></div>
+                <div class="pace_activity"></div>
+            </div>
+        </div>
+    </div>
+</script>
+
+@section Scripts{
+    <script type="text/javascript">
+        window.onload = function () {
+
+            IncomeMonthChange($('#incomeMonth').val());
+            StrategyYear();
+        }
+        function ReplaceNumberWithCommas(yourNumber) {
+
+
+            //Seperates the components of the number
+            var n = yourNumber.toString().split(".");
+            //Comma-fies the first part
+            n[0] = n[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            //Combines the two sections
+            return n.join(".");
+        }
+        function RoundUp(v, n) {
+            return Math.ceil(v * Math.pow(10, n)) / Math.pow(10, n);
+        }
+        var swalInit = swal.mixin({
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-light',
+                denyButton: 'btn btn-light',
+                input: 'form-control'
+            }
+        });
+
+        function UpdateSuccess() {
+            swalInit.fire({
+                title: 'Updated!',
+                text: 'Budget updated succesfully',
+                icon: 'success'
+            });
+
+        }
+
+        var grandtotalace = 0;
+        let my = Intl.NumberFormat('en-MY');
+
+        // recruitment
+        function OnMonthChange() {
+
+        }
+
+        function CalSalesApptEstimate() {
+
+            CalSalesApptEstimateClosingRatio();
+            CalSalesApptEstimateCallRatio();
+        }
+
+        function CalSalesApptEstimateClosingRatio() {
+
+            var ace = parseFloat($('#strategyace').text().replace(',', ''));
+            var productPrice = parseFloat($('#price').val());
+
+            var month = parseInt($('#incomeMonth').val());
+            if (isNaN(month))
+                month = 0;
+
+            var avgAce = productPrice * month;
+            var totalCases = parseFloat($("#totalcase").text());
+
+
+            $('#salesApptEstimate_Premium').text(ReplaceNumberWithCommas(ace.toFixed(2)));
+            $('#salesApptEstimate_AverageSize').text(ReplaceNumberWithCommas(avgAce.toFixed(2)));
+            $('#salesApptEstimate_NoOfCases').text(totalCases.toFixed(0));
+
+            var closingRate = parseFloat($("#salesApptEstimate_ClosingRatio").val());
+
+            var totalAppt = RoundUp(totalCases / (closingRate / 100),0);
+            var totalPerMonth = RoundUp(totalAppt / month,0);
+            var totalPerWeek = RoundUp( totalPerMonth / 4,0);
+            var totalPerDay = RoundUp(totalPerWeek / 7,0);
+
+            if (closingRate == '' || closingRate == undefined || closingRate == 0) {
+                totalAppt = 0;
+                totalPerMonth = 0;
+                totalPerWeek = 0;
+                totalPerDay = 0;
+            }
+            if (totalAppt == NaN)
+                totalAppt = 0;
+            if (totalPerMonth == NaN)
+                totalPerMonth = 0;
+            if (totalPerWeek == NaN)
+                totalPerWeek = 0;
+            if (totalPerDay == NaN)
+                totalPerDay = 0;
+
+            $('#salesApptEstimate_TotalAppt').text(ReplaceNumberWithCommas(totalAppt.toFixed(0)));
+            $('#salesApptEstimate_ApptPerMonth').text(ReplaceNumberWithCommas(totalPerMonth.toFixed(0)));
+            $('#salesApptEstimate_ApptPerWeek').text(ReplaceNumberWithCommas(totalPerWeek.toFixed(0)));
+            $('#salesApptEstimate_ApptPerDay').text(ReplaceNumberWithCommas(totalPerDay.toFixed(0)));
+        }
+
+
+
+        function CalSalesApptEstimateCallRatio() {
+
+            var callRate = parseFloat($("#salesApptEstimate_CallRatio").val());
+
+            var apptPerWeek = parseFloat( $('#salesApptEstimate_ApptPerWeek').text());
+            var totalCalls = RoundUp((apptPerWeek / (callRate / 100)), 0);
+
+            if (callRate == '' || callRate == undefined || callRate == 0) {
+                totalCalls = 0;
+            }
+
+            if (totalCalls == NaN)
+                totalCalls = 0;
+
+            $('#salesApptEstimate_CallsPerWeek').text(ReplaceNumberWithCommas(totalCalls.toFixed(0)));
+
+        }
+
+        function UpdateTargetAppt() {
+            var form = $("#frmTargetAppt");
+            form.validate();
+
+            if (form.valid()) {
+                var formData = $('#frmTargetAppt').serialize();
+                $.ajax({
+                    url: '@Url.Action("UpdateTargetAppt", "Budget")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        swalInit.fire({
+                            title: 'Success!',
+                            text: 'updated successfully!',
+                            icon: 'success'
+                        });
+                    }
+                });
+            }
+        }
+
+        function RefreshTargetAppt() {
+            var propotionYear = $("#incomeYear").val();
+            $.ajax({
+                url: '@Url.Action("RefreshTargetAppt", "Budget")',
+                type: 'POST',
+                async: false,
+                data: { incomeYear: propotionYear },
+                success: function (response) {
+                    $('#justified-left-tab5').html(response);
+                    CalSalesApptEstimate();
+                    //  CalPropotion();
+                }
+            });
+        }
+
+
+        // for income simulator
+        function IncomeYear() {
+            var incomeYear = $("#incomeYear").val();
+
+            BlockUIHelper.blockUI('body');
+            $.ajax({
+                url: '@Url.Action("GetIncome", "Budget")',
+                type: 'POST',
+                data: { incomeYear:incomeYear },
+                success: function (response) {
+                    $('#frmincome').html(response);
+                    RefreshMonthBudget();
+                    RefreshPropotion();
+                    RefreshStrategy();
+                    RefreshTargetAppt();
+                    IncomeMonthChange($('#incomeMonth').val());
+                    BlockUIHelper.unblockUI('body');
+                },
+                error: function (ex) {
+                    console.error(ex);
+
+                    BlockUIHelper.unblockUI('body');}
+                });
+
+            //get
+        }
+
+
+
+        function IncomeMonthChange(col) {
+            if (col == 3) {
+                $("#tblincome").find('.quarter1').show();
+                $("#tblincome").find('.quarter2').hide();
+                $("#tblincome").find('.quarter3').hide();
+                $("#tblincome").find('.quarter4').hide();
+
+                $(".strategy-quarter-1").find('.quarter1').show();
+                $(".strategy-quarter-2").find('.quarter2').hide();
+                $(".strategy-quarter-3").find('.quarter3').hide();
+                $(".strategy-quarter-4").find('.quarter4').hide();
+            }
+            else if (col == 6) {
+                $("#tblincome").find('.quarter1').show();
+                $("#tblincome").find('.quarter2').show();
+                $("#tblincome").find('.quarter3').hide();
+                $("#tblincome").find('.quarter4').hide();
+
+
+
+                $(".strategy-quarter-1").show();
+                $(".strategy-quarter-2").show();
+                $(".strategy-quarter-3").hide();
+                $(".strategy-quarter-4").hide();
+
+            }
+            else if (col == 9) {
+                $("#tblincome").find('.quarter1').show();
+                $("#tblincome").find('.quarter2').show();
+                $("#tblincome").find('.quarter3').show();
+                $("#tblincome").find('.quarter4').hide();
+
+                $(".strategy-quarter-1").show();
+                $(".strategy-quarter-2").show();
+                $(".strategy-quarter-3").show();
+                $(".strategy-quarter-4").hide();
+            }
+            else {
+                $("#tblincome").find('.quarter1').show();
+                $("#tblincome").find('.quarter2').show();
+                $("#tblincome").find('.quarter3').show();
+                $("#tblincome").find('.quarter4').show();
+
+                $(".strategy-quarter-1").show();
+                $(".strategy-quarter-2").show();
+                $(".strategy-quarter-3").show();
+                $(".strategy-quarter-4").show();
+            }
+
+            var displayMonths = parseInt(col);
+
+            for (var i = displayMonths+1; i <= 12; i++) {
+                $('#trpropotion' + i).hide();
+            }
+            for (var i = displayMonths ; i >= 1; i--) {
+                $('#trpropotion' + i).show();
+            }
+            CalIncome();
+        }
+
+        function CalIncome() {
+            let a = $("#price").val();
+            var acesum = 0;
+            var acetotalsum = 0;
+            var totalpricesum = 0;
+            var cases = 0;
+            var month = $('#incomeMonth').val();
+            $("#tblincome").find('td .inputproducer').each(function (i) {
+                // num = id="xxx{1}";
+                var num = i + 1;
+                if (i < month) {
+                    cases = cases + parseFloat($(this).val());
+
+                    //total price = personalproducer * product price
+                    totalprice = parseFloat(a) * parseFloat($(this).val());
+                    $("#incomePrice" + num).text(my.format(totalprice.toFixed(2)));
+
+                    //total commission = totalprice * commission percent
+                    totalpricesum += totalprice;
+
+                    var commission = parseFloat(totalpricesum) * parseFloat($("#commPercent-1").val() / 100);
+                    $("#incomecomm" + num).text(my.format(commission.toFixed(2)));
+
+                    //ace sum = total price * 12;
+                    ace = totalprice * 12;
+                    $("#incomeace" + num).text("RM " + my.format(ace.toFixed(2)));
+                    acesum += ace;
+                    acetotalsum += ace;
+                    if (num % 3 == 0) {
+                        $("#sumquarter" + num).text("RM " + my.format(acesum.toFixed(2)));
+                        acesum = 0;
+                    }
+                }
+            });
+            $("#totalcase").text(cases);
+            $("#commCase-1").text(cases);
+            $("#commCase-1").val(cases);
+            $(".commPrice").text(a);
+            $("#acesumtotal").text("RM " + my.format(acetotalsum.toFixed(2)));
+            grandtotalace = acetotalsum;
+            CalComm();
+
+            CalPropotion();
+        }
+
+        function CalComm() {
+
+            let a = $("#price").val();
+          
+            var acccom = 0;
+            let totalCommission = 0;
+            let totalAccumulatedCommission = 0;
+            let totalACE = 0;
+            $("#tblcommission").find('tr').each(function (i) {
+                var num = i + 1;
+                ttlcom = parseFloat($("#commCount-" + num).val()) * parseFloat($("#commCase-" + num).val()) * parseFloat(a) * parseFloat($("#commPercent-" + num).val() / 100);
+                $("#ttlCom-" + num).text("RM " + my.format(ttlcom.toFixed(2)));
+                acccom += ttlcom;
+                $("#accCom-" + num).text("RM " + my.format(acccom.toFixed(2)));
+
+
+                // case x price x 12 months 
+                let totalCase = parseFloat($("#commCase-" + num).val());
+                let totalGrouup = parseFloat($("#commCount-" + num).val());
+                let premium = parseFloat(a) * 12;
+                let totalGroupAce = (totalCase *totalGrouup)* premium;
+                $('#totalACECommission-' + num).text("RM " + my.format(totalGroupAce.toFixed(2)))
+
+                if (!isNaN(totalGroupAce))
+                    totalACE += totalGroupAce;
+
+            });
+
+            $('#totalAce').text("RM " + my.format(totalACE.toFixed(2)))
+        }
+
+        function RefreshStartMonth() {
+            // update start month
+            UpdateIncome(null);
+
+            RefreshPropotion();
+
+            RefreshMonthBudget();
+
+        }
+
+        function UpdateAllIncomeStimulator() {
+            UpdateIncome(null);
+            CalPropotion();
+            UpdateGroup();
+        }
+
+        function UpdateIncomeSuccessAction() {
+            UpdateSuccess();
+            CalPropotion();
+        }
+        function UpdateIncome(callback) {
+            var form = $("#frmincome");
+            form.validate();
+
+            if (form.valid()) {
+                var formData = $('#frmincome').serialize();
+                var month = $('#startMonth').val();
+                var incomeMonth = $('#incomeMonth').val();
+                formData += "&ProductStartMonth=" + month;
+                formData += "&BudgetMonth=" + incomeMonth;
+                //BudgetMonth
+                console.log(formData);
+              //  formData.append("ProductStartMonth", month);
+                $.ajax({
+                    url: '@Url.Action("Simulator", "Budget")',
+                    type: 'POST',
+                    data: formData,
+                    async:false,
+                    success: function (response) {
+                        if (callback != null) {
+                            callback();
+                        }
+                    }
+                });
+
+            }
+        }
+        function UpdateStrategy() {
+              var form = $("#frmstrategy");
+            form.validate();
+
+            if (form.valid()) {
+                var formData = $('#frmstrategy').serialize();
+
+                var year = $('#incomeYear').val();
+                formData += "&BudgetStrategyYear=" + year;
+                $.ajax({
+                    url: '@Url.Action("UpdateStrategy", "Budget")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        swalInit.fire({
+                            title: 'Success!',
+                            text: 'updated successfully!',
+                            icon: 'success'
+                        });
+                    }
+                });
+
+            }
+        }
+        function AddGroup() {
+            var form = $("#add-group");
+            form.validate();
+            if (form.valid()) {
+                event.preventDefault();
+                var formData = form.serialize();
+                $.ajax({
+                    url: '@Url.Action("AddGroup", "Budget")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+
+                        $('#modal_group').modal('hide');
+                        RefreshGroupCommission();
+                        $('.modal-backdrop').remove();
+                        swalInit.fire({
+                            title: 'Success!',
+                            text: 'Activity added successfully!',
+                            icon: 'success'
+                        });
+                        //location.reload();
+
+                    }
+                });
+            }
+
+        }
+
+
+        function DeleteGroup(id) {
+
+            $.ajax({
+                url: '@Url.Action("DeleteGroup", "Budget")',
+                type: 'POST',
+                data: {id:id},
+                success: function (response) {
+                    swalInit.fire({
+                        title: 'Success!',
+                        text: 'deleted successfully!',
+                        icon: 'success'
+                    });
+
+                    RefreshGroupCommission();
+
+                }
+            });
+
+
+        }
+
+
+
+
+
+        function RefreshGroupCommission() {
+            var propotionYear = $("#incomeYear").val();
+
+
+            var loading = $('#loading').html();
+            $('#commission-table').html(loading);
+            $.ajax({
+                url: '@Url.Action("RefreshGroupCommission", "Budget")',
+                type: 'POST',
+                async:false,
+                data: { incomeYear: propotionYear },
+                success: function (response) {
+                    $('#commission-table').html(response);
+                  //  CalPropotion();
+
+                    CalIncome();
+                }
+                });
+        }
+        function UpdateGroup() {
+
+            var list = ListHelper.getList('commission-group');
+            $.ajax({
+                url: '@Url.Action("UpdateGroup", "Budget")',
+                type: 'POST',
+                data: { list: list },
+                success: function (response) {
+                    swalInit.fire({
+                        title: 'Success!',
+                        text: 'Updated successfully!',
+                        icon: 'success'
+                    });
+                },
+                error: function (response) {
+                    alert(JSON.stringify(response));
+                    //need check y go error
+                    swalInit.fire({
+                        title: 'Success!',
+                        text: 'Updated successfully!',
+                        icon: 'success'
+                    }); }
+
+                });
+
+            @*var form = $("#add-group");
+            form.validate();
+            if (form.valid()) {
+                event.preventDefault();
+                var formData = "";
+                $.ajax({
+                    url: '@Url.Action("AddGroup", "Budget")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        $('#modal_group').modal('hide');
+                        swalInit.fire({
+                            title: 'Success!',
+                            text: 'Activity added successfully!',
+                            icon: 'success'
+                        });
+                        location.reload();
+                    }
+                });
+            }*@
+        }
+
+        function UpdateMonthlyBudget(id, noOfCases,type) {
+
+
+            var budget = {}
+            budget.BudgetMonthlyId = id;
+            budget.NoOfCases = noOfCases;
+            budget.ClientId = $('#' + id + 'ClientId').val();;
+            budget.BudgetValue = $('#budgetvalue' + type + '-' + noOfCases).val();
+            budget.AchieveValue = $('#achievevalue' + type + '-' + noOfCases).val();
+            BlockUIHelper.blockUI('tblmonthly');
+            $.ajax({
+                url: '@Url.Action("UpdateMonthlyBudget", "Budget")',
+                type: 'POST',
+                data: { update: budget },
+                success: function (response) {
+                    swalInit.fire({
+                        title: 'Success!',
+                        text: 'Budget Data Updated successfully!',
+                        icon: 'success'
+                    });
+                    BlockUIHelper.unblockUI('tblmonthly');
+                },
+                error: function (response) {
+                    console.error(response);
+                    //need check y go error
+                    swalInit.fire({
+                        title: 'Error!',
+                        text: 'Failed to update , please contact admin',
+                        icon: 'failed'
+                    });
+                    BlockUIHelper.unblockUI('tblmonthly');
+                }
+
+                });
+
+            @*var form = $("#add-group");
+            form.validate();
+            if (form.valid()) {
+                event.preventDefault();
+                var formData = "";
+                $.ajax({
+                    url: '@Url.Action("AddGroup", "Budget")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        $('#modal_group').modal('hide');
+                        swalInit.fire({
+                            title: 'Success!',
+                            text: 'Activity added successfully!',
+                            icon: 'success'
+                        });
+                        location.reload();
+                    }
+                });
+            }*@
+        }
+
+        //propotion
+        function PropotionYear() {
+            var propotionYear = $("#incomeYear").val();
+            $.ajax({
+                url: '@Url.Action("GetIncome", "Budget")',
+                type: 'POST',
+                data: { incomeYear: propotionYear },
+                success: function (response) {
+                    CalPropotion();
+                }
+                });
+
+            //get
+        }
+
+        function RefreshPropotion() {
+            var propotionYear = $("#incomeYear").val();
+            var startMonth = $("#startMonth").val();
+            $.ajax({
+                url: '@Url.Action("RefreshPropotionTab", "Budget")',
+                type: 'POST',
+                async: false,
+                data: { incomeYear: propotionYear, startMonth: startMonth },
+                success: function (response) {
+                    $('#frmpropotion').html(response);
+                    $("#propotiontotalace").text(grandtotalace);
+                  //  CalPropotion();
+                }
+                });
+        }
+
+
+         function RefreshStrategy() {
+            var propotionYear = $("#incomeYear").val();
+            $.ajax({
+                url: '@Url.Action("RefreshStrategyTab", "Budget")',
+                type: 'POST',
+                async: false,
+                data: { incomeYear: propotionYear },
+                success: function (response) {
+                    $('#frmstrategy').html(response);
+                  //  CalPropotion();
+                }
+                });
+        }
+
+        function DeleteMonthlyBudget(id) {
+            BlockUIHelper.blockUI('tblmonthly');
+            $.ajax({
+                url: '@Url.Action("DeleteMonthlyBudget", "Budget")',
+                type: 'POST',
+                data: {id:id},
+                success: function (response) {
+                    swalInit.fire({
+                        title: 'Success!',
+                        text: 'deleted successfully!',
+                        icon: 'success'
+                    });
+
+                    RefreshMonthlyBudgetTable();
+                    BlockUIHelper.unblockUI('tblmonthly');
+                },
+                failed: function (response) {
+                    BlockUIHelper.unblockUI('tblmonthly');
+                },
+                error: function (response) {
+                    BlockUIHelper.unblockUI('tblmonthly');
+                }
+            });
+
+
+        }
+
+         function RefreshMonthBudget() {
+             var year = $("#incomeYear").val();
+             var month = $("#startMonth").val();
+
+
+             var searchFilter = {};
+             searchFilter.PageNumber = 1;
+             searchFilter.PageSize = $('#show-entries').val();
+             searchFilter.BudgetYear = year;
+             searchFilter.BudgetMonth = month;
+
+
+            $.ajax({
+                url: '@Url.Action("RefreshMonthlyBudgetTab", "Budget")',
+                type: 'POST',
+                async: false,
+                data: { incomeYear: year },
+                success: function (response) {
+                    $('#monthlybudgettab').html(response);
+                    $('.select-search').select2();
+                }
+                });
+
+
+        }
+        function PropotionPercentChange(ele) {
+            var totalPercent = 0;
+            var incomeMonth = parseInt( $('#incomeMonth').val());
+
+            $("#tblpropotion").find('td input').each(function (i, element) {
+                if (i < incomeMonth) {
+                    totalPercent += parseFloat(this.value);
+
+                    if (totalPercent > 100) {
+                        swalInit.fire({
+                            text: 'Total Propotion % should not more than 100 ',
+                            icon: 'warning'
+                        });
+
+                        ele.value = 0.00;
+                        return;
+                    }
+                }
+            });
+
+            CalPropotion();
+
+        }
+        function CalPropotion() {
+            var m115 = @Html.Raw(JsonConvert.SerializeObject(Model.Monthly.BudgetMonthly.Where(p => p.MonthlyBudgetTypeId == 115)));
+            var m116 = @Html.Raw(JsonConvert.SerializeObject(Model.Monthly.BudgetMonthly.Where(p => p.MonthlyBudgetTypeId == 116)));
+            var propYear = $("#propotionYear").val();
+            $("#propotiontotalace").text(grandtotalace);
+            var accfall = 0;
+            var totalPercent = 0;
+            var totalBudget = 0;
+            var totalAchieve = 0;
+            var totalVariant = 0;
+            var totalAccShortfall = 0;
+
+            var incomeMonth = parseInt( $('#incomeMonth').val());
+            $("#tblpropotion").find('td input').each(function (i, element) {
+                if (i < incomeMonth) {
+
+                    totalPercent += parseFloat(this.value);
+
+                    if (totalPercent > 100) {
+                        swalInit.fire({
+                            text: 'Total Propotion % should not more than 100 ',
+                            icon: 'warning'
+                        });
+                        return;
+                    }
+                    var num = i + 1;
+                    var id = element.getAttribute('data-monthid');
+
+                    var id_split = [2];
+
+
+                    if (id != null)
+                        id_split = id.split('_');
+                    var month = parseInt(id_split[0]);
+                    var year = parseInt(id_split[1]);
+
+                    var propBudget = grandtotalace * (parseFloat(this.value) / 100);
+                    $("#propobudget" + num).text(ReplaceNumberWithCommas(propBudget.toFixed(2)));
+
+                    var budget = GetMonthlyBudgetData(month, year);
+                    //var propActual = 0;
+
+                    //budget.forEach(monthlyBudget => {
+                    //    propActual += monthlyBudget.AchieveValue;
+                    //});
+
+                 //   $("#propoactual" + num).text(ReplaceNumberWithCommas(propActual.toFixed(2)));
+                    $("#hdnpropotion" + num).val(propBudget);
+                    var propactual = parseFloat($("#propoactual" + num).text().replace(',', ''));
+                    var propvariance = propactual - propBudget;
+                    $("#propovariance" + num).text(ReplaceNumberWithCommas(propvariance.toFixed(2)));
+                    accfall += propvariance;
+                    $("#propaccfall" + num).text(my.format(accfall.toFixed(2)));
+
+
+
+                    totalAchieve += propactual;
+                    totalVariant += propvariance;
+                    totalBudget += propBudget;
+                    totalAccShortfall = accfall;
+
+                    LoadCharts();
+                    MonthlyBudget();
+                    StrategyYear();
+                }
+            });
+            if (totalPercent > 100)
+                $('#total_propobudget_percent').attr("style", "color:red");
+
+            $('#total_propobudget_percent').text(totalPercent.toFixed(2));
+            $('#total_propobudget_budget').text(ReplaceNumberWithCommas(totalBudget.toFixed(2)));
+            $('#total_propobudget_actual').text(ReplaceNumberWithCommas(totalAchieve.toFixed(2)));
+            $('#total_propobudget_variant').text(ReplaceNumberWithCommas(totalVariant.toFixed(2)));
+            $('#total_propobudget_accshortfall').text(ReplaceNumberWithCommas(totalAccShortfall.toFixed(2)));
+
+
+
+        }
+
+
+        function GetMonthlyBudgetData(month, year) {
+
+
+
+          //      var selectedMonthYear = $('#monthly-month').val();
+
+          //  var monthYear = selectedMonthYear.split('-');
+
+          //  if (monthYear.length < 2) {
+          //      console.error('error getting selected month and year in monthly budget tab');
+          //      return;
+          //  }
+
+
+          // var month = monthYear[1];
+          //var year=    monthYear[0];
+            var budget = [];
+
+            $.ajax({
+                url: '@Url.Action("GetMonthlyBudget", "Budget")',
+                type: 'POST',
+                async:false,
+                data: {year:year, month:month},
+                success: function (response) {
+                    budget = response;
+                    console.log(response);
+                }
+            });
+
+            return budget;
+        }
+
+        function LoadCharts() {
+            // Initialize the echarts instance based on the prepared dom
+            var myChart = echarts.init(document.getElementById('main'));
+            // Specify the configuration items and data for the chart
+            var option = {
+                color: ['#ecc402', '#a77400eb'],
+                // Chart animation duration
+                animationDuration: 750,
+
+                // Setup grid
+                grid: {
+                    left: 0,
+                    right: 40,
+                    top: 35,
+                    bottom: 0,
+                    containLabel: true
+                },
+
+                // Add legend
+                legend: {
+                    data: ['Budget', 'Actual'],
+                    itemHeight: 8,
+                    itemGap: 20,
+                    textStyle: {
+                        padding: [0, 5]
+                    }
+                },
+
+                // Add tooltip
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: 'rgba(0,0,0,0.75)',
+                    padding: [10, 15],
+                    textStyle: {
+                        fontSize: 13,
+                        fontFamily: 'Roboto, sans-serif'
+                    }
+                },
+
+                // Horizontal axis
+                xAxis: [{
+                    type: 'category',
+                    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    axisLabel: {
+                        color: '#333'
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#999'
+                        }
+                    },
+
+                }],
+
+                // Vertical axis
+                yAxis: [{
+                    type: 'value',
+                    axisLabel: {
+                        color: '#333'
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#999'
+                        }
+                    },
+
+                }],
+
+                // Add series
+                series: [
+                    {
+                        name: 'Budget',
+                        type: 'bar',
+                        data: [parseFloat($("#propobudget1").text().replace(',', '')),
+                        parseFloat($("#propobudget2").text().replace(',', '')),
+                        parseFloat($("#propobudget3").text().replace(',', '')),
+                        parseFloat($("#propobudget4").text().replace(',', '')),
+                        parseFloat($("#propobudget5").text().replace(',', '')),
+                        parseFloat($("#propobudget6").text().replace(',', '')),
+                        parseFloat($("#propobudget7").text().replace(',', '')),
+                        parseFloat($("#propobudget8").text().replace(',', '')),
+                        parseFloat($("#propobudget9").text().replace(',', '')),
+                        parseFloat($("#propobudget10").text().replace(',', '')),
+                        parseFloat($("#propobudget11").text().replace(',', '')),
+                        parseFloat($("#propobudget12").text().replace(',', ''))],
+                    },
+                    {
+                        name: 'Actual',
+                        type: 'bar',
+                        data: [parseFloat($("#propoactual1").text().replace(',', '')),
+                        parseFloat($("#propoactual2").text().replace(',', '')),
+                        parseFloat($("#propoactual3").text().replace(',', '')),
+                        parseFloat($("#propoactual4").text().replace(',', '')),
+                        parseFloat($("#propoactual5").text().replace(',', '')),
+                        parseFloat($("#propoactual6").text().replace(',', '')),
+                        parseFloat($("#propoactual7").text().replace(',', '')),
+                        parseFloat($("#propoactual8").text().replace(',', '')),
+                        parseFloat($("#propoactual9").text().replace(',', '')),
+                        parseFloat($("#propoactual10").text().replace(',', '')),
+                        parseFloat($("#propoactual11").text().replace(',', '')),
+                        parseFloat($("#propoactual12").text().replace(',', ''))],
+                    }
+                ]
+            };
+
+            // Display the chart using the configuration items and data just specified.
+            myChart.setOption(option);
+
+
+
+            // Initialize the echarts instance based on the prepared dom
+            var shortfall = echarts.init(document.getElementById('shortfall-chart'));
+
+            // Specify the configuration items and data for the chart
+            option = {
+                color: ['#ea7905f2', '#fcb127f2'],
+                // Chart animation duration
+                animationDuration: 750,
+
+                // Setup grid
+                grid: {
+                    left: 0,
+                    right: 40,
+                    top: 35,
+                    bottom: 0,
+                    containLabel: true
+                },
+
+                // Add legend
+                legend: {
+                    data: ['Accumulated Shortfall', 'Actual'],
+                    itemHeight: 8,
+                    itemGap: 20,
+                    textStyle: {
+                        padding: [0, 5]
+                    }
+                },
+
+                // Add tooltip
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: 'rgba(0,0,0,0.75)',
+                    padding: [10, 15],
+                    textStyle: {
+                        fontSize: 13,
+                        fontFamily: 'Roboto, sans-serif'
+                    }
+                },
+
+                // Horizontal axis
+                xAxis: [{
+                    type: 'category',
+                    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    axisLabel: {
+                        color: '#333'
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#999'
+                        }
+                    },
+
+                }],
+
+                // Vertical axis
+                yAxis: [{
+                    type: 'value',
+                    axisLabel: {
+                        color: '#333'
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#999'
+                        }
+                    },
+
+                }],
+
+                // Add series
+                series: [
+                    {
+                        name: 'Accumulated Shortfall',
+                        type: 'bar',
+                        data: [parseFloat($("#propaccfall1").text().replace(',', '')),
+                        parseFloat($("#propaccfall2").text().replace(',', '')),
+                        parseFloat($("#propaccfall3").text().replace(',', '')),
+                        parseFloat($("#propaccfall4").text().replace(',', '')),
+                        parseFloat($("#propaccfall5").text().replace(',', '')),
+                        parseFloat($("#propaccfall6").text().replace(',', '')),
+                        parseFloat($("#propaccfall7").text().replace(',', '')),
+                        parseFloat($("#propaccfall8").text().replace(',', '')),
+                        parseFloat($("#propaccfall9").text().replace(',', '')),
+                        parseFloat($("#propaccfall10").text().replace(',', '')),
+                        parseFloat($("#propaccfall11").text().replace(',', '')),
+                        parseFloat($("#propaccfall12").text().replace(',', ''))],
+                    },
+                    {
+                        name: 'Actual',
+                        type: 'bar',
+                        data: [parseFloat($("#propoactual1").text().replace(',', '')),
+                        parseFloat($("#propoactual2").text().replace(',', '')),
+                        parseFloat($("#propoactual3").text().replace(',', '')),
+                        parseFloat($("#propoactual4").text().replace(',', '')),
+                        parseFloat($("#propoactual5").text().replace(',', '')),
+                        parseFloat($("#propoactual6").text().replace(',', '')),
+                        parseFloat($("#propoactual7").text().replace(',', '')),
+                        parseFloat($("#propoactual8").text().replace(',', '')),
+                        parseFloat($("#propoactual9").text().replace(',', '')),
+                        parseFloat($("#propoactual10").text().replace(',', '')),
+                        parseFloat($("#propoactual11").text().replace(',', '')),
+                        parseFloat($("#propoactual12").text().replace(',', ''))],
+                    }
+                ]
+
+            };
+
+            // Display the chart using the configuration items and data just specified.
+            shortfall.setOption(option);
+        }
+
+        function UpdatePropotion() {
+            var form = $("#frmpropotion");
+            form.validate();
+            if (form.valid()) {
+                var formData = $('#frmpropotion').serialize();
+                $.ajax({
+                    url: '@Url.Action("UpdatePropotion", "Budget")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        swalInit.fire({
+                            title: 'Success!',
+                            text: 'updated successfully!',
+                            icon: 'success'
+                        });
+                    }
+                });
+
+            }
+        }
+
+        //monthly budget
+        function AddMonthlyDetail() {
+            var form = $("#add-monthlydetail");
+            form.validate();
+
+            if (form.valid()) {
+                BlockUIHelper.blockUI('add-budget-modal-body');
+                event.preventDefault();
+                var formData = form.serialize();
+                $.ajax({
+                    url: '@Url.Action("AddMonthlyDetail", "Budget")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        RefreshMonthlyBudgetTable();
+
+                        swalInit.fire({
+                            title: 'Success!',
+                            text: 'Budget added successfully!',
+                            icon: 'success'
+                        });
+                        $('#modal_budget').modal('hide');
+                        $('.modal-backdrop').remove();
+                        CalPropotion();
+                        BlockUIHelper.unblockUI('add-budget-modal-body');
+                    },
+                    failed: function (response) {
+                        BlockUIHelper.unblockUI('add-budget-modal-body');
+                    }, error: function (response) {
+                        BlockUIHelper.unblockUI('add-budget-modal-body');
+                    }
+                    
+                });
+
+            }
+        }
+
+        function RefreshMonthlyBudgetTable() {
+            @{ var filter = new CaliphWeb.Models.API.Budget.MonthlyFilter();
+                }
+            var searchFilter = @Html.Raw(Json.Encode(filter));
+            var selectedMonthYear = $('#monthly-month').val();
+
+            var monthYear = selectedMonthYear.split('-');
+
+            if (monthYear.length < 2) {
+                console.error('error getting selected month and year in monthly budget tab');
+                return;
+            }
+
+            searchFilter.PageNumber = 1;
+            searchFilter.PageSize = $('#show-entries').val();
+            searchFilter.BudgetYear = monthYear[1];
+            searchFilter.BudgetMonth = monthYear[0];
+
+
+            $.ajax({
+                url: '@Url.Action("RefreshMonthlyBudgetClientTable", "Budget")',
+                type: 'POST',
+                data: searchFilter,
+                success: function (response) {
+                    $('#monthly-budget-table').html(response);
+                    $('.select-search').select2();
+                    $('#AddMonthlyBudgetYear').val(searchFilter.BudgetYear);
+                    $('#AddMonthlyBudgetMonth').val(searchFilter.BudgetMonth);
+                    MonthlyBudget();
+                }
+            });
+
+        }
+
+        
+
+        function MonthlyBudget() {
+            var year = $('#incomeYear').val();
+            var month = $('#monthly-month').val().split('-')[0];
+            var index = $('#monthly-month').prop('selectedIndex') + 1;
+
+            $('#AddMonthlyBudgetYear').val(year);
+            $('#AddMonthlyBudgetMonth').val(month);
+
+            var highEndValue = parseFloat($("#case115").val());
+            var lowEndValue = parseFloat($("#case116").val());
+
+
+            var monthlyBudget = parseFloat($("#propobudget" + index).text().replace(',', ''));
+
+            $('#monthlyfall').text($("#propaccfall" + index).text());
+            var monthly115 = highEndValue > 0 ? monthlyBudget * (parseFloat($('#case115').val()) / 100) : 0;
+            var monthlycase115 = monthlyBudget > 0 ? (monthly115 / monthlyBudget) : 0;
+            var monthly116 = lowEndValue > 0 ? monthlyBudget * (parseFloat($('#case116').val()) / 100) : 0;
+            var monthlycase116 = monthlyBudget > 0 ? (monthly116 / monthlyBudget) : 0;
+
+
+
+
+            if (monthly115 === 0 || monthly115 === undefined || isNaN(monthly115))
+                monthly115 = 0;
+            if (monthly116 === 0 || monthly116 === undefined || isNaN(monthly116))
+                monthly116 = 0;
+
+            $('#monthlyfall115').text(ReplaceNumberWithCommas(monthly115.toFixed(2)));
+            $('#monthlyfall116').text(ReplaceNumberWithCommas(monthly116.toFixed(2)));
+            $('#monthlycase115').text(ReplaceNumberWithCommas(monthlycase115.toFixed(2)));
+            $('#monthlycase116').text(ReplaceNumberWithCommas(monthlycase116.toFixed(2)));
+
+            let budgetvalue115 = 0;
+            let achivevalue115 = 0;
+            let budgetvalue116 = 0;
+            let achivevalue116 = 0;
+
+            $("#tblmonthly").find('td .budgetvalue').each(function (i) {
+                var num = i + 1;
+
+                var highendBudget = parseFloat($("#budgetvalue115-" + num).val());
+                var highendAchieve = parseFloat($("#achievevalue115-" + num).val());
+
+                if (highendBudget === 0 || highendBudget === undefined || isNaN(highendBudget))
+                    highendBudget = 0;
+                if (highendAchieve === 0 || highendAchieve === undefined || isNaN(highendAchieve))
+                    highendAchieve = 0;
+                budgetvalue115 += highendBudget;
+                achivevalue115 += highendAchieve;
+
+
+                var lowendBudget = parseFloat($("#budgetvalue116-" + num).val());
+                var lowendAchieve = parseFloat($("#achievevalue116-" + num).val());
+
+                if (lowendBudget === 0 || lowendBudget === undefined || isNaN(lowendBudget))
+                    lowendBudget = 0;
+                if (lowendAchieve === 0 || lowendAchieve === undefined || isNaN(lowendAchieve))
+                    lowendAchieve = 0;
+
+                budgetvalue116 += lowendBudget;
+                achivevalue116 += lowendAchieve;
+
+            });
+
+
+
+            var highPercent = achivevalue115==0?0: (budgetvalue115 / achivevalue115) * 100;
+            var lowPercent = achivevalue116== 0 ? 0 : (budgetvalue116 / achivevalue116) * 100;
+            var plegde = budgetvalue115 + budgetvalue116;
+            var achieve = achivevalue115==0?0:achivevalue115 + achivevalue116;
+            if (highPercent === 0 || highPercent === undefined || isNaN(highPercent))
+                highPercent = 0;
+            if (lowPercent === 0 || lowPercent === undefined || isNaN(lowPercent))
+                lowPercent = 0;
+
+            $('#highendBudgetSum').text(ReplaceNumberWithCommas(budgetvalue115.toFixed(2)));
+            $('#highendAchieveSum').text(ReplaceNumberWithCommas(achivevalue115.toFixed(2)));
+            $('#highendAchieved').text(ReplaceNumberWithCommas(highPercent.toFixed(2)));
+
+            $('#lowendBudgetSum').text(ReplaceNumberWithCommas(budgetvalue116.toFixed(2)));
+            $('#lowendAchieveSum').text(ReplaceNumberWithCommas(achivevalue116.toFixed(2)));
+            $('#lowendAchieved').text(ReplaceNumberWithCommas(lowPercent.toFixed(2)));
+
+            $('#monthlypledge').text(ReplaceNumberWithCommas(plegde.toFixed(2)));
+
+
+
+
+
+            var pvb = (plegde / (parseFloat(monthlyBudget)) * 100 );
+            if (pvb === 0 || pvb === undefined || isNaN(pvb)) {
+                pvb = 0.00;
+            }
+            if (plegde === 0)
+                $('#pvb').text("0.00");
+            else
+                $('#pvb').text(ReplaceNumberWithCommas(pvb.toFixed(2)));
+
+            if (pvb < 250)
+                $('#pvb').attr("style", "color:red");
+            else
+                $('#pvb').attr("style", "color:black");
+
+
+
+            var monthlypercentAchieve = (achieve / monthlyBudget) * 100;
+            if (monthlyBudget === 0 || monthlyBudget === undefined || isNaN(monthlyBudget)) {
+                monthlyBudget = 0;
+                monthlypercentAchieve = 0;
+            }
+
+            $('#monthlyAchieved').text(ReplaceNumberWithCommas( achieve.toFixed(2)));
+            $('#shortfallbudget').text(ReplaceNumberWithCommas((achieve - monthlyBudget).toFixed(2)));
+            $('#monthlyAchievedPercent').text(ReplaceNumberWithCommas(monthlypercentAchieve.toFixed(2)));
+
+            var budget = $('#propobudget' + index).text();
+            $('#monthlyBudget').text(budget);
+
+
+        }
+
+        //strategy
+        function StrategyYear() {
+            CalStrategy();
+            var quarter = 1;
+
+
+
+
+
+            for (var i = 1;i<= 12; i++) {
+                var budget = $('#propobudget' + i).text();
+                var actual = $('#propoactual' + i).text();
+                CalQuarter(budget, actual, i);
+
+                if (i % 3 == 0) {
+                    var endEndQuarter = quarter * 3;
+                    var startQuarter = endEndQuarter - 2;
+                    var totalQuarterBudget = 0;
+                    for (var j = startQuarter; j <= endEndQuarter; j++) {
+                        var quarterbudget = $('#propobudget' + j).text();
+                        totalQuarterBudget += parseFloat(quarterbudget.replace(',', ''));
+                    }
+                    $("#quartbudgetsum" + endEndQuarter).text(my.format(totalQuarterBudget.toFixed(2)));
+                    quarter++;
+                }
+            }
+        }
+
+        function onStrategyPercentChange(type) {
+            var highPercent = parseFloat($("#highendpercent").val());
+            var lowPercent = parseFloat($("#lowendpercent").val());
+            if (type === 'high') {
+                highPercent = highPercent > 100 ? 100 : highPercent;
+                lowPercent = 100 - highPercent;
+            }
+            else if (type === 'low') {
+                lowPercent = lowPercent > 100 ? 100 : lowPercent;
+                highPercent = 100 - lowPercent;
+            }
+            $("#highendpercent").val(highPercent);
+            $("#lowendpercent").val(lowPercent);
+            CalStrategy();
+        }
+
+        function CalStrategy() {
+
+            var strategy = @Html.Raw(JsonConvert.SerializeObject(Model.Strategy.BudgetStrategy));
+            //for (var i = 0; i < strategies.length; i++) {
+            //    if (strategies[i].BudgetStrategyYear == strategyYear) {
+            //        $("#strategyace").text(my.format(parseFloat(strategies[i].GoalACEValue).toFixed(2)));
+            //        $("#highendpercent").val(strategies[i].HighEndPercentage);
+            //        $("#lowendpercent").val(strategies[i].LowEndPercentage);
+            //        $("#highendpremium").val(strategies[i].HighEndAveragePremium);
+            //        $("#lowendpremium").val(strategies[i].LowEndAveragePremium);
+            //    }
+            //}
+
+
+
+
+
+            $("#strategytotalcase").text($("#totalcase").text());
+            var strategyace = my.format(parseFloat($("#propotiontotalace").text()).toFixed(2));
+            $("#strategyace").text(strategyace);
+
+
+            var totalace = $("#strategyace").text();
+            var highendpercent = $("#highendpercent").val();
+            var lowendpercent = $("#lowendpercent").val();
+            var highendpremium = $("#highendpremium").val();
+            var lowendpremium = $("#lowendpremium").val();
+            var highendace = parseFloat(totalace.replace(',', '')) * highendpercent / 100;
+            $("#strategyhighendace").text(my.format(highendace.toFixed(2)));
+            var lowendace = parseFloat(totalace.replace(',', '')) * lowendpercent / 100;
+            $("#strategylowendace").text(my.format(lowendace.toFixed(2)));
+
+
+            var highendcase = highendpremium>0? highendace / parseFloat(highendpremium.replace(',', '')):0;
+            $("#highendcase").text(highendcase.toFixed(0));
+            var lowendcase = lowendpremium>0?lowendace / parseFloat(lowendpremium.replace(',', '')):0;
+            $("#lowendcase").text(lowendcase.toFixed(0));
+
+
+
+        }
+
+
+
+        function onMonthlyBudgetPercentChange(type) {
+            var highPercent = parseFloat($("#case115").val());
+            var lowPercent = parseFloat($("#case116").val());
+            if (type === 'high') {
+                highPercent = highPercent > 100 ? 100 : highPercent;
+                lowPercent = 100 - highPercent;
+            }
+            else if (type === 'low') {
+                lowPercent = lowPercent > 100 ? 100 : lowPercent;
+                highPercent = 100 - lowPercent;
+            }
+            $("#case115").val(highPercent);
+            $("#case116").val(lowPercent);
+            MonthlyBudget();
+        }
+        function CalQuarter(budget, achieve, count) {
+
+
+
+
+
+
+            $("#quartbudgetmonth" + count).text(budget);
+            $("#quartachievemonth" + count).text(achieve);
+            var percent = parseFloat(budget) > 0 ? parseFloat(achieve.replace(',', '')) / parseFloat(budget.replace(',', '')):0;
+            $("#quartachievepercent" + count).text((percent*100).toFixed(2));
+
+
+        }
+
+    </script>
+
+}

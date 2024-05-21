@@ -1,0 +1,60 @@
+﻿
+<form id="add-user-activity" class="form-validate-jquery">
+    <fieldset class="mb-3">
+  
+        <div class="form-group row">
+            <label class="col-form-label col-lg-3">Activity<span class="text-danger">*</span></label>
+            <div class="col-lg-8">
+                <select required class="custom-select" name="ActivityPointId">
+                    <option value="">Please Select</option>
+                    @foreach (var activity in Model.Activities)
+                    {
+                        <option value="@activity.ActivityPointId">@activity.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-lg-3">Date<span class="text-danger">*</span></label>
+            <div class="col-lg-8">
+                <div class="input-group">
+                    <span class="input-group-prepend">
+                        <span class="input-group-text"><i class="icon-calendar5"></i></span>
+                    </span>
+                    <input type="text" id="AddPlannedActivityDate" class="form-control pickadate rounded-right">
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-lg-3">Time<span class="text-danger">*</span></label>
+            <div class="col-lg-8 text-center">
+                <div class="input-group">
+                    <span class="input-group-prepend">
+                        <span class="input-group-text"><i class="icon-alarm"></i></span>
+                    </span>
+                    <input type="text" id="add-planned-timefrom" class="form-control rounded-right activity-time-from">
+                    <i class="icon-minus3 text-center  align-items-center" style="display:grid"></i>
+
+                    <span class="input-group-prepend">
+                        <span class="input-group-text"><i class="icon-alarm"></i></span>
+                    </span>
+                    <input type="text" id="add-planned-timeto" class="form-control rounded-right activity-time-to">
+                </div>
+            </div>
+            <input type="hidden" name="ActivityStartDate" id="AddPlannedActivityStartDate">
+            <input type="hidden" name="ActivityEndDate" id="AddPlannedActivityEndDate">
+        </div>
+
+        <div class="form-group row">
+            <label class="col-form-label col-lg-3">Notes</label>
+            <div class="col-lg-8">
+                <textarea name="Remarks" class="form-control"></textarea>
+            </div>
+        </div>
+
+    </fieldset>
+
+
+
+
+</form>

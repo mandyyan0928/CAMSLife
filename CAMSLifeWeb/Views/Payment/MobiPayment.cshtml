@@ -1,0 +1,47 @@
+﻿@model CaliphWeb.Models.ViewModel.PaymentViewModel
+
+@{
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Caliph Group</title>
+
+    <link rel="icon" type="image/png" href="~/global_assets/images/logo_icon.png" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+    <!-- global stylesheets -->
+    <link href="~/global_assets/css/icons/icomoon/styles.min.css" rel="stylesheet" type="text/css">
+    <link href="~/global_assets/assets/css/all.css" rel="stylesheet" type="text/css">
+    <!-- /global stylesheets -->
+    <script src="~/global_assets/js/main/jquery.min.js"></script>
+</head>
+
+<body>
+    <div style="text-align:center;">
+        <p>You are being redirect to the payment gateway. Please do not refresh the page.</p>
+    </div>
+    <button type="button" id="btn-mobi" onclick="sendMobiPayment()" class="btn btn-outline-success btn-lg btn-block" hidden>send</button>
+
+    <script type="text/javascript">
+        var arr = {
+            amount: '@Model.Amount',
+            mobi_api_key: '@Model.MobiApiKey',
+            callback_url: '@Model.CallbackUrl',
+            invoice: '@Model.UserEventPaymentRefNo',
+            mobi_api_id: '@Model.MobiApiId',
+            mobi_cus_name: "",
+            mobi_cus_mail: "",
+            mobi_cus_no: "",
+        }
+
+        $('#document').ready(function () {
+            $('#btn-mobi').click();
+        });
+    </script>
+    <script type="text/javascript" src="https://gomobi.io/demo/payment/ezyway/assets/mobi-payment.js"></script>
+</body>
+</html>

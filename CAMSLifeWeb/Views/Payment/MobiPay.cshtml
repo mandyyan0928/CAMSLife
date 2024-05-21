@@ -1,0 +1,31 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <title>EZYSPLIT</title>
+</head>
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+
+<body>
+
+    <button type="button" id="btn-mobi" onclick="sendMobiPayment()" class="btn btn-outline-success btn-lg btn-block">send</button>
+
+    <script type="text/javascript">
+		var arr = {
+			amount			:	"100",
+			mobi_api_key	:   "b07ad9f31df158edb188a41f725899bc",
+			callback_url	: 	"https://gomobi.io/ezyway-payment-result",
+			invoice			: 	"23022022",
+			mobi_api_id		: 	"MOBI01009",
+			mobi_cus_name	:	"",
+			mobi_cus_mail	:   "",
+			mobi_cus_no		:   "",
+		}
+    </script>
+    <script type="text/javascript" src="https://gomobi.io/demo/payment/ezyway/assets/mobi-payment.js"></script>
+
+
+
+</body>
+</html>
+

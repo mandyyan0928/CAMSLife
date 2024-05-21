@@ -1,0 +1,41 @@
+﻿@model CaliphWeb.Models.ViewModel.EditLeadsViewModel
+
+
+<form id="edit-lead-form" class="form-leads">
+    <input type="hidden" name="ClientLeadId" value="@Model.ClientLead.ClientLeadId" />
+    <div class="form-group row" style="display:none">
+        <label class="col-form-label col-lg-3">Deal<span class="text-danger">*</span></label>
+        <div class="col-lg-8">
+            <select required data-placeholder="Deal Title" name="ClientDealId" id="ClientDealId" class="form-control" data-fouc>
+                <option value="">Select</option>
+                @foreach (var deal in Model.Deals)
+                {
+                    var selected = Model.ClientDealId== deal.ClientDealId ? "selected" : "";
+                    <option value="@deal.ClientDealId" @selected> @deal.DealTitleDesc - @deal.Name </option>
+
+
+                }
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-lg-3">Name<span class="text-danger">*</span></label>
+        <div class="col-lg-8">
+            <input type="text" required id="Name" name="Name" value="@Model.ClientLead.Name" class="form-control">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-form-label col-lg-3">Contact<span class="text-danger">*</span></label>
+        <div class="col-lg-8">
+            <input type="text" required id="HP" name="HP" value="@Model.ClientLead.HP" class="form-control">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-form-label col-lg-3">Notes<span class="text-danger"></span></label>
+        <div class="col-lg-8">
+            <textarea id="notes" name="Remarks" class="form-control"> @Model.ClientLead.Remarks</textarea>
+        </div>
+    </div>
+
+</form>

@@ -1,0 +1,439 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Caliph Group</title>
+    @*@Styles.Render("~/Content/css")
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")*@
+
+    <link rel="icon" type="image/png" href="~/global_assets/images/logo_icon_new.png" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+    <!-- global stylesheets -->
+    <link href="~/global_assets/css/icons/icomoon/styles.min.css" rel="stylesheet" type="text/css">
+    <link href="~/global_assets/assets/css/all.css" rel="stylesheet" type="text/css">
+    <link href="~/global_assets/css/flipclock/flipTimer.css" rel="stylesheet" type="text/css">
+    <!-- /global stylesheets -->
+    <!-- Core JS files -->
+    <script src="~/global_assets/js/main/jquery.min.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="~/global_assets/js/main/bootstrap.bundle.min.js"></script>
+    <script src="~/global_assets//assets/js/app.js"></script>
+    @*<script src="~/global_assets/js/plugins/flipclock/flipclock.js"></script>*@
+    <script src="~/global_assets/js/helper/listhelper.js"></script>
+    <!-- /Core JS files -->
+    @Scripts.Render("~/bundles/jqueryplugin")
+    <script src="~/global_assets/js/helper/BlockUIHelper.js"></script>
+    <script src="~/global_assets/js/helper/FileUpload.js"></script>
+    <script src="~/global_assets/js/helper/InputHelper.js"></script>
+</head>
+<body>
+    <!-- Main navbar -->
+    <div class="navbar navbar-expand-lg navbar-dark navbar-static">
+        <div class="d-flex flex-1 d-lg-none">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-mobile">
+                <i class="icon-paragraph-justify3"></i>
+            </button>
+            <button class="navbar-toggler sidebar-mobile-main-toggle" type="button">
+                <i class="icon-transmission"></i>
+            </button>
+        </div>
+
+        <div class="navbar-brand text-center text-lg-left">
+            <a href="@Url.Action("Index", "Home")" class="d-inline-block" style="font-size:18px;color:white; font-weight:600">
+             <img src="~/global_assets/images/logo_new_light.png" style="width:180px;height:35px" />
+            </a>
+        </div>
+
+        <div class="collapse navbar-collapse order-2 order-lg-1" id="navbar-mobile">
+
+        </div>
+
+        <ul class="navbar-nav flex-row order-1 order-lg-2 flex-1 flex-lg-0 justify-content-end align-items-center">
+
+            @if (User.Identity.IsAuthenticated && Session["user"] != null)
+            {
+                var user = CaliphWeb.Helper.UserHelper.GetLoginUserViewModel();
+                <li class="nav-item nav-item-dropdown-lg dropdown dropdown-user h-100">
+                    <a href="#" class="navbar-nav-link navbar-nav-link-toggler dropdown-toggle d-inline-flex align-items-center h-100" data-toggle="dropdown">
+                        <span class="d-none d-lg-inline-block">@user.Fullname</span>
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a href="@Url.Action("List", "Client")" class="dropdown-item"><i class="icon-user-plus"></i> My Client</a>
+                        <a href="@Url.Action("Calender", "Activity")" class="dropdown-item"><i class="icon-calendar"></i> My Calendar</a>
+                        <a href="@Url.Action("List", "Deal")" class="dropdown-item">
+                            <i class="icon-coins"></i> My Deal
+                            @*<span class="badge badge-primary badge-pill ml-auto">58</span>*@
+                        </a>
+                        <a href="@Url.Action("ChangePassword", "Account")" class="dropdown-item">
+                            <i class="icon-transmission"></i> Change Password
+                            @*<span class="badge badge-primary badge-pill ml-auto">58</span>*@
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="@Url.Action("Logout", "Account")" class="dropdown-item"><i class="icon-switch2"></i> Logout</a>
+
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+    <!-- /main navbar -->
+    <!-- Page content -->
+    <div class="page-content">
+
+        <!-- Main sidebar -->
+        <div class="sidebar sidebar-dark sidebar-main sidebar-expand-lg">
+
+            <!-- Sidebar content -->
+            <div class="sidebar-content">
+
+                <!-- User menu -->
+                <div class="sidebar-section sidebar-user my-1">
+                    <div class="sidebar-section-body">
+                        <div class="media">
+                            <a href="#" class="mr-3">
+                                <img src="~/global_assets/images/logo_icon_new.png" class="rounded-circle" alt="">
+                            </a>
+
+                            <div class="media-body">
+                                @if (User.Identity.IsAuthenticated && Session["user"] != null)
+                                {
+                                    var user = CaliphWeb.Helper.UserHelper.GetLoginUserViewModel();
+                                    <div class="font-weight-semibold">@user.Fullname</div>
+                                    <div class="font-size-sm line-height-sm opacity-50">
+                                        @user.RoleName
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="ml-3 align-self-center">
+                                <button type="button" class="btn btn-outline-light-100 text-white border-transparent btn-icon rounded-pill btn-sm sidebar-control sidebar-main-resize d-none d-lg-inline-flex">
+                                    <i class="icon-transmission"></i>
+                                </button>
+
+                                <button type="button" class="btn btn-outline-light-100 text-white border-transparent btn-icon rounded-pill btn-sm sidebar-mobile-main-toggle d-lg-none">
+                                    <i class="icon-cross2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /user menu -->
+                <!-- Main navigation -->
+                <div class="sidebar-section">
+                    <ul class="nav nav-sidebar" data-nav-type="accordion">
+                        @if (User.Identity.IsAuthenticated && Session["user"] != null)
+                        {
+
+                            var user = CaliphWeb.Helper.UserHelper.GetLoginUserViewModel();
+                            var mainMenus = (from a in user.MenuList
+                                             select new CaliphWeb.Models.API.User.MainMenu { Name = a.MainMenuName, Id = a.MainMenuId }).ToList();
+
+                            <li class="nav-item-header">
+                                <div class="text-uppercase font-size-xs line-height-xs">MAIN</div>
+                                <i class="icon-menu" title="Main"></i>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href=@Url.Action("Index", "Home") class="nav-link active">
+                                    <i class="icon-home4"></i>
+                                    <span>
+                                        Dashboard
+                                    </span>
+                                </a>
+                            </li>
+                            //foreach (var mainMenu in mainMenus)
+                            //{
+
+                            //    if (mainMenu.Id == 0)
+                            //    {
+
+                            //    }
+                            //    var subMenus = user.MenuList.Where(x => x.MainMenuId == mainMenu.Id).ToList();
+                            //    foreach (var subMenu in subMenus)
+                            //    {
+
+                            //    }
+
+                            //}
+                            <!-- Main -->
+                            <!-- finding the best solution-->
+                            @*<li class="nav-item">
+                <a href=@Url.Action("Index", "Budget") class="nav-link">
+                    <i class="icon-calculator"></i>
+                    <span>
+                        Agent Budget
+                    </span>
+                </a>
+            </li>*@
+                            if (user.IsAgent || user.IsLeader || user.IsPotentialAgent)
+                            {
+
+                                <li class="nav-item nav-item-submenu">
+                                    <a href="#" class="nav-link"><i class="icon-accessibility"></i> <span>Training/Event</span></a>
+
+                                    <ul class="nav nav-group-sub" data-submenu-title="Agent">
+                                        <li class="nav-item"><a href="@Url.Action("UpcomingEvent", "Event")" class="nav-link">Upcoming Training/Events</a></li>
+                                        @if (user.IsAgent || user.IsLeader)
+                                        {
+                                            <li class="nav-item"><a href="@Url.Action("CPDEarned", "Event")" class="nav-link">CPD Earned</a></li>
+                                        }
+
+
+                                    </ul>
+                                </li>
+
+                            }
+
+                            if (user.IsAgent || user.IsLeader)
+                            {
+                                <li class="nav-item">
+                                    <a href=@Url.Action("Index2", "Budget") class="nav-link">
+                                        <i class="icon-calculator"></i>
+                                        <span>
+                                            Planning
+                                        </span>
+                                    </a>
+                                </li>
+
+                            }
+
+                            if (user.IsAdmin)
+                            {
+
+                                <li class="nav-item nav-item-submenu">
+                                    <a href="#" class="nav-link"><i class="icon-megaphone"></i> <span>Announcement</span></a>
+
+                                    <ul class="nav nav-group-sub" data-submenu-title="Announcement">
+                                        <li class="nav-item"><a href="@Url.Action("Add", "Announcement")" class="nav-link">Add Announcement</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("List", "Announcement")" class="nav-link">Announcement List</a></li>
+
+                                    </ul>
+                                </li>
+
+                                <li class="nav-item nav-item-submenu">
+                                    <a href="#" class="nav-link"><i class="icon-megaphone"></i> <span>Resource</span></a>
+
+                                    <ul class="nav nav-group-sub" data-submenu-title="Announcement">
+                                        <li class="nav-item"><a href="@Url.Action("List", "Resource")" class="nav-link">Resource List</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("Add", "Resource")" class="nav-link">Add Resource</a></li>
+                                    </ul>
+                                </li>
+
+                                <li class="nav-item nav-item-submenu">
+                                    <a href="#" class="nav-link"><i class="icon-calendar2"></i> <span>Training / Event</span></a>
+
+                                    <ul class="nav nav-group-sub" data-submenu-title="Event">
+                                        <li class="nav-item"><a href="@Url.Action("Add", "Event")" class="nav-link">Add Training/Event</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("List", "Event")" class="nav-link">Training/Event List</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("PaymentList", "Event")" class="nav-link">Training/Event Payment List</a></li>
+                                        @if (user.IsAdmin)
+                                        {
+                                            <li class="nav-item"><a href="@Url.Action("ManualAttendance", "Event")" class="nav-link">Manual Attendance</a></li>
+                                        }
+                                    </ul>
+                                </li>
+                                <li class="nav-item nav-item-submenu">
+                                    <a href="#" class="nav-link"><i class="icon-user"></i> <span>Agent</span></a>
+
+                                    <ul class="nav nav-group-sub" data-submenu-title="Agent">
+                                        <li class="nav-item"><a href="@Url.Action("AddAgent", "Agent")" class="nav-link">Add Potential Agent</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("List", "User")" class="nav-link">Agent List</a></li>
+                                    </ul>
+                                </li>
+                            }
+
+                            <li class="nav-item nav-item-submenu" id="Client">
+                                <a href="#" class="nav-link"><i class="icon-users4"></i> <span>Client</span></a>
+                                <ul class="nav nav-group-sub" data-submenu-title="Client">
+                                    <li class="nav-item"><a href="@Url.Action("Add", "Client")" class="nav-link">Add Client</a></li>
+                                    <li class="nav-item"><a href="@Url.Action("List", "Client")" class="nav-link">Client List</a></li>
+                                    <li class="nav-item"><a href="@Url.Action("Archive", "Client")" class="nav-link">Archive List</a></li>
+                                    <li class="nav-item"><a href="@Url.Action("Kiv", "Client")" class="nav-link"> KIV List</a></li>
+                                    @if (!user.IsPotentialAgent)
+                                    {
+                                        <li class="nav-item"><a href="@Url.Action("Referral", "Client")" class="nav-link">Referral List</a></li>
+                                    }
+                                    <li class="nav-item"><a href="@Url.Action("ClientSummary", "Report")" class="nav-link">Client Summary</a></li>
+
+                                </ul>
+                            </li>
+                            if (!user.IsPotentialAgent)
+                            {
+                                <li class="nav-item nav-item-submenu">
+                                    <a href="#" class="nav-link"><i class="icon-coin-dollar"></i> <span>Deal</span></a>
+
+                                    <ul class="nav nav-group-sub" data-submenu-title="Deal">
+                                        <li class="nav-item"><a href="@Url.Action("Add", "Deal")" class="nav-link">Add Deal</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("List", "Deal")" class="nav-link">Deal List</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            if (!user.IsPotentialAgent)
+                            {
+                                <li class="nav-item nav-item-submenu">
+                                    <a href="#" class="nav-link"><i class="icon-calendar3"></i> <span>Activity</span></a>
+
+                                    <ul class="nav nav-group-sub" data-submenu-title="Activity">
+                                        <li class="nav-item"><a href="@Url.Action("Add", "Activity")" class="nav-link">Add Activity</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("List", "Activity")" class="nav-link">Activity List</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("Calender", "Activity")" class="nav-link">Calendar</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item nav-item-submenu">
+                                    <a href="#" class="nav-link"><i class="icon-dots"></i> <span>20 Point System</span></a>
+
+                                    <ul class="nav nav-group-sub" data-submenu-title="Point System">
+                                        <li class="nav-item"><a href="@Url.Action("Summary", "PointSystem")" class="nav-link">Point Summary</a></li>
+                                    </ul>
+                                </li>
+                            }
+
+                            if (user.IsLeader || user.IsAgent)
+                            {
+
+                                <li class="nav-item nav-item-submenu">
+                                    <a href="#" class="nav-link"><i class="icon-collaboration"></i> <span>Recruitment</span></a>
+
+                                    <ul class="nav nav-group-sub" data-submenu-title="Agent">
+                                        <li class="nav-item"><a href="@Url.Action("Add", "Agent")" class="nav-link">Add Recruitment</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("List", "Agent")" class="nav-link">Recruitment List</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("ReferralList", "Agent")" class="nav-link">Referral List</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("AgentRecruitSummary", "Report")" class="nav-link">Recruitment Summary</a></li>
+                                    </ul>
+                                </li>
+
+                            }
+
+
+                            <li class="nav-item nav-item-submenu">
+                                <a href="#" class="nav-link"><i class="icon-menu2"></i> <span>Report</span></a>
+
+                                <ul class="nav nav-group-sub" data-submenu-title="Point System">
+                                    @if (user.IsAdmin)
+                                    {
+                                        <li class="nav-item"><a href="@Url.Action("EventAttendanceReport", "Report")" class="nav-link"> Attendance Report</a></li>
+                                    }
+
+                                    @if (user.IsLeader || user.IsAgent)
+                                    {
+                                        <li class="nav-item">
+                                            <a href='/Persistency/index' class="nav-link">
+                                                Persistency Calculator
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (user.IsAgent)
+                                    {
+                                        @*<li class="nav-item">
+                            <a href='/BonusTracker/AgentBonusDetails' class="nav-link">
+                                Bonus Tracker
+                            </a>
+                        </li>*@
+                                    }
+                                    <li class="nav-item"><a href="@Url.Action("Project100", "Report")" class="nav-link">Project 100 (Pdf Export)</a></li>
+                                    @if (user.IsLeader || user.IsAdmin)
+                                    {
+                                        @*<li class="nav-item"><a href="@Url.Action("Project100Recruit", "Report")" class="nav-link">Project 100 Recruitment (Pdf Export)</a></li>*@
+                                    }
+                                    @if (!user.IsPotentialAgent)
+                                    {
+                                        <li class="nav-item"><a href="@Url.Action("KIVHistory", "Report")" class="nav-link">KIV Revert History</a></li>
+                                    }
+                                    @if (user.IsLeader || user.IsAgent)
+                                    {
+
+
+                                        <li class="nav-item">
+                                            <a href=@Url.Action("Summary", "AgentCommission") class="nav-link">
+                                                <span>
+                                                    Commission History
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href='/Persistency/BusinessReport' class="nav-link">
+                                                Business Report
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (user.IsLeader)
+                                    {
+                                        <li class="nav-item"><a href="@Url.Action("MapaCalculator", "Agent", new {type =(int) CaliphWeb.ViewModel.Data.MasterDataEnum.AgentStimulatorType.DirectGroup, id = DateTime.Now.Year })" class="nav-link">Direct Group MAPA</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("MapaCalculator", "Agent", new {type =(int) CaliphWeb.ViewModel.Data.MasterDataEnum.AgentStimulatorType.WholeGroup, id = DateTime.Now.Year })" class="nav-link">Whole Group MAPA</a></li>
+
+                                        @*<li class="nav-item">
+                            <a href='/BonusTracker/LeaderBonusSummary' class="nav-link">
+                                Direct Group Bonus Tracker
+                            </a>
+                        </li>*@
+                                    }
+
+                                    @*<li class="nav-item"><a href="@Url.Action("DealHistory", "Report")" class="nav-link">Deal History</a></li>*@
+                                </ul>
+                            </li>
+                            <!-- /main -->
+
+                        }
+                        <li class="nav-item"><a href="@Url.Action("Logout", "Account")" class="nav-link"><i class="icon-switch2"></i> <span>Log Out</span></a></li>
+
+
+                    </ul>
+                </div>
+                <!-- /main navigation -->
+
+            </div>
+            <!-- /sidebar content -->
+
+        </div>
+        <!-- /main sidebar -->
+        <!-- Main content -->
+        <div class="content-wrapper">
+
+            <!-- Inner content -->
+            <div class="content-inner">
+                <!-- Content area -->
+                <div class="content">
+                    @RenderBody()
+                </div>
+                <!-- /content area -->
+                <!-- Footer -->
+                <div class="navbar navbar-expand-lg navbar-light border-bottom-0 border-top">
+                    <div class="text-center d-lg-none w-100">
+                        <button type="button" class="navbar-toggler dropdown-toggle" data-toggle="collapse" data-target="#navbar-footer">
+                            <i class="icon-unfold mr-2"></i>
+                            Footer
+                        </button>
+                    </div>
+
+                    <div class="navbar-collapse collapse" id="navbar-footer">
+                        <span class="navbar-text">
+                            &copy; 2021. <a href="#">CALIPH GROUP</a>
+                        </span>
+
+
+                    </div>
+                </div>
+                <!-- /footer -->
+
+            </div>
+            <!-- /inner content -->
+
+        </div>
+        <!-- /main content -->
+
+    </div>
+    <!-- /page content -->
+
+
+
+
+    <script>
+
+    </script>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

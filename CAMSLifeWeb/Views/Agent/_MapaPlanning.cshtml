@@ -1,0 +1,231 @@
+﻿ @model CaliphWeb.Models.ViewModel.MapaCalculatorViewModel
+
+<div class="row form-group">
+    <div class="table-responsive">
+        <table class="table table-bordered table-small" style="font-size:12px; padding:0!important " id="tblincome">
+            
+            <thead>
+                <tr class="trhead">
+                    <th style="width:10%"> </th>
+                    <th colspan="7">Actual <label id="actualYear">@(Model.Year-1)</label>
+                    
+                    </th>
+                    <th></th>
+                    <th colspan="7">Plan <label id="planYear">@Model.Year</label></th>
+                </tr>
+                <tr>
+                    <th>Months</th>
+                    <th>ACE</th>
+                    <th>%</th>
+                    <th>MPower</th>
+                    <th>Rec</th>
+                    <th>Act Agt</th>
+                    <th> Active Ratio</th>
+                    <th>Cases</th>
+                    <th>Months</th>
+                    <th>ACE</th>
+                    <th>MPower</th>
+                    <th>Rec</th>
+                    <th>Act Agt</th>
+                    <th> Active Ratio</th>
+                    <th>Cases</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{var totalAce = Model.PreviousYearActualMapa.Sum(x => x.ACE);
+                    var quarter = 1;
+                    decimal totalQuarterAce = 0;
+                }
+                @foreach (var actual in Model.PreviousYearActualMapa.OrderBy(x => x.Month))
+                {
+                    totalQuarterAce += actual.ACE;
+                    <tr>
+                        @{ DateTime date = new DateTime(DateTime.Now.Year, actual.Month, 1); ;
+                            var aceAverage = totalAce == 0 ? 0 :((decimal) actual.ACE / totalAce)*100;
+                            var activeRatio = actual.Manpower_YTDRecruit == 0 ? 0 : ((decimal)actual.ActiveAgent / actual.Manpower_YTDRecruit)*100;
+                        }
+                        <td>@date.ToString("MMM")</td>
+                        <td>@actual.ACE.ToString("n2")</td>
+                        <td id="mapaPlanning_Actual_Percent_@actual.Month">@aceAverage.ToString("n2")</td>
+                        <td id="mapaPlanning_Actual_ManPower_@actual.Month">@actual.Manpower_YTDRecruit.ToString("n0")</td>
+                        <td>@actual.NewRecruit.ToString("n0")</td>
+                        <td>@actual.ActiveAgent.ToString("n0")</td>
+                        <td id="mapaPlanning_Actual_ActiveRatio_@actual.Month"> @activeRatio.ToString("n2")%</td>
+                        <td>@actual.TotalCases.ToString("n2")</td>
+                        <td>@date.ToString("MMM")</td>
+                        <td id="mapaPlanning_Plan_ACE_@actual.Month"></td>
+                        <td id="mapaPlanning_Plan_ManPower_@actual.Month"></td>
+                        <td id="mapaPlanning_Plan_Rec_@actual.Month"></td>
+                        <td id="mapaPlanning_Plan_ActAgt_@actual.Month"></td>
+                        <td id="mapaPlanning_Plan_ActiveRatio_@actual.Month"></td>
+                        <td id="mapaPlanning_Plan_Cases_@actual.Month"></td>
+                    </tr>
+                            if (actual.Month % 3 == 0)
+                            {
+                        <tr>
+                            <td>
+                                Quarter @quarter
+                            </td>
+                            <td>
+                                @totalQuarterAce.ToString("n2")
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            
+                            <td></td>
+                            <td>  Quarter @quarter</td>
+                            <td id="mapaPlanning_Plan_QuarterAce_@quarter"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+
+                                    totalQuarterAce = 0;
+                                    quarter++;
+                                }
+                            }
+
+
+                <tr>
+                    <td>
+                        Total ACE
+                    </td>
+                    <td id="mapaPlanning_previousYearTotalACE">
+                        @totalAce.ToString("n2")
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td> Total ACE</td>
+                    <td id="totalPlanningAce"></td>
+                    <td ></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        Total New Recruit
+                    </td>
+                    <td>
+                        @Model.PreviousYearActualMapa.Sum(x => x.NewRecruit).ToString("n2")
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>   Total New Recruit</td>
+                    <td id="totalPlanningNewRecruit"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+                <tr class="text-center font-weight-bold">
+                    <td></td>
+                    <td>M</td>
+                    <td>A</td>
+                    <td>P</td>
+                    <td>A</td>
+                    <td>ACE</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>M</td>
+                    <td>A</td>
+                    <td>P</td>
+                    <td>A</td>
+                    <td>ACE</td>
+                    <td></td>
+                </tr>
+                @{ quarter = 1;}
+                @foreach (var actual in Model.PreviousYearActualMapa.OrderBy(x => x.Month))
+                {
+                    totalQuarterAce += actual.ACE;
+            <tr>
+                @{ DateTime date = new DateTime(DateTime.Now.Year, actual.Month, 1); ;
+                    var aceAverage = totalAce == 0 ? 0 :((decimal) actual.ACE / totalAce)*100;
+                    var activeRatio = actual.Manpower_YTDRecruit == 0 ? 0 : ((decimal)actual.ActiveAgent / actual.Manpower_YTDRecruit) * 100;
+
+                    actual.ActiveAgent_TotalCases = actual.TotalCases == 0 ? 0 :((decimal) actual.TotalCases / actual.ActiveAgent);
+                    actual.ACE_TotalCases = actual.TotalCases == 0 ? 0 : ((decimal)actual.ACE / actual.TotalCases);
+                }
+                <td>@date.ToString("MMM")</td>
+                <td>@actual.Manpower_YTDRecruit</td>
+                <td id="mapaPlanning_Actual_ActiveAgent_YTDRecruit_@actual.Month">@activeRatio.ToString("n2")</td>
+                <td id="mapaPlanning_Actual_ActiveAgent_TotalCases_@actual.Month">@actual.ActiveAgent_TotalCases.ToString("n2")</td>
+                <td id="mapaPlanning_Actual_ACE_TotalCases_@actual.Month">@actual.ACE_TotalCases.ToString("n2")</td>
+                <td id="mapaPlanning_Actual_ACE_@actual.Month">@actual.ACE</td>
+                <td></td>
+                <td></td>
+                <td>@date.ToString("MMM")</td>
+                <td id="mapaPlanning_Plan_Mpower_@actual.Month"> </td>
+                <td id="mapaPlanning_Plan_ActiveAgent_YTDRecruit_@actual.Month"> </td>
+                <td id="mapaPlanning_Plan_ActiveAgent_TotalCases_@actual.Month"> </td>
+                <td id="mapaPlanning_Plan_ACE_TotalCases_@actual.Month"> </td>
+                <td id="mapaPlanning_Plan_MAPAACE_@actual.Month"></td>
+                <td></td>
+            </tr>
+                    if (actual.Month % 3 == 0)
+                    {
+                        <tr>
+                            <td>
+                                Quarter @quarter
+                            </td>
+                            <td>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>  @totalQuarterAce.ToString("n2")</td>
+                            <td>  </td>
+                            <td></td>
+                            <td>Quarter @quarter</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td id="totalAceQuarter_@quarter"></td>
+                        </tr>
+
+                        totalQuarterAce = 0;
+                        quarter++;
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,90 @@
+﻿@model CaliphWeb.Models.ViewModel.PaymentViewModel
+@using CaliphWeb.ViewModel.Data
+<form id="add-payment" action="~/payment/makepayment" class="form-validate-jquery" method="post">
+    <div class="page-header page-header-light">
+        <div class="page-header-content header-elements-lg-inline">
+            <div class="page-title d-flex">
+                <h4><i class="icon-stack-plus"></i> <span class="font-weight-semibold">Payment Method</span></h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <!-- Form inputs -->
+            <div class="card h-100">
+                <div class="card-header">
+                    <h3 class="card-title">Please select your payment method</h3>
+                </div>
+                <div class="card-body">
+                    <input hidden name="UserEventId" id="UserEventId" value="@Model.UserEventId" />
+                    <input hidden name="Price" id="Price" value="@Model.Amount" />
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Event Name</label>
+                        <div class="col-lg-8">
+                            @Model.EventName
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Event Type</label>
+                        <div class="col-lg-8">
+                            @Model.EventType
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Event Host</label>
+                        <div class="col-lg-8">
+                            @Model.EventHost
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Event Channel</label>
+                        <div class="col-lg-8">
+                            @Model.EventChannel
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Event Fees</label>
+                        <div class="col-lg-8">
+                            @Model.Amount
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3">Payment Method</label>
+                        <div class="col-lg-8">
+                            <div class="border p-3 rounded">
+                                @foreach (var item in Model.PaymentChannels)
+                                {
+                                    var isCheck = item.MasterDataId == (int) MasterDataEnum.PaymentChannel.Stripe ? "checked" : "";
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" value="@item.MasterDataId" class="custom-control-input" name="PaymentChannelId" id="@item.MasterDataId" @isCheck>
+                                        <label class="custom-control-label" for="@item.MasterDataId">@item.Name</label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row m-2">
+                    <div class="col-lg-12">
+                        <div class="text-left float-left">
+                            <a class="btn btn-primary" href="~/Event/UpcomingEvent"><i class="icon-arrow-left12"></i>Back</a>
+                        </div>
+                        <div class="text-right float-right">
+                            <button type="button" onclick="AddPayment()" class="btn btn-primary">Submit<i class="icon-paperplane ml-2"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <script type="text/javascript">
+        function AddPayment() {
+            var form = $("#add-payment");
+            form.submit();
+        }
+    </script>
+}

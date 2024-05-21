@@ -1,0 +1,207 @@
+﻿@using CaliphWeb.Helper
+@model  CaliphWeb.Models.ViewModel.ManualAttendanceViewModel
+
+
+
+<script src="~/global_assets/js/demo_pages/form_validation.js"></script>
+<script src="~/global_assets/js/demo_pages/form_input_groups.js"></script>
+<script src="~/global_assets/js/demo_pages/form_select2.js"></script>
+<!-- Page header -->
+<div class="page-header page-header-light">
+    <div class="page-header-content header-elements-lg-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-user-plus"></i> <span class="font-weight-semibold">Manual Attendace</span></h4>
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+
+    </div>
+
+    <div class="breadcrumb-line breadcrumb-line-light header-elements-lg-inline">
+        <div class="d-flex">
+            <div class="breadcrumb">
+                <a class="breadcrumb-item"><i class="icon-users4 mr-2"></i> Training/Events</a>
+                <a class="breadcrumb-item">Manual Attendance</a>
+            </div>
+
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+    </div>
+</div>
+<!-- /page header -->
+
+<div class="mb-3">
+    <h6 class="mb-0 font-weight-semibold">
+    </h6>
+</div>
+
+<form id="add-manual-attendance" class="form-validate-jquery">
+    <div class="row">
+        <div class="col-lg-12">
+            <!-- Form inputs -->
+            <div class="card h-100">
+
+                <div class="card-body">
+                    <fieldset class="mb-3">
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Event<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <select class="form-control select-search" name="EventId" id="EventId" required onchange="OnEventChange()">
+                                    <option value="">Please Select</option>
+                                    @foreach (var evnt in Model.Events)
+                                    {
+                                        <option value="@evnt.EventId">@evnt.EventName</option>
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Date<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <select class="form-control select-search" name="EventDateId" id="EventDateId" required>
+                                    <option value="">Please Select</option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Agent<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <select class="form-control select-search" name="UserId" id="UserId" required>
+                                    <option value="">Please Select</option>
+                                    @foreach (var agent in Model.Agents)
+                                    {
+                                        <option value="@agent.UserId">@(agent.Username +"-"+agent.Fullname)</option>
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Quize Status<span class="text-danger">*</span></label>
+                            <div class="col-lg-8">
+                                <select class="custom-select" name="QuizScoreId" required>
+                                    <option value="">Please Select</option>
+                                    @foreach (var source in Model.QuizScores)
+                                    {
+                                        <option value="@source.MasterDataId">@source.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3">Remarks </label>
+                            <div class="col-lg-8">
+                                <textarea name="remarks" id="remarks" rows="6" class="form-control"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row form-group m-2">
+                            <div class="col-lg-12">
+                                <div class="text-right float-right">
+                                    <button type="button" class="btn btn-primary" onclick="AddManualAttendance()">Submit <i class="icon-paperplane ml-2"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </div>
+
+
+               
+            </div>
+        </div>
+
+    </div>
+</form>
+
+
+@section Scripts{
+
+    <script type="text/javascript">
+                var swalInit = swal.mixin({
+                    buttonsStyling: false,
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-light',
+                        denyButton: 'btn btn-light',
+                        input: 'form-control'
+                    }
+                });
+
+
+        function AddManualAttendance() {
+            var form = $("#add-manual-attendance");
+            form.validate();
+            if (form.valid()) {
+                var formData = $('#add-manual-attendance').serialize();
+                $.ajax({
+                    url: '@Url.Action("ManualAttendance", "Event")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        console.log(response);
+
+
+                        if (response.IsSuccess) {
+                            swalInit.fire({
+                                title: 'Success!',
+                                text: 'Attendance added successfully!',
+                                icon: 'success'
+                            });
+                            form.trigger('reset');
+
+                            $("#EventId").val('').trigger('change')
+                            $("#EventDateId").val('').trigger('change')
+                            $("#UserId").val('').trigger('change')
+                        }
+                        else {
+                            swalInit.fire({
+                                title: 'Error',
+                                text: response.Data,
+                                icon: 'error'
+                            });
+                        }
+                    }
+                });
+
+            }
+        }
+
+           function OnEventChange() {
+               var eventId = $('#EventId').val();
+             
+               BlockUIHelper.blockUI('EventDateId')
+          $.ajax({
+                url: '@Url.Action("GetEventDate", "Event")',
+              type: 'POST',
+              data: { id: eventId  },
+              success: function (response) {
+                  console.log(response);
+                  $('#EventDateId').val(null).trigger('change');
+                  $('#EventDateId').val(null).empty()
+                  $('#EventDateId').select2('data', null);
+
+
+
+                  response.forEach(agent => {
+                      var data = {
+                          id: agent.EventDateId,
+                          text: agent.EventDate
+                      };
+
+                      var newOption = new Option(data.text, data.id, false, false);
+                      $('#EventDateId').append(newOption).trigger('change');
+                      console.log(data);
+
+                  })
+                  BlockUIHelper.unblockUI('EventDateId')
+
+              }
+            });
+        }
+    </script>
+}

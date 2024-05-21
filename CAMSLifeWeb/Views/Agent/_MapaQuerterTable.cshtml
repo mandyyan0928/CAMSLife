@@ -1,0 +1,216 @@
+﻿
+@model CaliphWeb.Models.ViewModel.MapaCalculatorViewModel
+
+
+
+@{
+    var totalAchieveQuarterAce = Model.CurrentYearActualMapa.Where(x => Model.Months.Contains(x.Month)).Sum(x => (x.ActiveAgent_TotalCases * (x.ActiveAgent_YTDRecruit / 100) * x.ACE_TotalCases * x.Manpower_YTDRecruit));
+    var totalBudgetQuarterAce = Model.PlannedMapa.Where(x => Model.Months.Contains(x.Month)).Sum(x => (x.ActiveAgent_TotalCases * (x.ActiveAgent_YTDRecruit / 100) * x.ACE_TotalCases * x.Manpower_YTDRecruit));
+    var perQuarter = totalAchieveQuarterAce + totalBudgetQuarterAce;
+    var achievePercent = (perQuarter == 0 ? 0 : totalAchieveQuarterAce / perQuarter) * 100;
+}
+
+
+
+
+<table class="table table-bordered fix-width" id="tblincome">
+    <thead>
+
+        <tr id="tr1" class="trhead">
+            <th style="width:10%">YTD Actual </th>
+            <th>@totalAchieveQuarterAce.ToString("n2")</th>
+            <th colspan="2">Per Quarter</th>
+            <th colspan="3" id="@("totalBudgetAceQuarterHeader"+Model.Quarter)">@perQuarter.ToString("n2")</th>
+            <th colspan="2">% Achieved  @("Q" + Model.Quarter )	</th>
+            <th colspan="2" id="@("quarterAchievePercentHeader" + Model.Quarter)">@achievePercent.ToString("n2") %</th>
+        </tr>
+
+    </thead>
+ 
+<tbody>
+    <tr>
+        <td></td>
+        <td></td>
+        @foreach (int month in Model.Months)
+        {
+            DateTime monthdisplay = new DateTime(DateTime.Now.Year, month, 1);
+            <td colspan="3">@monthdisplay.ToString("MMM")</td>
+        }
+    </tr>
+    <tr>
+        <td></td>
+        @{ var previousMonths = Model.Months.FirstOrDefault();
+            previousMonths = previousMonths - 1 == 0 ? 12 : previousMonths - 1;
+            var previousMonthdate = new DateTime(DateTime.Now.Year, previousMonths, 1);
+        }
+        <td>@previousMonthdate.ToString("MMM")</td>
+        <td>Budget</td>
+        <td>Actual</td>
+        <td>Todo</td>
+        <td>Budget</td>
+        <td>Actual</td>
+        <td>Todo</td>
+        <td>Budget</td>
+        <td>Actual</td>
+        <td>Todo</td>
+    </tr>
+
+
+    <tr>
+        @{
+
+            var previousAchived = previousMonths == 12 ? Model.PreviousYearActualMapa[11] : Model.CurrentYearActualMapa[previousMonths-1] ?? new CaliphWeb.Models.ViewModel.MapaPlanning();
+            <td>ACE</td>
+            <td>@previousAchived.ACE</td>
+            foreach (var month in Model.Months)
+            {
+                var personalBudget = Model.PlannedMapa[month-1] ?? new CaliphWeb.Models.ViewModel.MapaPlanning();
+                var personalAchived = Model.CurrentYearActualMapa[month-1] ?? new CaliphWeb.Models.ViewModel.MapaPlanning();
+                var todo = personalBudget.ACE - personalAchived.ACE;
+
+                <td id="@("personal_ace"+month)">@personalBudget.ACE</td>
+                <td>@personalAchived.ACE</td>
+                <td>@todo.ToString("n2")</td>
+            }
+        }
+    </tr>
+    <tr>
+        @{
+            <td>Active Agent</td>
+            <td>@previousAchived.ActiveAgent</td>
+            foreach (var month in Model.Months)
+            {
+                var personalBudget = Model.PlannedMapa[month-1] ?? new CaliphWeb.Models.ViewModel.MapaPlanning();
+                var personalAchived = Model.CurrentYearActualMapa[month-1] ?? new CaliphWeb.Models.ViewModel.MapaPlanning();
+                var todo = personalBudget.ActiveAgent - personalAchived.ActiveAgent;
+
+                <td id="@("personal_activeagent"+month)">@personalBudget.ActiveAgent</td>
+                <td>@personalAchived.ActiveAgent</td>
+                <td>@todo.ToString("n2")</td>
+            }
+        }
+    </tr>
+    <tr>
+        @{
+            <td>New Recruit</td>
+            <td>@previousAchived.NewRecruit</td>
+            foreach (var month in Model.Months)
+            {
+                var personalBudget = Model.PlannedMapa[month-1] ?? new CaliphWeb.Models.ViewModel.MapaPlanning();
+                var personalAchived = Model.CurrentYearActualMapa[month-1] ?? new CaliphWeb.Models.ViewModel.MapaPlanning();
+                var todo = personalBudget.NewRecruit - personalAchived.NewRecruit;
+
+                <td id="@("personal_newrecruit"+month)">@personalBudget.NewRecruit</td>
+                <td>@personalAchived.NewRecruit</td>
+                <td>@todo.ToString("n2")</td>
+            }
+        }
+    </tr>
+    <tr>
+        @{
+            <td>YTD Recruits</td>
+            <td>@previousAchived.YtdRecruit</td>
+            foreach (var month in Model.Months)
+            {
+                var personalBudget = Model.PlannedMapa[month-1] ?? new CaliphWeb.Models.ViewModel.MapaPlanning();
+                var personalAchived = Model.CurrentYearActualMapa[month-1] ?? new CaliphWeb.Models.ViewModel.MapaPlanning();
+                var todo = personalBudget.YtdRecruit - personalAchived.YtdRecruit;
+
+                <td id="@("personal_ytdrecruit"+month)">@personalBudget.YtdRecruit</td>
+                <td>@personalAchived.YtdRecruit</td>
+                <td>@todo.ToString("n2")</td>
+            }
+        }
+    </tr>
+    <tr>
+        @{
+            <td>Total Cases</td>
+            <td>@previousAchived.TotalCases</td>
+            foreach (var month in Model.Months)
+            {
+                var personalBudget = Model.PlannedMapa[month-1] ?? new CaliphWeb.Models.ViewModel.MapaPlanning();
+                var personalAchived = Model.CurrentYearActualMapa[month-1] ?? new CaliphWeb.Models.ViewModel.MapaPlanning();
+                var todo = personalBudget.TotalCases - personalAchived.TotalCases;
+
+                <td id="@("personal_totalcases"+month)">@personalBudget.TotalCases</td>
+                <td>@personalAchived.TotalCases</td>
+                <td>@todo.ToString("n2")</td>
+            }
+        }
+
+    </tr>
+
+    <tr>
+        <td></td>
+        <td class="text-center font-weight-bold">M</td>
+        <td class="text-center font-weight-bold" colspan="3">A</td>
+        <td class="text-center font-weight-bold" colspan="3">P</td>
+        <td class="text-center font-weight-bold" colspan="2">A</td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>@previousMonthdate.ToString("MMM")</td>
+        <td id="ytd_recruit13">@previousAchived.YtdRecruit</td>
+        <td colspan="3">@previousAchived.ActiveAgent_YTDRecruit.ToString("n2")</td>
+        <td colspan="3">@previousAchived.ActiveAgent_TotalCases.ToString("n2")</td>
+        <td colspan="2">  @previousAchived.ACE_TotalCases.ToString("n2")</td>
+        <td>
+            @{ var total = previousAchived.YtdRecruit * (previousAchived.ActiveAgent_YTDRecruit / 100) *
+                                         previousAchived.ActiveAgent_TotalCases * previousAchived.ACE_TotalCases;
+
+            }
+            @total.ToString("n2")
+        </td>
+    </tr>
+
+
+    @foreach (var month in Model.Months)
+    {
+        var personalBudget = Model.PlannedMapa[month-1] ?? new CaliphWeb.Models.ViewModel.MapaPlanning();
+        var personalAchived = Model.CurrentYearActualMapa[month-1] ?? new CaliphWeb.Models.ViewModel.MapaPlanning();
+        var todo = personalBudget.TotalCases - personalAchived.TotalCases;
+       var  date = new DateTime(DateTime.Now.Year, month, 1);
+        <tr>
+            <td>@date.ToString("MMM")</td>
+            <td id="mapaQuarter_Plan_Manpower_@month">
+                @*<input class="form-control" id="@("Manpower_YTDRecruit"+month)" name="@("Manpower_YTDRecruit"+month)"  onchange="CalcMAPABudget(@month)" />*@
+                @*@personalAchived.YtdRecruit*@
+            </td>
+            <td id="mapaQuarter_Plan_ActiveAgent_YTDRecruit_@month" colspan="3">
+                @*@personalAchived.ActiveAgent
+                <input class="form-control" id="@("ActiveAgent_YTDRecruit"+month)" name="@("Manpower_YTDRecruit"+month)" onchange="CalcMAPABudget(@month)" />*@
+            </td>
+            <td id="mapaQuarter_Plan_ActiveAgent_TotalCases_@month" colspan="3">
+                @*<input class="form-control" id="@("ActiveAgent_TotalCases"+month)" name="@("Manpower_YTDRecruit"+month)"   onchange="CalcMAPABudget(@month)" />*@
+            </td>
+            <td id="mapaQuarter_Plan_ACE_TotalCase_@month" colspan="2">
+                @*<input class="form-control" id="@("ACE_TotalCases"+month)" name="@("Manpower_YTDRecruit"+month)"   onchange="CalcMAPABudget(@month)" />*@
+            </td>
+            <td id="@("mapaQuarter_Plan_MAPAACE_"+month)"></td>
+        </tr>
+        <tr>
+            <td>@date.ToString("MMM") (A) </td>
+            <td>@personalAchived.YtdRecruit</td>
+            <td colspan="3">@personalAchived.ActiveAgent_YTDRecruit.ToString("n2")</td>
+            <td colspan="3">@personalAchived.ActiveAgent_TotalCases.ToString("n2")</td>
+            <td colspan="2">  @personalAchived.ACE_TotalCases.ToString("n2")</td>
+            <td>
+                @{ total = personalAchived.YtdRecruit * (personalAchived.ActiveAgent_YTDRecruit / 100) *
+                                          personalAchived.ActiveAgent_TotalCases * personalAchived.ACE_TotalCases;
+
+                }
+                @total.ToString("n2")
+            </td>
+        </tr>
+    }
+   
+    <tr>
+
+        <td>Total</td>
+        <td colspan="8"></td>
+        <td id="@("totalBudgetAceQuarter"+Model.Quarter)"></td>
+        <td id="@("totalAchieveAceQuarter"+Model.Quarter)">@totalAchieveQuarterAce.ToString("n2")</td>
+    </tr>
+</tbody>
+</table>

@@ -1,0 +1,175 @@
+﻿
+
+@model CaliphWeb.ViewModel.LeaderBonusSummaryViewModel
+<script src="~/global_assets/js/plugins/visualization/echarts/echarts.min.js"></script>
+<script src="~/global_assets/js/demo_pages/form_validation.js"></script>
+<script src="~/global_assets/js/demo_pages/form_select2.js"></script>
+<script src="~/global_assets/js/plugins/tables/datatables/datatables.min.js"></script>
+<script src="~/global_assets/js/demo_pages/datatables_basic.js"></script>
+<script src="~/global_assets/js/demo_charts/echarts/light/pies/pie_basic.js"></script>
+
+<!-- Basic datatable -->
+<!-- Page header -->
+<div class="page-header page-header-light">
+    <div class="page-header-content header-elements-lg-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-list"></i> <span class="font-weight-semibold">Bonus Tracker Summary</span> </h4>
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+    </div>
+
+    <div class="breadcrumb-line breadcrumb-line-light header-elements-lg-inline">
+        <div class="d-flex">
+            <div class="breadcrumb">
+                <a class="breadcrumb-item"><i class="icon-users4 mr-2"></i> Report</a>
+                <a class="breadcrumb-item"> Bonus Tracker Summary</a>
+            </div>
+
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+    </div>
+</div>
+<!-- /page header -->
+<div class="card" id="search">
+    <div class="card-header">
+    </div>
+    <div class="card-body">
+        <div class="row mt-5">
+            <div class="col-md-12 text-center">
+                <h5>
+                    Bonus Tracker Summary for year
+                    <label>
+                        @Model.Year.ToString()
+                    </label>
+                </h5>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-12">
+
+
+                <a id="export-excel" href="@Url.Action("ExportBonusReport", "Report")"  target="_blank"> <i class="icon-file-pdf"></i></a>
+                <div class=" table-responsive">
+                    <table class="table datatable-basic">
+                        <thead>
+                            <tr>
+                                <th style="width:150px"> Selling Agent  </th>
+                                <th>  FYC Eligible for Bonus</th>
+                                <th> Cases </th>
+                                <th> ACE </th>
+                                <th> Net ACE </th>
+                                <th> Premium </th>
+                                <th> D0 PR% </th>
+                                <th> Achieved Bonus </th>
+                                <th>Potential Bonus </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+                            @foreach (var agentPolicy in Model.LeaderSummaryDatas)
+                            {
+
+                                <tr>
+                                    <td style="white-space:nowrap">
+                                        <a class="text-wrap" href="/bonustracker/agentbonusdetails/@agentPolicy.AgentId" target="_blank">
+                                            @agentPolicy.AgentId  - @agentPolicy.AgentName <br />
+                                        </a>
+                                        @{var status = agentPolicy.InForceDate >= new DateTime(2022, 6, 1) ? "Rookie" : "Non Rookie";}
+                                        <br />
+                                        @agentPolicy.InForceDate.ToString("dd MMM yyyy")
+                                        @if (status.ToLower() == "rookie")
+                                        {
+                                            <span class="badge badge-success-100 text-success">
+                                                @status
+
+                                            </span>
+                                        }
+
+                                        else
+                                        {
+                                            <span class="badge badge-warning-100 text-warning">
+
+                                                @status
+
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <td> @agentPolicy.TotalPremiumCollected_FYC.ToString("n2")</td>
+                                    <td> @agentPolicy.Cases.ToString("n0")</td>
+                                    <td> @agentPolicy.ACE.ToString("n2")</td>
+                                    <td> @agentPolicy.NetACE.ToString("n2")</td>
+                                    <td> @agentPolicy.PersistencyPremium.ToString("n2")</td>
+                                    <td> @(agentPolicy.PersistencyRatio.ToString("n2"))% </td>
+                                    @{
+
+                                        var latestQualifiedBonus = agentPolicy.QualifiedBonus.OrderByDescending(x => x.BonusPercent).FirstOrDefault();
+                                        var achievedBonus = latestQualifiedBonus == null ? 0 : latestQualifiedBonus.BonusPercent;
+
+                                    }
+                                    <td> @(achievedBonus==0?"-":( achievedBonus*100).ToString("n0")+"%")  </td>
+
+                                    <td>
+                                        @if (achievedBonus >= agentPolicy.PotentialBonus.BonusPercent)
+                                        {
+                                            <span>-</span>
+                                        }
+                                        else
+                                        {
+                                            <span>  @((agentPolicy.PotentialBonus.BonusPercent*100).ToString("n0"))% </span>
+                                            <br />
+                                            <div class="text-nowrap">
+                                                ACE (@agentPolicy.NetACE.ToString("n2")/ @agentPolicy.PotentialBonus.FromNetACE.ToString("n2"))
+                                            </div>
+                                            <div class="progress mb-2 mt-2" style="height: 0.125rem;">
+                                                @{ var completeProgress = agentPolicy.PotentialBonus.FromNetACE == 0 ? 0 : ((agentPolicy.NetACE / (double)agentPolicy.PotentialBonus.FromNetACE) * 100) > 100 ? 100 : (agentPolicy.NetACE / (double)agentPolicy.PotentialBonus.FromNetACE) * 100;}
+                                                <div class="progress-bar bg-warning" style="width: @(completeProgress)%">
+                                                    <span class="sr-only">@(completeProgress)% Complete</span>
+                                                </div>
+                                            </div>
+                                            <div class="text-nowrap">
+                                                D0 PR   (@agentPolicy.PersistencyRatio.ToString("n2")% / @agentPolicy.PotentialBonus.PR_D0.ToString("n2")%)
+                                            </div>
+                                            <div class="progress mb-2" style="height: 0.125rem;">
+                                                @{ completeProgress = agentPolicy.PotentialBonus.PR_D0 == 0 ? 0 : ((agentPolicy.PersistencyRatio / (double)agentPolicy.PotentialBonus.PR_D0) * 100) > 100 ? 100 : (agentPolicy.PersistencyRatio / (double)agentPolicy.PotentialBonus.PR_D0) * 100;}
+                                                <div class="progress-bar bg-success" style="width: @(completeProgress)%">
+                                                    <span class="sr-only">@(completeProgress)% Complete</span>
+                                                </div>
+                                            </div>
+                                            <div class="text-wrap">
+                                                Cases  (@agentPolicy.Cases.ToString("n0")/ @agentPolicy.PotentialBonus.Cases.ToString("n0"))
+
+                                            </div>
+
+
+                                            <div class="progress mb-2" style="height: 0.125rem;">
+                                                @{ completeProgress = agentPolicy.PotentialBonus.Cases == 0 ? 0 : ((agentPolicy.Cases / (double)agentPolicy.PotentialBonus.Cases) * 100) > 100 ? 100 : (agentPolicy.Cases / (double)agentPolicy.PotentialBonus.Cases) * 100;}
+                                                <div class="progress-bar bg-info" style="width: @(completeProgress)%">
+                                                    <span class="sr-only">@(completeProgress)% Complete</span>
+                                                </div>
+                                            </div>
+                                        }
+
+
+
+
+
+
+
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- /basic datatable -->
+    </div>
+</div>

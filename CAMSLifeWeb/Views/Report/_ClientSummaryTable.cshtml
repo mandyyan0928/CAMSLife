@@ -1,0 +1,39 @@
+﻿
+@model  List<CaliphWeb.Models.API.Report.ClientSummary>
+<table class="table table-bordered">
+
+    @{ var masters = Model.Select(x => x.MasterName).Distinct().ToList();
+
+
+        foreach (var master in masters)
+        {
+            var masterDatas = Model.Where(x => x.MasterName == master).ToList();
+            var firstMasterData = masterDatas.FirstOrDefault();
+
+        <tr>
+            <td rowspan="@masterDatas.Count()">
+                <b>@master</b>
+            </td>
+            <td class="text-left">
+                @firstMasterData.MasterDataName
+            </td>
+            <td>@firstMasterData.Total</td>
+            <td>@firstMasterData.Percentage.ToString("N2")%</td>
+        </tr>
+
+            masterDatas.Remove(firstMasterData);
+            foreach (var masterData in masterDatas)
+            {
+<tr>
+    <td class="text-left">
+        @masterData.MasterDataName
+    </td>
+    <td> @masterData.Total</td>
+    <td>@masterData.Percentage.ToString("N2")%</td>
+</tr>
+            }
+
+        }
+    }
+
+</table>

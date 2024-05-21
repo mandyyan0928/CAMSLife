@@ -1,0 +1,82 @@
+﻿
+
+<div class="row form-group">
+    @model CaliphWeb.Models.ViewModel.MapaCalculatorViewModel
+    <div class="col-md-12">
+        <div class="">
+            <ul class="nav nav-tabs nav-tabs-highlight nav-justified">
+                <li class="nav-item"><a href="#quarter1" class="nav-link active" data-toggle="tab"> Quarter 1</a></li>
+                <li class="nav-item"><a href="#quarter2" class="nav-link " data-toggle="tab"> Quarter 2</a></li>
+                <li class="nav-item"><a href="#quarter3" class="nav-link " data-toggle="tab"> Quarter 3</a></li>
+                <li class="nav-item"><a href="#quarter4" class="nav-link " data-toggle="tab"> Quarter 4</a></li>
+            </ul>
+            <div class="tab-content">
+                <!--Quarter1-->
+                <div class="tab-pane fade show active" id="quarter1">
+                    <div class="row form-group">
+
+                        @{ 
+                            Model.Quarter = 1;
+                            Model.Months = new List<int> { 1, 2, 3 };
+                        }
+
+                        @Html.Partial("_MapaQuerterTable", Model);
+
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-12">
+                            <button type="button" onclick="UpdateMapaQuarter(1)" class="btn btn-primary float-right ">Update</button>
+                        </div>
+
+                    </div>
+                </div>
+                <!--Quarter2-->
+                <div class="tab-pane fade" id="quarter2">
+                    @{ Model.Quarter = 2;
+                        Model.Months = new List<int> { 4, 5, 6 };}
+
+                    @Html.Partial("_MapaQuerterTable", Model);
+                    <div class="row form-group">
+                        <div class="col-md-12">
+                            <button type="button" onclick="UpdateMapaQuarter(2)" class="btn btn-primary float-right ">Update</button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!--Quarter3-->
+                <div class="tab-pane fade" id="quarter3">
+                    @{ Model.Quarter = 3;
+                        Model.Months = new List<int> { 7, 8, 9 };}
+
+                    @Html.Partial("_MapaQuerterTable", Model);
+                    <div class="row form-group">
+                        <div class="col-md-12">
+                            <button type="button" onclick="UpdateMapaQuarter(3)" class="btn btn-primary float-right ">Update</button>
+                        </div>
+
+                    </div>
+                </div>
+                <!--Quarter3-->
+
+
+
+                <div class="tab-pane fade" id="quarter4">
+                    @{ Model.Quarter = 4;
+                        Model.Months = new List<int> { 10, 11, 12 };}
+
+                    @Html.Partial("_MapaQuerterTable", Model);
+                    <div class="row form-group">
+                        <div class="col-md-12">
+                            <button type="button" onclick="UpdateMapaQuarter(4)" class="btn btn-primary float-right ">Update</button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>

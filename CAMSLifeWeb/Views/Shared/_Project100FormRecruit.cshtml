@@ -1,0 +1,219 @@
+﻿@model CaliphWeb.Models.ViewModel.Project100RecruitmentViewModel
+<style>
+    .table {
+        width: 100%;
+        table-layout: fixed;
+    }
+    .pagebreak {
+        page-break-after: always;
+    }
+    .vertical-text {
+        text-align: left!important;
+        width: 20px;
+        margin: 0px;
+        padding: 0px;
+        padding-left: 3px;
+        padding-right: 3px;
+        padding-top: 10px;
+        white-space: nowrap;
+        -webkit-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+
+    }
+
+    table {
+        border-collapse: collapse;
+    }
+
+    .table-bordered {
+        border: 2px solid black;
+    }
+
+    .text-left {
+        text-align: left !important;
+    }
+
+    .table-bordered td {
+        border: 1px solid black;
+        text-align: center;
+        font-size: 16px
+    }
+
+    .mb-5 {
+        margin-bottom: 10%
+    }
+</style>
+
+@{
+
+    var count = 10;
+
+    if (Model.AgentRecruiments == null || Model.AgentRecruiments.Count == 0)
+    {
+        <div>No Agent Recruit Found</div>
+        return;
+    }
+
+    var loopCount = (Model.AgentRecruiments.Count + count - 1) / count;
+
+    for(int i =1;i<= loopCount; i++)
+    {
+        var skip = (i-1)*10;
+        var loopRecruitData = Model.AgentRecruiments.Skip(skip).Take(count).ToList();
+
+        var ct = count - loopRecruitData.Count;
+        for (int c = 1; c <= ct; c++)
+        {
+            loopRecruitData.Add(new  CaliphWeb.Models.API.AgentRecruit.AgentRecruiment());
+        }
+
+        @*<img src=@server.mappath("~/global_assets/images/project100_banner.png") style="width:100%;" object-fit:cover" />*@
+        <div style="background-color: #FE8F17; height: 80px; width: 100%;margin-bottom:10px ">
+            <img style=" width: 30%; background-color: white; height: 100%; object-fit:contain" src="@Server.MapPath("~/global_assets/images/logo_new.png")"/>
+        </div>
+        <table class="table table-bordered pagebreak">
+            <thead>
+                <tr>
+                    <td colspan="2" style="width:37%;">
+                        Source Of Name
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tr>
+                <td colspan="2" style="width:30%;height:370px" class="text-left">
+                    A. Agent’s Referral<br />
+                    B. Policy Holder<br />
+                    C. Nominator / COI<br />
+                    D. Personal Observation<br />
+                </td>
+                @foreach (var agentRecruit in loopRecruitData)
+                {
+                    <td class="vertical-text"  text-rotate="45">
+                        HP:@agentRecruit.ContactNo <br />
+                        Name: @agentRecruit.Name
+
+                    </td>
+                }
+            </tr>
+            <tr>
+                @{ var annualIncome = Model.AnnualIncomes.FirstOrDefault();}
+                <td rowspan="@Model.AnnualIncomes.Count">
+                    <b> Annual Income</b>
+                </td>
+                <td class="text-left">
+                    @annualIncome.Name
+                </td>
+                @foreach (var client in loopRecruitData)
+                {
+                    <td>@(client.AnnualIncomeId == annualIncome.MasterDataId ? "X" : "")</td>
+                }
+            </tr>
+            @foreach (var masterdata in Model.AnnualIncomes.Skip(1))
+            {
+                <tr>
+                    <td class="text-left">
+                        @masterdata.Name
+                    </td>
+                    @foreach (var client in loopRecruitData)
+                    {
+                        <td>@(client.AnnualIncomeId == masterdata.MasterDataId ? "X" : "")</td>
+                    }
+                </tr>
+            }
+            <tr>
+                @{ var age = Model.Ages.FirstOrDefault();}
+                <td rowspan="@Model.Ages.Count">
+                    <b>Ages</b>
+                </td>
+                <td class="text-left">
+                    @age.Name
+                </td>
+                @foreach (var client in loopRecruitData)
+                {
+                    <td>@(client.AgeId == age.MasterDataId ? "X" : "")</td>
+                }
+            </tr>
+            @foreach (var masterdata in Model.Ages.Skip(1))
+            {
+                <tr>
+                    <td class="text-left">
+                        @masterdata.Name
+                    </td>
+                    @foreach (var client in loopRecruitData)
+                    {
+                        <td>@(client.AgeId == masterdata.MasterDataId ? "X" : "")</td>
+                    }
+                </tr>
+            }
+            <tr>
+                @{ var firstdata = Model.Occupations.FirstOrDefault();}
+                <td rowspan="@Model.Occupations.Count">
+                    <b>Occupation</b>
+                </td>
+                <td class="text-left">
+                    @firstdata.Name
+                </td>
+                @foreach (var client in loopRecruitData)
+                {
+                    <td>@(client.OccupationId == firstdata.MasterDataId ? "X" : "")</td>
+                }
+            </tr>
+            @foreach (var masterdata in Model.Occupations.Skip(1))
+            {
+                <tr>
+                    <td class="text-left">
+                        @masterdata.Name
+                    </td>
+                    @foreach (var client in loopRecruitData)
+                    {
+                        <td>@(client.OccupationId == masterdata.MasterDataId ? "X" : "")</td>
+                    }
+                </tr>
+            }
+            <tr>
+                @{ firstdata = Model.MaritalStatuses.FirstOrDefault();}
+                <td rowspan="@Model.MaritalStatuses.Count">
+                    <b>Marital Status</b>
+                </td>
+                <td class="text-left">
+                    @firstdata.Name
+                </td>
+                @foreach (var client in loopRecruitData)
+                {
+                    <td>@(client.MaritalId == firstdata.MasterDataId ? "X" : "")</td>
+                }
+            </tr>
+            @foreach (var masterdata in Model.MaritalStatuses.Skip(1))
+            {
+                <tr>
+                    <td class="text-left">
+                        @masterdata.Name
+                    </td>
+                    @foreach (var client in loopRecruitData)
+                    {
+                        <td>@(client.MaritalId == masterdata.MasterDataId ? "X" : "")</td>
+                    }
+                </tr>
+            }
+
+
+                
+        </table>
+
+                        skip++;
+                    }
+}
+
+
+
+
