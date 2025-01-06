@@ -26,11 +26,11 @@ namespace CaliphWeb.Controllers
         private readonly IMasterDataService _masterService;
         private readonly ICaliphAPIHelper _caliphAPIHelper;
         private readonly IUserService _userService;
-        private readonly IOne2OneApiHelper _one2oneAPIHelper;
+        private readonly IALCApiHelper _one2oneAPIHelper;
 
         public ICaliphAPIHelper CaliphAPIHelper => _caliphAPIHelper;
 
-        public HomeController(IMasterDataService masterService, ICaliphAPIHelper caliphAPIHelper, IUserService userService, IOne2OneApiHelper one2oneAPIHelper)
+        public HomeController(IMasterDataService masterService, ICaliphAPIHelper caliphAPIHelper, IUserService userService, IALCApiHelper one2oneAPIHelper)
         {
             this._masterService = masterService;
             this._caliphAPIHelper = caliphAPIHelper;
@@ -169,7 +169,7 @@ namespace CaliphWeb.Controllers
                 start_year = DateTime.Now.Year, end_year = DateTime.Now.Year
 
             };
-            var responseData = await _one2oneAPIHelper.PostAsync<AgentMapaRequest, One2OneResponse<AgentMapaResponse> >(req, "/edfwebapi/alc/agentmapa",  new One2OneResponse<AgentMapaResponse>());
+            var responseData = await _one2oneAPIHelper.GetDataAsync<AgentMapaRequest, One2OneResponse<AgentMapaResponse> >(req, "/edfwebapi/alc/agentmapa",  new One2OneResponse<AgentMapaResponse>());
             var ace = (responseData == null || responseData.data == null) ? new AgentMapaResponse() : responseData.data.OrderByDescending(x => x.month).FirstOrDefault();
 
             return Json(ace);
@@ -208,7 +208,7 @@ namespace CaliphWeb.Controllers
                 date_from = startDate, date_to = endDate
 
             };
-            var responseData = await _one2oneAPIHelper.PostAsync<AgentPolicyRequest, One2OneResponse<AgentPolicyResponse>>(req, "/edfwebapi/alc/AgentPolicyData",  new One2OneResponse<AgentPolicyResponse>());
+            var responseData = await _one2oneAPIHelper.GetDataAsync<AgentPolicyRequest, One2OneResponse<AgentPolicyResponse>>(req, "/edfwebapi/alc/AgentPolicyData",  new One2OneResponse<AgentPolicyResponse>());
             var vm = new PersistencySummaryData{ StartDate = startDate, EndDate = endDate, PersistencyDate = persistencyDate, AgentId = user};
             vm.GroupPolicies = (responseData == null || responseData.data == null) ? new List<AgentPolicyResponse>() : responseData.data;
             var personalPolicies = vm.GroupPolicies.Where(x => x.selling_agent_code == user).ToList();
@@ -236,7 +236,7 @@ namespace CaliphWeb.Controllers
                     date_to = endDate
 
                 };
-                var responseData = await _one2oneAPIHelper.PostAsync<AgentPolicyRequest, One2OneResponse<AgentPolicyByProdyctResponse>>(req, "/edfwebapi/alc/AgentPolicyProductData", new One2OneResponse<AgentPolicyByProdyctResponse>());
+                var responseData = await _one2oneAPIHelper.GetDataAsync<AgentPolicyRequest, One2OneResponse<AgentPolicyByProdyctResponse>>(req, "/edfwebapi/alc/AgentPolicyProductData", new One2OneResponse<AgentPolicyByProdyctResponse>());
                 var  vm = new BonusTrackerViewModel { PersistencyDate = persistencyDate };
                 vm.AgentProductPolicies = (responseData == null || responseData.data == null) ? new List<AgentPolicyByProdyctResponse>() : responseData.data.Where(x=>x.selling_agent_code== user.Username).ToList();
 

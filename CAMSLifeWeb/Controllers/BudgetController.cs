@@ -24,9 +24,9 @@ namespace CaliphWeb.Controllers
         private readonly IMasterDataService _masterService;
         private readonly ICaliphAPIHelper _caliphAPIHelper;
         private readonly IUserService _userService;
-        private readonly IOne2OneApiHelper _one2oneAPIHelper;
+        private readonly IALCApiHelper _one2oneAPIHelper;
 
-        public BudgetController(IMasterDataService masterService, ICaliphAPIHelper caliphAPIHelper, IUserService userService, IOne2OneApiHelper one2OneApiHelper)
+        public BudgetController(IMasterDataService masterService, ICaliphAPIHelper caliphAPIHelper, IUserService userService, IALCApiHelper one2OneApiHelper)
         {
             this._masterService = masterService;
             this._caliphAPIHelper = caliphAPIHelper;
@@ -211,7 +211,7 @@ namespace CaliphWeb.Controllers
                
             };
 
-            var response = await _one2oneAPIHelper.PostAsync<AgentACERequest, One2OneResponse<AgentACEResponse>>(request, "/edfwebapi/alc/agentace",  new One2OneResponse<AgentACEResponse>());
+            var response = await _one2oneAPIHelper.GetDataAsync<AgentACERequest, One2OneResponse<AgentACEResponse>>(request, "/edfwebapi/alc/agentace",  new One2OneResponse<AgentACEResponse>());
             var result = new List<PropotionACE>();
             response.data = (response == null || response.data == null)? new List<AgentACEResponse>():response.data ;
 

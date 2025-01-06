@@ -25,7 +25,7 @@ namespace CaliphWeb
             container.RegisterType<IUserService, UserService>();
             container.RegisterType<IMasterDataService, MasterDataService>();
             container.RegisterType<ICaliphAPIHelper, CaliphAPIHelper>();
-            container.RegisterType<IOne2OneApiHelper, One2OneApiHelper>();
+            container.RegisterType<IALCApiHelper, One2OneApiHelper>();
         }
     }
 }

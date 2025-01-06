@@ -26,10 +26,10 @@ namespace CaliphWeb.Controllers
     {
         private readonly IUserService _userService;
         private readonly ICaliphAPIHelper _caliphAPIHelper;
-        private readonly IOne2OneApiHelper _one2oneAPIHelper;
+        private readonly IALCApiHelper _one2oneAPIHelper;
 
 
-        public AccountController(IUserService userService, ICaliphAPIHelper caliphAPIHelper,IOne2OneApiHelper one2OneApiHelper)
+        public AccountController(IUserService userService, ICaliphAPIHelper caliphAPIHelper,IALCApiHelper one2OneApiHelper)
         {
             this._userService = userService;
             this._caliphAPIHelper = caliphAPIHelper;
@@ -83,7 +83,7 @@ namespace CaliphWeb.Controllers
                 {
 
                     var req = new AgentHierarchyRequest { agent_id = login.Username, generation = "0" };
-                    var responseData = await _one2oneAPIHelper.PostAsync<AgentHierarchyRequest, One2OneResponse<AgentHierarchyResponse>>(req, "/edfwebapi/alc/agenthierarchy", new One2OneResponse<AgentHierarchyResponse> { data = new List<AgentHierarchyResponse>() });
+                    var responseData = await _one2oneAPIHelper.GetDataAsync<AgentHierarchyRequest, One2OneResponse<AgentHierarchyResponse>>(req, "/edfwebapi/alc/agenthierarchy", new One2OneResponse<AgentHierarchyResponse> { data = new List<AgentHierarchyResponse>() });
 
                     if (responseData != null && responseData.data != null || responseData.data.Count > 0)
                     {

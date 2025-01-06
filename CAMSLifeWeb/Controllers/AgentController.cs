@@ -24,9 +24,9 @@ namespace CaliphWeb.Controllers
         private readonly ICaliphAPIHelper _caliphAPIHelper;
         private readonly IMasterDataService _masterDataService;
         private readonly IUserService _userService;
-        private readonly IOne2OneApiHelper _one2oneAPIHelper;
+        private readonly IALCApiHelper _one2oneAPIHelper;
 
-        public AgentController(ICaliphAPIHelper caliphAPIHelper, IMasterDataService masterDataService, IUserService userService, IOne2OneApiHelper one2OneApiHelper )
+        public AgentController(ICaliphAPIHelper caliphAPIHelper, IMasterDataService masterDataService, IUserService userService, IALCApiHelper one2OneApiHelper )
         {
             this._caliphAPIHelper = caliphAPIHelper;
             this._masterDataService = masterDataService;
@@ -54,7 +54,7 @@ namespace CaliphWeb.Controllers
             return View(addAgentRecruitVM);
         }
 
-        public async Task<ActionResult> AddAgent()
+        public ActionResult AddAgent()
         {
             return View();
         }
@@ -447,7 +447,7 @@ namespace CaliphWeb.Controllers
             };
 
 
-            var response =await  _one2oneAPIHelper.PostAsync<AgentMapaRequest, One2OneResponse<AgentMapaResponse>>(request, "/edfwebapi/alc/agentmapa",  new One2OneResponse<AgentMapaResponse>());
+            var response =await  _one2oneAPIHelper.GetDataAsync<AgentMapaRequest, One2OneResponse<AgentMapaResponse>>(request, "/edfwebapi/alc/agentmapa",  new One2OneResponse<AgentMapaResponse>());
             var result = new List<MapaPlanning>();
 
 
@@ -768,7 +768,7 @@ namespace CaliphWeb.Controllers
             var req = new AgentHierarchyRequest { agent_id = UserHelper.GetDefaultOne2OneSearchUser(), generation=generation.ToString() };
              
 
-            var responseData = await _one2oneAPIHelper.PostAsync<AgentHierarchyRequest, One2OneResponse<AgentHierarchyResponse>>(req, "/edfwebapi/alc/agenthierarchy",  new One2OneResponse<AgentHierarchyResponse>());
+            var responseData = await _one2oneAPIHelper.GetDataAsync<AgentHierarchyRequest, One2OneResponse<AgentHierarchyResponse>>(req, "/edfwebapi/alc/agenthierarchy",  new One2OneResponse<AgentHierarchyResponse>());
 
             if (responseData == null || responseData.data == null)
             {
@@ -790,7 +790,7 @@ namespace CaliphWeb.Controllers
         public async Task<ActionResult> GetAgentByGenerationAndID(AgentHierarchyRequest req)
         {
 
-            var responseData = await _one2oneAPIHelper.PostAsync<AgentHierarchyRequest, One2OneResponse<AgentHierarchyResponse>>(req, "/edfwebapi/alc/agenthierarchy",  new One2OneResponse<AgentHierarchyResponse>());
+            var responseData = await _one2oneAPIHelper.GetDataAsync<AgentHierarchyRequest, One2OneResponse<AgentHierarchyResponse>>(req, "/edfwebapi/alc/agenthierarchy",  new One2OneResponse<AgentHierarchyResponse>());
 
             if (responseData == null || responseData.data == null || responseData.data.Count == 0)
             {

@@ -27,9 +27,9 @@ namespace CaliphWeb.Controllers
         private readonly IMasterDataService _masterService;
         private readonly ICaliphAPIHelper _caliphAPIHelper;
         private readonly IUserService _userService;
-        private readonly IOne2OneApiHelper _one2oneAPIHelper;
+        private readonly IALCApiHelper _one2oneAPIHelper;
 
-        public PointSystemController(IMasterDataService masterService, ICaliphAPIHelper caliphAPIHelper, IUserService userService, IOne2OneApiHelper one2oneAPIHelper )
+        public PointSystemController(IMasterDataService masterService, ICaliphAPIHelper caliphAPIHelper, IUserService userService, IALCApiHelper one2oneAPIHelper )
         {
             this._masterService = masterService;
             this._caliphAPIHelper = caliphAPIHelper;
@@ -78,7 +78,7 @@ namespace CaliphWeb.Controllers
             eventResponse.Data = eventResponse.Data ?? new List<EventListResponse>();
 
             var aceReq = new AgentACERequest { agent_id = user.Username, date_from = pointSummaryFilter.StartDate, date_to = pointSummaryFilter.EndDate, type = "p" };
-            var aceRes =await  _one2oneAPIHelper.PostAsync<AgentACERequest, One2OneResponse<AgentACEResponse>>(aceReq, "/edfwebapi/alc/agentace",  new One2OneResponse<AgentACEResponse>());
+            var aceRes =await  _one2oneAPIHelper.GetDataAsync<AgentACERequest, One2OneResponse<AgentACEResponse>>(aceReq, "/edfwebapi/alc/agentace",  new One2OneResponse<AgentACEResponse>());
             aceRes.data = aceRes.data ?? new List<AgentACEResponse>();
 
 

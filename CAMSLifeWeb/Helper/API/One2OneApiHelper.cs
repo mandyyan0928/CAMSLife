@@ -1,5 +1,6 @@
 ﻿using CaliphWeb.Core.Helper;
 using CaliphWeb.ViewModel;
+using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -9,20 +10,22 @@ using System.Configuration;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace CaliphWeb.Services.Helper
 {
-    public class One2OneApiHelper : IOne2OneApiHelper
+    public class One2OneApiHelper : IALCApiHelper
     {
         private readonly IRestHelper _restHelper;
-
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public One2OneApiHelper(IRestHelper restHelper)
         {
             this._restHelper = restHelper;
+            log4net.Config.XmlConfigurator.Configure();
         }
 
-        public async Task<TReturn> PostAsync<T, TReturn>(T req, string post, TReturn instanceFactory) where T : class
+        public async Task<TReturn> GetDataAsync<T, TReturn>(T req, string post, TReturn instanceFactory) where T : class
         {
             var url = ConfigurationManager.AppSettings["One2OneUrl"] + post;
 
@@ -30,17 +33,15 @@ namespace CaliphWeb.Services.Helper
 
             try
             {
-                //var response = await _restHelper.PostAsync(url, req);
+                var response = await _restHelper.PostAsync(url, req);
 
-                //var returnData = JsonConvert.DeserializeObject<TReturn>(response);
-                //Console.WriteLine(response);
-                //return returnData;
-
-                return instanceFactory;
-
+                var returnData = JsonConvert.DeserializeObject<TReturn>(response);
+                return returnData;
             }
             catch (Exception ex)
-            { }
+            {
+                log.Error($"Error in SLM get data : {ex.Message}");
+            }
             return default(TReturn);
         }
 
@@ -62,11 +63,8 @@ namespace CaliphWeb.Services.Helper
             }
             catch (Exception ex)
             {
+                log.Error($"Error in SLM get data : {ex.Message}");
                 return token;
-
-            }
-            finally
-            {
 
             }
         }

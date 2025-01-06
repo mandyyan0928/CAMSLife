@@ -22,17 +22,17 @@ namespace PullAgentInfo
             var serviceProvider = new ServiceCollection()
                 .AddSingleton<IRestHelper, HttpClientHelper>()
                 .AddSingleton<ICaliphAPIHelper, CaliphAPIHelper>()
-                .AddSingleton<IOne2OneApiHelper, One2OneApiHelper>()
+                .AddSingleton<IALCApiHelper, One2OneApiHelper>()
                 .BuildServiceProvider();
 
             var caliphAPIHelper = serviceProvider.GetService<ICaliphAPIHelper>();
-            var one2OneAPIHelper = serviceProvider.GetService<IOne2OneApiHelper>();
+            var one2OneAPIHelper = serviceProvider.GetService<IALCApiHelper>();
 
            // GrabAgentInfo(caliphAPIHelper, one2OneAPIHelper);
    GrabAgentCommission(caliphAPIHelper, one2OneAPIHelper);
         }
 
-        private static void GrabAgentCommission(ICaliphAPIHelper caliphAPIHelper, IOne2OneApiHelper one2OneAPIHelper)
+        private static void GrabAgentCommission(ICaliphAPIHelper caliphAPIHelper, IALCApiHelper one2OneAPIHelper)
         {
             //insert agent commission 
             var today = new DateTime();
@@ -52,7 +52,7 @@ namespace PullAgentInfo
                         Date = startDate
                     };
                     Console.WriteLine("getting commission data for " + startDate.ToString("yyyy-MM-dd"));
-                    var response_commission = one2OneAPIHelper.PostAsync<ApiRequest, ResponseData<List<ApiResponseCommission>>>(commissionModel, "/edfwebapi/alc/agentcommission", ()=> new ResponseData<List<ApiResponseCommission>>()).Result;
+                    var response_commission = one2OneAPIHelper.GetDataAsync<ApiRequest, ResponseData<List<ApiResponseCommission>>>(commissionModel, "/edfwebapi/alc/agentcommission", new ResponseData<List<ApiResponseCommission>>()).Result;
 
                     if (response_commission.Data != null && response_commission.Data.Count > 0)
                     {
@@ -80,7 +80,7 @@ namespace PullAgentInfo
             //}
         }
 
-        private static void GrabAgentInfo(ICaliphAPIHelper caliphAPIHelper, IOne2OneApiHelper one2OneAPIHelper)
+        private static void GrabAgentInfo(ICaliphAPIHelper caliphAPIHelper, IALCApiHelper one2OneAPIHelper)
         {
             var startDate = new DateTime(2022, 4, 2);   //DateTime.Now.Date.AddDays(-1);
             var endDate = new DateTime(2022, 4, 5);//DateTime.Now.Date.AddDays(-1);
@@ -93,7 +93,7 @@ namespace PullAgentInfo
                     Date = startDate
                 };
                 Console.WriteLine("getting data for " + startDate.ToString("yyyy-MM-dd"));
-                var responseData = one2OneAPIHelper.PostAsync<ApiRequest, ResponseData<List<ApiResponse>>>(model, "/edfwebapi/alc/agentcontracted", ()=> new ResponseData<List<ApiResponse>>()).Result;
+                var responseData = one2OneAPIHelper.GetDataAsync<ApiRequest, ResponseData<List<ApiResponse>>>(model, "/edfwebapi/alc/agentcontracted", new ResponseData<List<ApiResponse>>()).Result;
 
                 Console.WriteLine(responseData.Data.Count);
 

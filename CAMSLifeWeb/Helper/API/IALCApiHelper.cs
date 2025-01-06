@@ -6,8 +6,8 @@ using System.Web;
 
 namespace CaliphWeb.Services.Helper
 {
-    public interface IOne2OneApiHelper
+    public interface IALCApiHelper
     {
-        Task<TReturn> PostAsync<T, TReturn>(T req, string post, TReturn instanceFactory) where T : class;
+        Task<TReturn> GetDataAsync<T, TReturn>(T req, string post, TReturn instanceFactory) where T : class;
     }
 }

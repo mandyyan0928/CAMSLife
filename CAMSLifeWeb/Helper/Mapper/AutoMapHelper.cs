@@ -32,5 +32,7 @@ namespace CaliphWeb.Helper.Mapper
             var resul = iMapper.Map<List<TSource>, List<TDestnation>>(source);
             return resul;
         }
+
+       
     }
 }

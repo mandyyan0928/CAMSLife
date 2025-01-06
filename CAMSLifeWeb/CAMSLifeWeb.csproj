@@ -285,10 +285,13 @@
     <Compile Include="Controllers\ResourceController.cs" />
     <Compile Include="Controllers\SweetController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Helper\ALCData\SunlifeDataGetter.cs" />
+    <Compile Include="Helper\ALCData\IALCDataGetter.cs" />
     <Compile Include="Helper\API\CaliphAPIHelper.cs" />
     <Compile Include="Helper\API\ICaliphAPIHelper.cs" />
-    <Compile Include="Helper\API\IOne2OneApiHelper.cs" />
+    <Compile Include="Helper\API\IALCApiHelper.cs" />
     <Compile Include="Helper\API\IRestHelper.cs" />
+    <Compile Include="Helper\API\SLMAPIHelper.cs" />
     <Compile Include="Helper\API\One2OneApiHelper.cs" />
     <Compile Include="Helper\ConvertHelper.cs" />
     <Compile Include="Helper\DateTimeExtensions.cs" />
@@ -298,6 +301,7 @@
     <Compile Include="Helper\LinqExtension.cs" />
     <Compile Include="Helper\Mapper\AutoMapHelper.cs" />
     <Compile Include="Helper\Mapper\FormCollectionMapper.cs" />
+    <Compile Include="Helper\Mapper\SunlifeMapHelper.cs" />
     <Compile Include="Helper\Pager.cs" />
     <Compile Include="Helper\UserHelper.cs" />
     <Compile Include="Models\API\AccessRight\Request\AddStaffRequest.cs" />
@@ -386,6 +390,12 @@
     <Compile Include="Models\API\User\UserListResponse.cs" />
     <Compile Include="Models\API\User\UserRequest.cs" />
     <Compile Include="Models\BonusContest.cs" />
+    <Compile Include="Models\SunlifeAPI\SunlifeAPIList.cs" />
+    <Compile Include="Models\SunlifeAPI\SunlifeMonthlyAFYC.cs" />
+    <Compile Include="Models\SunlifeAPI\SunlifeDailyAFYC.cs" />
+    <Compile Include="Models\SunlifeAPI\SunlifeMAPA.cs" />
+    <Compile Include="Models\SunlifeAPI\SunlifePolicy.cs" />
+    <Compile Include="Models\SunlifeAPI\SunlifeHierarchy.cs" />
     <Compile Include="Models\ViewModel\AddStaffViewModel.cs" />
     <Compile Include="Models\ViewModel\AddDepartmentViewModel.cs" />
     <Compile Include="Models\EmailSetting.cs" />
