@@ -9,6 +9,7 @@ using CaliphWeb.Helper.Mapper;
 using CaliphWeb.Models;
 using CaliphWeb.Models.API.one2one;
 using CaliphWeb.Services.Helper;
+using CaliphWeb.ViewModel.Data;
 
 public class SunlifeDataGetter :  IALCDataGetter
 {
@@ -24,39 +25,43 @@ public class SunlifeDataGetter :  IALCDataGetter
     }
 
 
-    public async Task<List<AgentHierarchyResponse>> GetAgentHierarchyAsync(AgentHierarchyRequest req)
+    public async Task<List<AgentHierarchyResponse>> GetAgentHierarchyAsync(AgentHierarchyRequest source)
     {
-        var sunlifeResponse = await _ALCAPIhelper.GetDataAsync<AgentHierarchyRequest, SunlifeAPIList<SunlifeHierarchyResponse>>(req, this._hierarchyEndpoint, new SunlifeAPIList<SunlifeHierarchyResponse>());
+        var sunlifeRequest = SunlifeMapHelper.MapHierarchyRequest(source);
+        var sunlifeResponse = await _ALCAPIhelper.GetDataAsync<SunlifeHierarcyRequest, SunlifeAPIList<SunlifeHierarchyResponse>>(sunlifeRequest, this._hierarchyEndpoint, new SunlifeAPIList<SunlifeHierarchyResponse>());
         if (sunlifeResponse == null || sunlifeResponse.subList == null)
             return new List<AgentHierarchyResponse>();
         else
             return SunlifeMapHelper.MapHierarchyResponse(sunlifeResponse.subList);
     }
 
-    public async Task<List<AgentHierarchyResponse>> GetPolicyDataAsync(AgentHierarchyRequest req)
+    public async Task<List<AgentPolicyResponse>> GetPolicyDataAsync(AgentPolicyRequest source)
     {
-        var responseData = await _ALCAPIhelper.GetDataAsync<AgentHierarchyRequest, One2OneResponse<AgentHierarchyResponse>>(req, this._hierarchyEndpoint, new One2OneResponse<AgentHierarchyResponse>());
-        if (responseData == null || responseData.data == null)
-            return new List<AgentHierarchyResponse>();
+        var sunlifeRequest = SunlifeMapHelper.MapPolicyRequest(source);
+        var responseData = await _ALCAPIhelper.GetDataAsync<SunlifePolicyRequest, SunlifeAPIList<SunlifePolicyResponse>>(sunlifeRequest, this._hierarchyEndpoint, new SunlifeAPIList<SunlifePolicyResponse>());
+        if (responseData == null || responseData.subList == null)
+            return new List<AgentPolicyResponse>();
         else
-            return responseData.data;
+            return SunlifeMapHelper.MapPolicyResponse(responseData.subList);
     }
 
-    Task<List<AgentMapaRequest>> IALCDataGetter.GetAgentMAPAaAsync(AgentMapaResponse req)
+    public async Task<List<AgentMapaResponse>> GetMapaAsync(AgentMapaRequest source)
     {
-        throw new System.NotImplementedException();
+        var sunlifeRequest = SunlifeMapHelper.MapMAPARequest(source);
+        var responseData = await _ALCAPIhelper.GetDataAsync<SunlifeMAPARequest, SunlifeAPIList<SunlifeMAPAResponse>>(sunlifeRequest, this._MAPAEndpoint, new SunlifeAPIList<SunlifeMAPAResponse>());
+        if (responseData == null || responseData.subList == null)
+            return new List<AgentMapaResponse>();
+        else
+            return SunlifeMapHelper.MapMAPAResponse(responseData.subList);
     }
 
-    Task<List<AgentACERequest>> IALCDataGetter.GetDailyAFYCAsync(AgentACEResponse req)
+    public async Task<List<AgentACEResponse>> GetDailyAFYCAsync(AgentACERequest source)
     {
-        throw new System.NotImplementedException();
+        var sunlifeRequest = SunlifeMapHelper.MapAFYCRequest(source);
+        var responseData = await _ALCAPIhelper.GetDataAsync<SunlifeDailyAFYCRequest, SunlifeAPIList<SunlifeDailyAFYCResponse>>(sunlifeRequest, this._dailyAFYCEndpoint, new SunlifeAPIList<SunlifeDailyAFYCResponse>());
+        if (responseData == null || responseData.subList == null)
+            return new List<AgentACEResponse>();
+        else
+            return SunlifeMapHelper.MapAFYCResponse(responseData.subList);
     }
-
-  
-    Task<List<AgentPolicyRequest>> IALCDataGetter.GetPolicyDataAsync(AgentPolicyResponse req)
-    {
-        throw new System.NotImplementedException();
-    }
-
-   
 }

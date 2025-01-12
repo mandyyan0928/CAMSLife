@@ -7,6 +7,8 @@ namespace CaliphWeb.Models.API.one2one
         public string agent_id { get; set; }
         public DateTime date_from { get; set; }
         public DateTime date_to { get; set; }
+
+        public int Level { get; set; }
     }
 
 

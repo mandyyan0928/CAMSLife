@@ -10,10 +10,10 @@ namespace CaliphWeb.Helper.ALCData
 {
     public interface IALCDataGetter
     {
-        Task<List<AgentHierarchyResponse>> GetAgentHierarchyAsync(AgentHierarchyRequest req);
-        Task<List<AgentPolicyRequest>> GetPolicyDataAsync(AgentPolicyResponse req);
-        Task<List<AgentMapaRequest>> GetAgentMAPAaAsync(AgentMapaResponse req);
-        Task<List<AgentACERequest>> GetDailyAFYCAsync(AgentACEResponse req);
+        Task<List<AgentHierarchyResponse>> GetAgentHierarchyAsync(AgentHierarchyRequest source);
+        Task<List<AgentACEResponse>> GetDailyAFYCAsync(AgentACERequest source);
+        Task<List<AgentPolicyResponse>> GetPolicyDataAsync(AgentPolicyRequest source);
+        Task<List<AgentMapaResponse>> GetMapaAsync(AgentMapaRequest source); 
        
     }
 }
