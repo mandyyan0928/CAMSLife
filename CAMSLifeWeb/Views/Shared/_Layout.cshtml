@@ -319,11 +319,11 @@
 
                                     @if (user.IsLeader || user.IsAgent)
                                     {
-                                        <li class="nav-item">
+                                        @*<li class="nav-item">
                                             <a href='/Persistency/index' class="nav-link">
                                                 Persistency Calculator
                                             </a>
-                                        </li>
+                                        </li>*@
                                     }
                                     @if (user.IsAgent)
                                     {
@@ -346,22 +346,24 @@
                                     {
 
 
-                                        <li class="nav-item">
+                                        @*<li class="nav-item">
                                             <a href=@Url.Action("Summary", "AgentCommission") class="nav-link">
                                                 <span>
                                                     Commission History
                                                 </span>
                                             </a>
-                                        </li>
-                                        <li class="nav-item">
+                                        </li>*@
+
+                                        //temp hide
+                                        @*<li class="nav-item">
                                             <a href='/Persistency/BusinessReport' class="nav-link">
                                                 Business Report
                                             </a>
-                                        </li>
+                                        </li>*@
                                     }
                                     @if (user.IsLeader)
                                     {
-                                        <li class="nav-item"><a href="@Url.Action("MapaCalculator", "Agent", new {type =(int) CaliphWeb.ViewModel.Data.MasterDataEnum.AgentStimulatorType.DirectGroup, id = DateTime.Now.Year })" class="nav-link">Direct Group MAPA</a></li>
+                                        @*<li class="nav-item"><a href="@Url.Action("MapaCalculator", "Agent", new {type =(int) CaliphWeb.ViewModel.Data.MasterDataEnum.AgentStimulatorType.DirectGroup, id = DateTime.Now.Year })" class="nav-link">Direct Group MAPA</a></li>
                                         <li class="nav-item"><a href="@Url.Action("MapaCalculator", "Agent", new {type =(int) CaliphWeb.ViewModel.Data.MasterDataEnum.AgentStimulatorType.WholeGroup, id = DateTime.Now.Year })" class="nav-link">Whole Group MAPA</a></li>
 
                                         @*<li class="nav-item">

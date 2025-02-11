@@ -213,7 +213,7 @@
 
         function OpenLoginModal(username) {
             $('#login_username').val(username);
-           
+
         }
 
         function SearchData(page) {
@@ -284,19 +284,19 @@
            function LoginAgent() {
             var username = $('#login_username').val();
             var pw = $('#PW').val();
-           
-           
+
+
                 $.ajax({
                     url: '@Url.Action("LoginAgent", "User")',
                     type: 'POST',
                     data: { username: username, pw: pw },
                     success: function (response) {
                         if (response == true) {
-                            window.location='/home/index';
+                            window.location = '@Url.Action("Index", "Home")';//'/home/index';
                         }
                     }
                 });
-            
+
         }
 
         function UpdatePassword() {

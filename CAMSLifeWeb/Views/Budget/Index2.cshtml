@@ -508,8 +508,11 @@
                 var formData = $('#frmincome').serialize();
                 var month = $('#startMonth').val();
                 var incomeMonth = $('#incomeMonth').val();
+                var incomeyear = $('#incomeYear').val();
+
                 formData += "&ProductStartMonth=" + month;
                 formData += "&BudgetMonth=" + incomeMonth;
+                formData += "&BudgetYear=" + incomeyear;
                 //BudgetMonth
                 console.log(formData);
               //  formData.append("ProductStartMonth", month);
