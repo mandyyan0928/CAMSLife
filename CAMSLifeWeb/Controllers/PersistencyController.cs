@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CaliphWeb.Core;
 using CaliphWeb.Helper;
+using CaliphWeb.Helper.ALCData;
 using CaliphWeb.Helper.Mapper;
 using CaliphWeb.Models.API;
 using CaliphWeb.Models.API.AgentRecruit;
@@ -28,16 +29,16 @@ namespace CaliphWeb.Controllers
         private readonly IMasterDataService _masterService;
         private readonly ICaliphAPIHelper _caliphAPIHelper;
         private readonly IUserService _userService;
-        private readonly IALCApiHelper _one2oneAPIHelper;
+        private readonly IALCDataGetter _alcDataGetter;
 
         public const string PAGE_PERSISTENCY = "persistency";
         public const string PAGE_BUSINESS_REPORT= "businessreport";
-        public PersistencyController(IMasterDataService masterService, ICaliphAPIHelper caliphAPIHelper, IUserService userService, IALCApiHelper one2oneAPIHelper)
+        public PersistencyController(IMasterDataService masterService, ICaliphAPIHelper caliphAPIHelper, IUserService userService, IALCDataGetter alcDataGetter)
         {
             this._masterService = masterService;
             this._caliphAPIHelper = caliphAPIHelper;
             this._userService = userService;
-            this._one2oneAPIHelper = one2oneAPIHelper;
+            this._alcDataGetter = alcDataGetter;
         }
 
 
@@ -407,8 +408,10 @@ namespace CaliphWeb.Controllers
 
             int startGeneration = 0;
             var generationHierarchyReq = new AgentHierarchyRequest { agent_id = agentid, generation = startGeneration.ToString() };
-            var generationHierarchyRes = await _one2oneAPIHelper.GetDataAsync<AgentHierarchyRequest, One2OneResponse<AgentHierarchyResponse>>(generationHierarchyReq, "/edfwebapi/alc/agenthierarchy",  new One2OneResponse<AgentHierarchyResponse>());
-            var generationHierarchies = (generationHierarchyRes == null || generationHierarchyRes.data == null) ? new List<AgentHierarchyResponse>() : generationHierarchyRes.data.Where(x => x.role == "leader" || x.agent_id == username).ToList();
+            var generationHierarchyRes = await _alcDataGetter.GetAgentHierarchyAsync(generationHierarchyReq);
+
+            // add role leader filter 
+            var generationHierarchies = generationHierarchyRes.Where(x => x.role == "leader" || x.agent_id == username).ToList();
 
 
             while (generationHierarchies.Count > 0)
@@ -423,8 +426,8 @@ namespace CaliphWeb.Controllers
                 startGeneration++;
 
                 generationHierarchyReq = new AgentHierarchyRequest { agent_id = agentid, generation = startGeneration.ToString() };
-                generationHierarchyRes = await _one2oneAPIHelper.GetDataAsync<AgentHierarchyRequest, One2OneResponse<AgentHierarchyResponse>>(generationHierarchyReq, "/edfwebapi/alc/agenthierarchy",  new One2OneResponse<AgentHierarchyResponse>());
-                generationHierarchies = (generationHierarchyRes == null || generationHierarchyRes.data == null) ? new List<AgentHierarchyResponse>() : generationHierarchyRes.data.Where(x => x.role == "leader").ToList();
+                generationHierarchyRes = await _alcDataGetter.GetAgentHierarchyAsync(generationHierarchyReq);
+                generationHierarchies = generationHierarchyRes.Where(x => x.role == "leader").ToList();
             }
 
             return persistencyCalculator;
@@ -468,8 +471,8 @@ namespace CaliphWeb.Controllers
             for (int i = 0; i <= 6; i++)
             {
                 var generationHierarchyReq = new AgentHierarchyRequest { agent_id = agentid, generation = i.ToString() };
-                var generationHierarchyRes = await _one2oneAPIHelper.GetDataAsync<AgentHierarchyRequest, One2OneResponse<AgentHierarchyResponse>>(generationHierarchyReq, "/edfwebapi/alc/agenthierarchy",  new One2OneResponse<AgentHierarchyResponse>());
-                var generationHierarchies = (generationHierarchyRes == null || generationHierarchyRes.data == null) ? new List<AgentHierarchyResponse>() : generationHierarchyRes.data.Where(x => x.role == "leader" || x.agent_id == agentid).ToList();
+                var generationHierarchyRes = await _alcDataGetter.GetAgentHierarchyAsync(generationHierarchyReq);
+                var generationHierarchies = generationHierarchyRes.Where(x => x.role == "leader" || x.agent_id == agentid).ToList();
 
                 foreach (var agent in generationHierarchies)
                 {
@@ -524,10 +527,9 @@ namespace CaliphWeb.Controllers
             else
             {
                 var policyReq = new AgentPolicyRequest { date_from = startDate, date_to = endDate, agent_id = username };
-                var policyRes = await _one2oneAPIHelper.GetDataAsync<AgentPolicyRequest, One2OneResponse<AgentPolicyResponse>>(policyReq, "/edfwebapi/alc/AgentPolicyData",  new One2OneResponse<AgentPolicyResponse>());
+                var policyRes = await _alcDataGetter.GetPolicyDataAsync(policyReq);
 
-                var policies = (policyRes == null || policyRes.data == null) ? new List<AgentPolicyResponse>() : policyRes.data;
-                return policies.Where(x => x.certificate_status.ToLower() != PolicyCertificateStatus.FreelookCancellation).ToList();
+                return policyRes.Where(x => x.certificate_status.ToLower() != PolicyCertificateStatus.FreelookCancellation).ToList();
             }
         }
 
@@ -588,8 +590,8 @@ namespace CaliphWeb.Controllers
             else
             {
                 var policyReq = new AgentPolicyRequest { date_from = startDate, date_to = endDate, agent_id = user.Username };
-                var policyRes = await _one2oneAPIHelper.GetDataAsync<AgentPolicyRequest, One2OneResponse<AgentPolicyResponse>>(policyReq, "/edfwebapi/alc/AgentPolicyData",  new One2OneResponse<AgentPolicyResponse>());
-                policies = (policyRes == null || policyRes.data == null) ? new List<AgentPolicyResponse>() : policyRes.data.Where(x=> x.certificate_status.ToLower() != PolicyCertificateStatus.FreelookCancellation).ToList();
+                var policyRes = await _alcDataGetter.GetPolicyDataAsync(policyReq);
+                policies = policyRes.Where(x => x.certificate_status.ToLower() != PolicyCertificateStatus.FreelookCancellation).ToList();
             }
 
             if (type == "g")
@@ -665,8 +667,7 @@ namespace CaliphWeb.Controllers
             else
             {
                 var policyReq = new AgentPolicyRequest { date_from = startDate, date_to = endDate, agent_id = agentid };
-                var policyRes = await _one2oneAPIHelper.GetDataAsync<AgentPolicyRequest, One2OneResponse<AgentPolicyResponse>>(policyReq, "/edfwebapi/alc/AgentPolicyData",  new One2OneResponse<AgentPolicyResponse>());
-                policies = (policyRes == null || policyRes.data == null) ? new List<AgentPolicyResponse>() : policyRes.data;
+                policies = await _alcDataGetter.GetPolicyDataAsync(policyReq); 
             }
 
             if (type == "g")
@@ -723,8 +724,8 @@ namespace CaliphWeb.Controllers
             else
             {
                 var generationHierarchyReq = new AgentHierarchyRequest { agent_id = req.AgentId, generation = "0" };
-                var generationHierarchyRes = await _one2oneAPIHelper.GetDataAsync<AgentHierarchyRequest, One2OneResponse<AgentHierarchyResponse>>(generationHierarchyReq, "/edfwebapi/alc/agenthierarchy",  new One2OneResponse<AgentHierarchyResponse>());
-                var generationHierarchies = (generationHierarchyRes == null || generationHierarchyRes.data == null) ? new List<AgentHierarchyResponse>() : generationHierarchyRes.data.Where(x => x.role == "agent" || x.agent_id == req.AgentId).ToList();
+                var generationHierarchyRes = await _alcDataGetter.GetAgentHierarchyAsync(generationHierarchyReq);
+                var generationHierarchies = generationHierarchyRes.Where(x => x.role == "agent" || x.agent_id == req.AgentId).ToList();
                 hierarchyPolicies = await GetHierarchyPolicies(req, generationHierarchies, true);
             }
             var generation = new GenerationGroupPolicy

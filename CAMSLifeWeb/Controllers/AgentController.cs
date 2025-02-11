@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using Caliph.Library.Helper;
 using CaliphWeb.Models.API.AgentStimulator;
+using CaliphWeb.Helper.ALCData;
 
 namespace CaliphWeb.Controllers
 {
@@ -24,14 +25,14 @@ namespace CaliphWeb.Controllers
         private readonly ICaliphAPIHelper _caliphAPIHelper;
         private readonly IMasterDataService _masterDataService;
         private readonly IUserService _userService;
-        private readonly IALCApiHelper _one2oneAPIHelper;
+        private readonly IALCDataGetter _AlcDataGetter;
 
-        public AgentController(ICaliphAPIHelper caliphAPIHelper, IMasterDataService masterDataService, IUserService userService, IALCApiHelper one2OneApiHelper )
+        public AgentController(ICaliphAPIHelper caliphAPIHelper, IMasterDataService masterDataService, IUserService userService, IALCDataGetter aLCDataGetter )
         {
             this._caliphAPIHelper = caliphAPIHelper;
             this._masterDataService = masterDataService;
             this._userService = userService;
-            this._one2oneAPIHelper = one2OneApiHelper;
+            this._AlcDataGetter = aLCDataGetter;
         }
         // GET: Agent
         public ActionResult Index()
@@ -447,11 +448,10 @@ namespace CaliphWeb.Controllers
             };
 
 
-            var response =await  _one2oneAPIHelper.GetDataAsync<AgentMapaRequest, One2OneResponse<AgentMapaResponse>>(request, "/edfwebapi/alc/agentmapa",  new One2OneResponse<AgentMapaResponse>());
+            var response =await  _AlcDataGetter.GetMapaAsync(request);
             var result = new List<MapaPlanning>();
 
-
-            var agentMapa = response.data;
+            var agentMapa = response;
             if (agentMapa == null)
                 return result;
 
@@ -765,54 +765,22 @@ namespace CaliphWeb.Controllers
         {
             var login = UserHelper.GetLoginUserViewModel();
 
-            var req = new AgentHierarchyRequest { agent_id = UserHelper.GetDefaultOne2OneSearchUser(), generation=generation.ToString() };
-             
-
-            var responseData = await _one2oneAPIHelper.GetDataAsync<AgentHierarchyRequest, One2OneResponse<AgentHierarchyResponse>>(req, "/edfwebapi/alc/agenthierarchy",  new One2OneResponse<AgentHierarchyResponse>());
-
-            if (responseData == null || responseData.data == null)
-            {
-                if (generation == 0)
-                {
-                    var agent = new AgentHierarchyResponse { agent_id = login.Username, agent_name = login.Fullname };
-                    var result = new List<AgentHierarchyResponse>();
-                    result.Add(agent);
-                    return Json(new List<AgentHierarchyResponse>());
-                }
-                else
-                    return Json(new List<AgentHierarchyResponse>());
-            }
-            else
-                return Json(responseData.data);
+            var req = new AgentHierarchyRequest { agent_id = UserHelper.GetDefaultOne2OneSearchUser(), generation = generation.ToString() };
+            var responseData = await _AlcDataGetter.GetAgentHierarchyAsync(req);
+            return Json(responseData);
         }
 
         [HttpPost]
         public async Task<ActionResult> GetAgentByGenerationAndID(AgentHierarchyRequest req)
         {
 
-            var responseData = await _one2oneAPIHelper.GetDataAsync<AgentHierarchyRequest, One2OneResponse<AgentHierarchyResponse>>(req, "/edfwebapi/alc/agenthierarchy",  new One2OneResponse<AgentHierarchyResponse>());
+            var responseData = await _AlcDataGetter.GetAgentHierarchyAsync(req);
 
-            if (responseData == null || responseData.data == null || responseData.data.Count == 0)
-            {
-                if (ConvertHelper.ConvertInt(req.generation) == 0)
-                {
-                    var login = UserHelper.GetLoginUserViewModel();
-                    var agent = new AgentHierarchyResponse { agent_id = login.Username, agent_name = login.Fullname };
-                    var result = new List<AgentHierarchyResponse>();
-                    result.Add(agent);
-                    return Json(new List<AgentHierarchyResponse>());
-                }
-                else
-                    return Json(new List<AgentHierarchyResponse>());
-            }
-            else
-            {
-                TempData["Agents"] = responseData.data;
-                return Json(responseData.data);
-            }
+            if (responseData.Count > 0)
+                TempData["Agents"] = responseData;
+
+            return Json(responseData);
         }
-
-
 
         public async Task<ActionResult> Edit(int id)
         {

@@ -29,7 +29,7 @@ namespace CaliphWeb.Services.Helper
         {
             var url = ConfigurationManager.AppSettings["SLMUrl"] + endpoint;
 
-            _restHelper.Authorization = new AuthenticationHeaderValue("X-Api-Key", ConfigurationManager.AppSettings["SLMToken"]);
+            _restHelper.Authorization = new AuthenticationHeaderValue("x-api-key", ConfigurationManager.AppSettings["SLMToken"]);
 
             try
             {
@@ -59,7 +59,17 @@ namespace CaliphWeb.Services.Helper
             var properties = body.GetType().GetProperties();
             foreach (var property in properties)
             {
-                queryString += property.Name + "=" + property.GetValue(body) + "&";
+                var value = property.GetValue(body);
+
+                if (value == null) continue;
+
+                //// Check if the property is of type DateTime and format it
+                if (value is DateTime dateValue)
+                {
+                    value = dateValue.ToString("yyyy-MM-dd");
+                }
+
+                queryString += $"{property.Name}={value}&";
             }
 
 

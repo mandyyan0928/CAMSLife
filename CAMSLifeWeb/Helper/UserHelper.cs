@@ -59,9 +59,9 @@ namespace CaliphWeb.Helper
 
             if (user.IsAdmin)
                 return null;
-            else if (user.IsAgent|| user.IsLeader)
+            else if (user.IsAgent || user.IsLeader)
                 return user.Username;
-          
+
 
             return user.Username;
         }
@@ -76,7 +76,7 @@ namespace CaliphWeb.Helper
                 return "";
             }
 
-            if (user.IsAdmin|| user.IsStaffLeader)
+            if (user.IsAdmin || user.IsStaffLeader)
                 return "CAL888";
             else if (user.IsAgent || user.IsLeader)
                 return user.Username;
@@ -89,6 +89,15 @@ namespace CaliphWeb.Helper
             return user == MasterDataEnum.One2OneConfig.COMPANY_ACCOUNT;
         }
 
+        public static bool IsLeader(string user)
+        {
+            return (user == MasterDataEnum.SLMConfig.ROLE_BD|| user== MasterDataEnum.SLMConfig.ROLE_BM);
+        }
+
+        public static bool IsAgent(string user)
+        {
+            return (user == MasterDataEnum.SLMConfig.ROLE_BE || user == MasterDataEnum.SLMConfig.ROLE_SBE);
+        }
 
         public static string GetTopLeader( )
         {

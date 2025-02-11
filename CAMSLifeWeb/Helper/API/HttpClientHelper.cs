@@ -38,7 +38,10 @@ namespace CaliphWeb.Helper
                 {
                     try
                     {
- 
+                        if (Authorization != null)
+                            httpClient.DefaultRequestHeaders.Add("x-api-key", Authorization.Parameter);// httpClient.DefaultRequestHeaders.Authorization = Authorization;
+
+
                         HttpResponseMessage response = await httpClient.GetAsync(requestUri);
                         result = await response.Content.ReadAsStringAsync();
                         if (response.StatusCode == HttpStatusCode.OK)

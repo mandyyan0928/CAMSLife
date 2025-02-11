@@ -1,4 +1,5 @@
 ﻿using CaliphWeb.Helper;
+using Microsoft.Owin.Security.Provider;
 using System;
 
 namespace CaliphWeb.Models.API.one2one
@@ -31,7 +32,9 @@ namespace CaliphWeb.Models.API.one2one
         {
             get
             {
-                if (pay_mode.ToLower() == "monthly")
+                if (string.IsNullOrEmpty(pay_mode))
+                    return 0;
+               else if (pay_mode.ToLower() == "monthly")
                     return 12;
                 else if (pay_mode.ToLower() == "half annual")
                     return 2;

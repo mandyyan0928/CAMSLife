@@ -374,6 +374,8 @@
     <Compile Include="Models\API\Event\Response\EventAttendanceListResponse.cs" />
     <Compile Include="Models\API\Event\Response\EventDateListResponse.cs" />
     <Compile Include="Models\API\Event\Response\EventPaymentListResponse.cs" />
+    <Compile Include="Models\API\one2one\AgentListRequest.cs" />
+    <Compile Include="Models\API\one2one\AgentListResponse.cs" />
     <Compile Include="Models\API\one2one\AgentMapa\AgentACERequest.cs" />
     <Compile Include="Models\API\one2one\AgentMapa\AgentACEResponse.cs" />
     <Compile Include="Models\API\one2one\AgentMapa\AgentMapaRequest.cs" />
@@ -394,6 +396,7 @@
     <Compile Include="Models\SunlifeAPI\SunlifeMonthlyAFYC.cs" />
     <Compile Include="Models\SunlifeAPI\SunlifeDailyAFYC.cs" />
     <Compile Include="Models\SunlifeAPI\SunlifeMAPA.cs" />
+    <Compile Include="Models\SunlifeAPI\SunlifeAdvisor.cs" />
     <Compile Include="Models\SunlifeAPI\SunlifePolicy.cs" />
     <Compile Include="Models\SunlifeAPI\SunlifeHierarchy.cs" />
     <Compile Include="Models\ViewModel\AddStaffViewModel.cs" />
@@ -3448,7 +3451,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>50873</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>https://localhost:44331/</IISUrl>
+          <IISUrl>https://localhost:44330/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

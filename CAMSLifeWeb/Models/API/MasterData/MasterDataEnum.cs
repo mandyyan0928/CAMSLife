@@ -191,10 +191,18 @@
 
         }
 
+        public class SLMConfig
+        {
 
-      
-     
+            public const string ROLE_BD = "BD";
+            public const string ROLE_BM = "BM";
+            public const string ROLE_BE = "BE";
+            public const string ROLE_SBE = "SBE";
 
-       
+        }
+
+
+
+
     }
 }

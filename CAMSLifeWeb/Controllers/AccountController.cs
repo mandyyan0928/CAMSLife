@@ -2,6 +2,7 @@
 using CaliphWeb.Core;
 using CaliphWeb.Core.Helper;
 using CaliphWeb.Helper;
+using CaliphWeb.Helper.ALCData;
 using CaliphWeb.Models.API;
 using CaliphWeb.Models.API.one2one;
 using CaliphWeb.Services;
@@ -26,14 +27,14 @@ namespace CaliphWeb.Controllers
     {
         private readonly IUserService _userService;
         private readonly ICaliphAPIHelper _caliphAPIHelper;
-        private readonly IALCApiHelper _one2oneAPIHelper;
+        private readonly IALCDataGetter _AlcDataGetter;
 
 
-        public AccountController(IUserService userService, ICaliphAPIHelper caliphAPIHelper,IALCApiHelper one2OneApiHelper)
+        public AccountController(IUserService userService, ICaliphAPIHelper caliphAPIHelper, IALCDataGetter aLCDataGetter)
         {
             this._userService = userService;
             this._caliphAPIHelper = caliphAPIHelper;
-            _one2oneAPIHelper = one2OneApiHelper;
+            _AlcDataGetter = aLCDataGetter;
         }
         // GET: Account
         public ActionResult Login()
@@ -83,15 +84,15 @@ namespace CaliphWeb.Controllers
                 {
 
                     var req = new AgentHierarchyRequest { agent_id = login.Username, generation = "0" };
-                    var responseData = await _one2oneAPIHelper.GetDataAsync<AgentHierarchyRequest, One2OneResponse<AgentHierarchyResponse>>(req, "/edfwebapi/alc/agenthierarchy", new One2OneResponse<AgentHierarchyResponse> { data = new List<AgentHierarchyResponse>() });
+                    var responseData = await _AlcDataGetter.GetAgentHierarchyAsync(req);
 
-                    if (responseData != null && responseData.data != null || responseData.data.Count > 0)
+                    if (responseData != null)
                     {
 
-                        var agent = responseData.data.Where(x => x.agent_id == login.Username).FirstOrDefault();
-                        if (agent != null && agent.role == "leader")
+                        var agent = responseData.Where(x => x.agent_id == login.Username).FirstOrDefault();
+                        if (agent != null && UserHelper.IsLeader(agent.role))
                             data.Data.RoleId = (int)MasterDataEnum.RoleId.Leader;
-                        else if (agent != null && agent.role == "agent")
+                        else if (agent != null && UserHelper.IsAgent(agent.role))
                             data.Data.RoleId = (int)MasterDataEnum.RoleId.Agent;
                     }
 

@@ -15,6 +15,7 @@ using CaliphWeb.ViewModel;
 using CaliphWeb.ViewModel.Data;
 using CaliphWeb.Models.API.one2one;
 using CaliphWeb.Models;
+using CaliphWeb.Helper.ALCData;
 
 namespace CaliphWeb.Controllers
 {
@@ -24,14 +25,14 @@ namespace CaliphWeb.Controllers
         private readonly IMasterDataService _masterService;
         private readonly ICaliphAPIHelper _caliphAPIHelper;
         private readonly IUserService _userService;
-        private readonly IALCApiHelper _one2oneAPIHelper;
+        private readonly IALCDataGetter _alcDataGetter;
 
-        public BudgetController(IMasterDataService masterService, ICaliphAPIHelper caliphAPIHelper, IUserService userService, IALCApiHelper one2OneApiHelper)
+        public BudgetController(IMasterDataService masterService, ICaliphAPIHelper caliphAPIHelper, IUserService userService, IALCDataGetter alcDataGetter)
         {
             this._masterService = masterService;
             this._caliphAPIHelper = caliphAPIHelper;
             this._userService = userService;
-            this._one2oneAPIHelper = one2OneApiHelper;
+            this._alcDataGetter = alcDataGetter;
         }
 
         // GET: Budget
@@ -211,15 +212,14 @@ namespace CaliphWeb.Controllers
                
             };
 
-            var response = await _one2oneAPIHelper.GetDataAsync<AgentACERequest, One2OneResponse<AgentACEResponse>>(request, "/edfwebapi/alc/agentace",  new One2OneResponse<AgentACEResponse>());
+            var response = await _alcDataGetter.GetDailyAFYCAsync(request);
             var result = new List<PropotionACE>();
-            response.data = (response == null || response.data == null)? new List<AgentACEResponse>():response.data ;
 
             // map from api to   modal 
             for (int i = 0; i <12; i++)
             {
                 var month = startDate.AddMonths(i);
-                var currentMonthAce = response.data.Where(x => x.date.Month == month.Month&& x.date.Year== month.Year).Sum(x => x.ace);
+                var currentMonthAce = response.Where(x => x.date.Month == month.Month&& x.date.Year== month.Year).Sum(x => x.ace);
                 result.Add(new PropotionACE { Month = month.Month, Year=month.Year, ACE = currentMonthAce });
 
             }

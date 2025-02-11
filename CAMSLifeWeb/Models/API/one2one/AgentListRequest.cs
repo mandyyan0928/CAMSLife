@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PullAgentInfo
 {
-    public class ApiRequest
+    public class AgentListRequest
     {
         public DateTime Date { get; set; }
     }

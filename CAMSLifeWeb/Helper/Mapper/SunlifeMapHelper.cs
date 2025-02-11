@@ -5,6 +5,7 @@ using CaliphWeb.Models;
 using CaliphWeb.Models.API.one2one;
 using CaliphWeb.ViewModel.Data;
 using DocumentFormat.OpenXml.Drawing;
+using PullAgentInfo;
 
 namespace CaliphWeb.Helper.Mapper
 {
@@ -181,6 +182,43 @@ namespace CaliphWeb.Helper.Mapper
                    type == MasterDataEnum.one2oneRelationType.G2 ? 3 :
                    type == MasterDataEnum.one2oneRelationType.G3 ? 4 :
                    throw new ArgumentOutOfRangeException(nameof(type), $"Unhandled type: {type}");
+        }
+
+        public static SunlifeAdvisorListRequest MapAdvisorListRequest(AgentListRequest source)
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                _ = cfg.CreateMap<AgentListRequest, SunlifeAdvisorListRequest>()
+                .ForMember(dest => dest.recruitOn, opt => opt.MapFrom(src => src.Date));
+            });
+
+            IMapper iMapper = config.CreateMapper();
+            var result = iMapper.Map<AgentListRequest, SunlifeAdvisorListRequest>(source);
+            result.itemsPerPage = 99999;
+            return result;
+        }
+
+        public static List<AgentListResponse> MapAdvisorListResponse(List<SunlifeAdvisorListResponse> source)
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                _ = cfg.CreateMap<SunlifeAdvisorListResponse, AgentListResponse>()
+                .ForMember(dest => dest.Agent_Id, opt => opt.MapFrom(src => src.advisorCode))
+            .ForMember(dest => dest.Agent_Name, opt => opt.MapFrom(src => $"{src.firstName} {src.lastName}"))
+            .ForMember(dest => dest.Join_Date, opt => opt.MapFrom(src => src.recruitDate))
+            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.roleCode))
+            .ForMember(dest => dest.Upline_Agent_Id, opt => opt.MapFrom(src => src.leaderAdvisorCode))
+            .ForMember(dest => dest.Upline_Agent_Name, opt => opt.MapFrom(src => src.leaderAdvisorCode))
+            .ForMember(dest => dest.Agent_Branch, opt => opt.MapFrom(src => src.costCenterCode))
+            .ForMember(dest => dest.Agent_Type, opt => opt.MapFrom(src => src.mtaNumber))
+            .ForMember(dest => dest.IC, opt => opt.MapFrom(src => src.otherIc))
+            .ForMember(dest => dest.Mobile, opt => opt.MapFrom(src => src.liamNumber))
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.email));
+            });
+
+            IMapper iMapper = config.CreateMapper();
+            var result = iMapper.Map<List<SunlifeAdvisorListResponse>, List<AgentListResponse>>(source);
+            return result;
         }
 
     }

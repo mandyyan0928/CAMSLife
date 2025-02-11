@@ -1,5 +1,6 @@
 using CaliphWeb.Core.Helper;
 using CaliphWeb.Helper;
+using CaliphWeb.Helper.ALCData;
 using CaliphWeb.Services;
 using CaliphWeb.Services.Helper;
 using System.Web.Mvc;
@@ -25,7 +26,8 @@ namespace CaliphWeb
             container.RegisterType<IUserService, UserService>();
             container.RegisterType<IMasterDataService, MasterDataService>();
             container.RegisterType<ICaliphAPIHelper, CaliphAPIHelper>();
-            container.RegisterType<IALCApiHelper, One2OneApiHelper>();
+            container.RegisterType<IALCApiHelper, SLMAPIHelper>();
+            container.RegisterType<IALCDataGetter, SunlifeDataGetter>();
         }
     }
 }

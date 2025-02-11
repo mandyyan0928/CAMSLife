@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace PullAgentInfo
 {
-    public class ApiResponse
+    public class AgentListResponse
     {
         [JsonPropertyName("agent_id")]
         public string Agent_Id { get; set; }
