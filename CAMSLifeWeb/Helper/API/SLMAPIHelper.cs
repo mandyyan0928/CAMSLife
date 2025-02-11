@@ -64,10 +64,10 @@ namespace CaliphWeb.Services.Helper
                 if (value == null) continue;
 
                 //// Check if the property is of type DateTime and format it
-                if (value is DateTime dateValue)
-                {
-                    value = dateValue.ToString("yyyy-MM-dd");
-                }
+                //if (value is DateTime dateValue)
+                //{
+                //    value = dateValue.ToString("yyyy-MM-dd");
+                //}
 
                 queryString += $"{property.Name}={value}&";
             }

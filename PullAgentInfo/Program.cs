@@ -166,10 +166,13 @@ namespace PullAgentInfo
 
                             if (!response.IsSuccess)
                             {
-                                failedStreamWriter.WriteLine(response.StatusMsg+","+one2oneAgent.Agent_Id + "," + one2oneAgent.Agent_Name + "," + pass + "," + one2oneAgent.Upline_Agent_Id + "," + one2oneAgent.Upline_Agent_Name + "," + one2oneAgent.Join_Date +","+ one2oneAgent.Email, "add");
+                                failedStreamWriter.WriteLine(response.StatusMsg + "," + one2oneAgent.Agent_Id + "," + one2oneAgent.Agent_Name + "," + pass + "," + one2oneAgent.Upline_Agent_Id + "," + one2oneAgent.Upline_Agent_Name + "," + one2oneAgent.Join_Date + "," + one2oneAgent.Email, "add");
+                            }
+                            else
+                            {
+                                streamWriter.WriteLine(one2oneAgent.Agent_Id + "," + one2oneAgent.Agent_Name + "," + pass + "," + one2oneAgent.Upline_Agent_Id + "," + one2oneAgent.Upline_Agent_Name + "," + one2oneAgent.Join_Date + "," + one2oneAgent.Agent_Branch + "," + one2oneAgent.IC + "," + one2oneAgent.Mobile + "," + one2oneAgent.Email, "add");
                             }
                             Console.WriteLine(response.StatusMsg + " - " + response.Data + "-" + one2oneAgent.Agent_Id + "-" + one2oneAgent.Join_Date);
-                            streamWriter.WriteLine(one2oneAgent.Agent_Id + "," + one2oneAgent.Agent_Name + "," + pass + "," + one2oneAgent.Upline_Agent_Id + "," + one2oneAgent.Upline_Agent_Name + "," + one2oneAgent.Join_Date + "," + one2oneAgent.Agent_Branch + "," + one2oneAgent.IC + "," + one2oneAgent.Mobile + "," + one2oneAgent.Email, "add");
                         }
 
                       
