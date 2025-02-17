@@ -179,6 +179,7 @@
             public const string G4 = "g4";
             public const string G5 = "g5";
             public const string G6 = "g6";
+            public const string WHOLE_GROUP = "w";
 
         }
 

@@ -23,7 +23,7 @@ public class SunlifeMAPAResponse
 public class SunlifeMAPARequest
 {
     public string advisorCode { get; set; }
-    public int level { get; set; }
+    public int? level { get; set; }
     public int startMonth { get; set; }
     public int startYear { get; set; }
     public int endMonth { get; set; }

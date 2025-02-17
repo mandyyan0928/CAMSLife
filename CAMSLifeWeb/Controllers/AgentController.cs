@@ -289,21 +289,10 @@ namespace CaliphWeb.Controllers
             var groupTypes =new  List<string>();
             if (type == (int)(MasterDataEnum.AgentStimulatorType.DirectGroup))
                 groupTypes.Add(MasterDataEnum.one2oneRelationType.DIRECT_GROUP);
-            else if (type == (int)(MasterDataEnum.AgentStimulatorType.WholeGroup))
-                groupTypes.AddRange(new List<string> {
-                MasterDataEnum.one2oneRelationType.G6,
-                MasterDataEnum.one2oneRelationType.G5,
-                MasterDataEnum.one2oneRelationType.G4,
-                MasterDataEnum.one2oneRelationType.G3,
-                MasterDataEnum.one2oneRelationType.G2,
+           else if (type == (int)(MasterDataEnum.AgentStimulatorType.WholeGroup))
+                groupTypes.Add(MasterDataEnum.one2oneRelationType.WHOLE_GROUP);
 
-                                    MasterDataEnum.one2oneRelationType.G1,
-                     MasterDataEnum.one2oneRelationType.DIRECT_GROUP,
-                  MasterDataEnum.one2oneRelationType.PERSONAL,
 
-                });
-
-          
             var lastYearstartDate = new DateTime(checkYear - 1, 1, 1);
             var lastYearendDate = lastYearstartDate.AddYears(2).AddDays(-1);
 

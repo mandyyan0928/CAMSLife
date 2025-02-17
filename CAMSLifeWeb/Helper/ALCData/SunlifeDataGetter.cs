@@ -19,7 +19,7 @@ public class SunlifeDataGetter :  IALCDataGetter
     private readonly string _policyEndpoint = "/alc/api/agency/policies/selling";
     private readonly string _dailyAFYCEndpoint = "/alc/api/agency/proddailies/afyc/daily";
     private readonly string _monthlyAFYCEndpoint = "/alc/api/agency/proddailies/afyc/monthly";
-    private readonly string _MAPAEndpoint = "/alc/api/agency/proddailies/afyc/monthly";
+    private readonly string _MAPAEndpoint = "/alc/api/agency/advisors/recruitment";
     private readonly string _advisorListEndpoint = "/alc/api/agency/advisors";
     public SunlifeDataGetter(IRestHelper restHelper, IALCApiHelper aLCApiHelper)
     {
