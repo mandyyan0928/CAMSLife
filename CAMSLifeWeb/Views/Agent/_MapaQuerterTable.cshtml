@@ -60,7 +60,7 @@
         @{
 
             var previousAchived = previousMonths == 12 ? Model.PreviousYearActualMapa[11] : Model.CurrentYearActualMapa[previousMonths-1] ?? new CaliphWeb.Models.ViewModel.MapaPlanning();
-            <td>ACE</td>
+                <td>AFYC</td>
             <td>@previousAchived.ACE</td>
             foreach (var month in Model.Months)
             {

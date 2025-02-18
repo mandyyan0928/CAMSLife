@@ -386,7 +386,7 @@
                         $('#id').val(response.Data);
                     }
 
-                
+
 
 
                     swalInit.fire({
@@ -641,145 +641,146 @@
             BlockUIHelper.blockUI('mapa-page')
             var year = parseInt($('#Year').val());
             var type = '@Model.Type';
-            window.location = '/Agent/MapaCalculator/'+ year+'?type='+type;
-            //var year = parseInt($('#Year').val());
-            //var previousYear = year - 1;
 
-            //$('#actualYear').text(previousYear);
-            //$('#planYear').text(year);
+            window.location = '@Url.Action("MapaCalculator", "Agent")/' + year+'?type='+type;
+    //var year = parseInt($('#Year').val());
+    //var previousYear = year - 1;
+
+    //$('#actualYear').text(previousYear);
+    //$('#planYear').text(year);
 
 
-            //$('#currentActualYear').text(year);
-            //$('#currentPlanYear').text(year);
+    //$('#currentActualYear').text(year);
+    //$('#currentPlanYear').text(year);
 
-            //get data from api
+    //get data from api
 
-            // replace
-        }
+    // replace
+}
 
         // added on 8th November for latest Mapa Changes
 
         function calculate_Req(month) {
-            var previousMonth = month - 1;
-            var mapa_m_input = formatInputToFloat($('#mapaActual_Plan_Input_Mpower_' + month).val());
-            var previousRecruitInput = $('#mapaActual_Plan_Input_Mpower_' + previousMonth).val();;
-            var previousRecruit = formatInputToFloat(previousRecruitInput);
-            var currentRecuit = formatInputToFloat(mapa_m_input);
+                var previousMonth = month - 1;
+                var mapa_m_input = formatInputToFloat($('#mapaActual_Plan_Input_Mpower_' + month).val());
+                var previousRecruitInput = $('#mapaActual_Plan_Input_Mpower_' + previousMonth).val();;
+                var previousRecruit = formatInputToFloat(previousRecruitInput);
+                var currentRecuit = formatInputToFloat(mapa_m_input);
 
-            var newRecruit = previousMonth === 0 ? currentRecuit : currentRecuit - previousRecruit;
+                var newRecruit = previousMonth === 0 ? currentRecuit : currentRecuit - previousRecruit;
 
                 $('#mapaActual_Plan_Rec_' + month).text(ReplaceNumberWithCommas(newRecruit.toFixed(0)));
 
-        }
-        function MapaActual_M_Calculation(  month, calculateTotal=true) {
+            }
+            function MapaActual_M_Calculation(  month, calculateTotal=true) {
 
 
-            var mapa_m_input = formatInputToFloat( $('#mapaActual_Plan_Input_Mpower_' + month).val());
+                var mapa_m_input = formatInputToFloat( $('#mapaActual_Plan_Input_Mpower_' + month).val());
 
             $('#mapaActual_Plan_ManPower_' + month).text(ReplaceNumberWithCommas(mapa_m_input.toFixed(0)));
 
 
-            if (calculateTotal == true) {
-                MapaActual_ACE_Calculation(month);
-                MapaActual_Req_Quarter_Total_Calculation(month);
-                MapaActual_Req_Total_Calculation();
+                if (calculateTotal == true) {
+                    MapaActual_ACE_Calculation(month);
+                    MapaActual_Req_Quarter_Total_Calculation(month);
+                    MapaActual_Req_Total_Calculation();
 
-                if (month === 12) {
+                    if (month === 12) {
                     $('#mapaActual_Plan_M_Footer').text(ReplaceNumberWithCommas(mapa_m_input.toFixed(0)));
+                    }
                 }
+
+
             }
 
 
-        }
+            function MapaActual_A_Calculation(month, calculateTotal = true) {
 
 
-        function MapaActual_A_Calculation(month, calculateTotal = true) {
-
-
-            var activeRatio = formatInputToFloat( $('#mapaActual_Plan_Input_ActiveAgent_YTDRecruit_' + month).val());
-            var manpower = formatInputToFloat( $('#mapaActual_Plan_Input_Mpower_' + month).val());
-            var activeAgent =( activeRatio/100) * manpower;
+                var activeRatio = formatInputToFloat( $('#mapaActual_Plan_Input_ActiveAgent_YTDRecruit_' + month).val());
+                var manpower = formatInputToFloat( $('#mapaActual_Plan_Input_Mpower_' + month).val());
+                var activeAgent =( activeRatio/100) * manpower;
 
             $('#mapaActual_Plan_ActiveRatio_' + month).text(ReplaceNumberWithCommas(activeRatio.toFixed(2)) +" %");
             $('#mapaActual_Plan_ActAgt_' + month).text(ReplaceNumberWithCommas(activeAgent.toFixed(0)));
 
-            var casesPerAgent = formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_TotalCases_' + month).val());
-            var cases = activeAgent * casesPerAgent;
+                var casesPerAgent = formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_TotalCases_' + month).val());
+                var cases = activeAgent * casesPerAgent;
 
 
             $('#mapaActual_Plan_Cases_' + month).text(ReplaceNumberWithCommas(cases.toFixed(0)));
 
-            if (calculateTotal === true) {
-                MapaActual_ACE_Calculation(month);
+                if (calculateTotal === true) {
+                    MapaActual_ACE_Calculation(month);
 
-                var totalActiveRatio = 0;
-                for (var i = 1; i <= 12; i++) {
-                    totalActiveRatio += formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_YTDRecruit_' + i).val());
-                }
+                    var totalActiveRatio = 0;
+                    for (var i = 1; i <= 12; i++) {
+                        totalActiveRatio += formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_YTDRecruit_' + i).val());
+                    }
 
-                var averageRatio = totalActiveRatio / 12;
+                    var averageRatio = totalActiveRatio / 12;
                 $('#mapaActual_Plan_A_Footer').text(ReplaceNumberWithCommas(averageRatio.toFixed(2)));
+                }
             }
-        }
 
 
-        function MapaActual_P_Calculation(month, calculateTotal=true) {
+            function MapaActual_P_Calculation(month, calculateTotal=true) {
 
 
-            var casesPerAgent = formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_TotalCases_' + month).val());
-            var activeAgent = formatInputToFloat($('#mapaActual_Plan_ActAgt_' + month).text().replaceAll(',', ''));
-            var cases = activeAgent * casesPerAgent;
+                var casesPerAgent = formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_TotalCases_' + month).val());
+                var activeAgent = formatInputToFloat($('#mapaActual_Plan_ActAgt_' + month).text().replaceAll(',', ''));
+                var cases = activeAgent * casesPerAgent;
 
 
             $('#mapaActual_Plan_Cases_' + month).text(ReplaceNumberWithCommas(cases.toFixed(0)));
 
-            if (calculateTotal === true) {
+                if (calculateTotal === true) {
+                    MapaActual_ACE_Calculation(month);
+
+                    var totalCasesPerAgent = 0;
+                    for (var i = 1; i <= 12; i++) {
+                        totalCasesPerAgent += formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_TotalCases_' + i).val());
+                    }
+
+                    var averageCasesPerAgent = totalCasesPerAgent / 12;
+                $('#mapaActual_Plan_P_Footer').text(ReplaceNumberWithCommas(averageCasesPerAgent.toFixed(2)));
+                }
+            }
+
+            function MapaActual_AA_Calculation(month) {
+
                 MapaActual_ACE_Calculation(month);
 
-                var totalCasesPerAgent = 0;
+
+                var totalAcePerCases = 0;
                 for (var i = 1; i <= 12; i++) {
-                    totalCasesPerAgent += formatInputToFloat($('#mapaActual_Plan_Input_ActiveAgent_TotalCases_' + i).val());
+                    totalAcePerCases += formatInputToFloat($('#mapaActual_Plan_Input_ACE_TotalCases_' + i).val());
                 }
 
-                var averageCasesPerAgent = totalCasesPerAgent / 12;
-                $('#mapaActual_Plan_P_Footer').text(ReplaceNumberWithCommas(averageCasesPerAgent.toFixed(2)));
-            }
-        }
-
-        function MapaActual_AA_Calculation(month) {
-
-            MapaActual_ACE_Calculation(month);
-
-
-            var totalAcePerCases = 0;
-            for (var i = 1; i <= 12; i++) {
-                totalAcePerCases += formatInputToFloat($('#mapaActual_Plan_Input_ACE_TotalCases_' + i).val());
-            }
-
-            var averageACEperCases = totalAcePerCases / 12;
+                var averageACEperCases = totalAcePerCases / 12;
             $('#mapaActual_Plan_AA_Footer').text(ReplaceNumberWithCommas(averageACEperCases.toFixed(2)));
-        }
+            }
 
 
-        function MapaActual_ACE_Calculation(month) {
-            var mapa_m_input = $('#mapaActual_Plan_Input_Mpower_' + month).val();
-            var mapa_a_input = $('#mapaActual_Plan_Input_ActiveAgent_YTDRecruit_' + month).val();
-            var mapa_p_input = $('#mapaActual_Plan_Input_ActiveAgent_TotalCases_' + month).val();
-            var mapa_aa_input = $('#mapaActual_Plan_Input_ACE_TotalCases_' + month).val();
+            function MapaActual_ACE_Calculation(month) {
+                var mapa_m_input = $('#mapaActual_Plan_Input_Mpower_' + month).val();
+                var mapa_a_input = $('#mapaActual_Plan_Input_ActiveAgent_YTDRecruit_' + month).val();
+                var mapa_p_input = $('#mapaActual_Plan_Input_ActiveAgent_TotalCases_' + month).val();
+                var mapa_aa_input = $('#mapaActual_Plan_Input_ACE_TotalCases_' + month).val();
 
-            var ace = formatInputToFloat(mapa_m_input) * (formatInputToFloat(mapa_a_input)/100) * formatInputToFloat(mapa_p_input) * formatInputToFloat( mapa_aa_input);
+                var ace = formatInputToFloat(mapa_m_input) * (formatInputToFloat(mapa_a_input)/100) * formatInputToFloat(mapa_p_input) * formatInputToFloat( mapa_aa_input);
             $('#mapaActual_Plan_ACE_' + month).text(ReplaceNumberWithCommas(ace.toFixed(2)));
             $('#mapaActual_Plan_MAPAACE_' + month).text(ReplaceNumberWithCommas(ace.toFixed(2)));
             $('#budgetsummary_' + month).text(ReplaceNumberWithCommas(ace.toFixed(2)));
 
-            //achieve figure
-            var achieve_ace = formatInputToFloat($('#achievesummary_' + month).text().replaceAll(',', ''));
-            var percent = ace == 0 ? 0 : (achieve_ace / ace)*100;
+                //achieve figure
+                var achieve_ace = formatInputToFloat($('#achievesummary_' + month).text().replaceAll(',', ''));
+                var percent = ace == 0 ? 0 : (achieve_ace / ace)*100;
             //percentsummary_ = achieve/budget
 
             $('#percentsummary_' + month).text(ReplaceNumberWithCommas(formatInputToFloat(percent).toFixed(2)) + '%');
 
-            if (percent < 50 )
+                if (percent < 50 )
                 $('#percentsummary_' + month).addClass('text-danger');
             else
                 $('#percentsummary_' + month).removeClass('text-danger');
