@@ -58,193 +58,334 @@
             <div class="table datatable-header">
                 <div class="row">
                 </div>
-                <h2>Whole Group</h2>
-                <table class="table datatable-button-html5-basic">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th></th>
-                            <th>ACE</th>
-                            <th>PP</th>
-                            <th>%</th>
-                            <th>Target %</th>
-                            <th>PP After Fix</th>
-                        </tr>
-                    </thead>
+                @{
+                    var firstLevel = Model.HierarchyPolicies.Where(x => x.Generation == 1).FirstOrDefault();
 
-                    <tbody>
 
-                        <tr>
-                            <td>
-                            </td>
-                            <td>
-                                <a href="#" onclick="DisplayCalculator('@loginUser.Username', 'w', '@Json.Encode(@loginUser.Fullname)')">
-                                    @Html.Raw(loginUser.Username + "(" + loginUser.RoleName + ") <br/> " + loginUser.Fullname)
-
-                                </a>
-                            </td>
-                            <td id="ace_whole_@loginUser.Username">
-                                @Model.ACE.ToString("n2")
-                            </td>
-                            <td id="pp_whole_@loginUser.Username">
-                                @Model.PersistencyPremium.ToString("n2")
-
-                            </td>
-                            <td>
-
-                                @Model.Ratio.ToString("n2")
-                                %
-                            </td>
-                            <td id="whole_new_pp_ratio_@loginUser.Username">
-                                @Model.Ratio.ToString("n2")
-                                %
-                            </td>
-                            <td id="whole_new_pp_@loginUser.Username">
-                                @Model.PersistencyPremium.ToString("n2")
-
-                            </td>
-                        </tr>
-
-                    </tbody>
-                </table>
-                @foreach (var generationGroup in Model.HierarchyPolicies)
+                }
+                @if (firstLevel != null)
                 {
-                    <h2>@generationGroup.GenerationName</h2>
-                    <table class="table datatable-nested">
-                        <thead>
-                            <tr>
-                                <th>
 
-                                </th>
-                                <th>
+                    var wholeGroupPolicies = firstLevel.AgentHierarchyPolicies.Where(x => x.Agent.IsLeader);
+                    var directGroupPolicies = firstLevel.AgentHierarchyPolicies.Where(x => !x.Agent.IsLeader);
 
-                                </th>
-                                <th>ACE</th>
-                                <th>PP</th>
-                                <th>%</th>
-                                <th>Target %</th>
-                                <th>PP After Fix</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    @*<h2>Direct Group</h2>
+            <table class="table datatable-button-html5-basic">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th>AFYC</th>
+                        <th>PP</th>
+                        <th>%</th>
+                        <th>Target %</th>
+                        <th>PP After Fix</th>
+                    </tr>
+                </thead>
 
-                            <tr>
-                                <td></td>
-                                <td></td>
+                <tbody>
 
-                                <td id="ace_group_@generationGroup.Generation" class="exclude">
-                                    @{var groupace = generationGroup.AgentHierarchyPolicies.Sum(x => x.ACE);}
-                                    @generationGroup.AgentHierarchyPolicies.Sum(x => x.ACE).ToString("n2")
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            <a href="#" onclick="DisplayCalculator('@loginUser.Username', 'w', '@Json.Encode(@loginUser.Fullname)')">
+                                @Html.Raw(loginUser.Username + "(" + loginUser.RoleName + ") <br/> " + loginUser.Fullname)
 
+                            </a>
+                        </td>
+                        <td id="ace_whole_@loginUser.Username">
+                            @Model.ACE.ToString("n2")
+                        </td>
+                        <td id="pp_whole_@loginUser.Username">
+                            @Model.PersistencyPremium.ToString("n2")
 
-                                </td>
-                                <td id="pp_group_@generationGroup.Generation">
-                                    @{ var pp = generationGroup.AgentHierarchyPolicies.Sum(x => x.PersistencyPremium);}
-                                    @pp.ToString("n2")
+                        </td>
+                        <td>
 
+                            @Model.Ratio.ToString("n2")
+                            %
+                        </td>
+                        <td id="whole_new_pp_ratio_@loginUser.Username">
+                            @Model.Ratio.ToString("n2")
+                            %
+                        </td>
+                        <td id="whole_new_pp_@loginUser.Username">
+                            @Model.PersistencyPremium.ToString("n2")
 
-                                </td>
-                                <td>
-                                    @{ var ratio = groupace == 0 ? 0 : ((pp / groupace) * 100);}
-                                    @ratio.ToString("n2") %
-                                </td>
-                                <td id="group_new_pp_ratio_@generationGroup.Generation">
-                                    @ratio.ToString("n2")  %
-                                </td>
-                                <td id="group_new_pp_@generationGroup.Generation">
+                        </td>
+                    </tr>
 
-                                    @pp.ToString("n2")
-                                </td>
+                </tbody>
+            </table>*@
 
-                            </tr>
+                    if (directGroupPolicies != null)
+                    {
+                        <h2>Direct Group</h2>
+                        <table class="table datatable-nested">
+                            <thead>
+                                <tr>
+                                    <th>
 
-                            @foreach (var agentHierarchyPolicy in generationGroup.AgentHierarchyPolicies)
-                            {
-                                var user = agentHierarchyPolicy.Agent;
+                                    </th>
+                                    <th>
+
+                                    </th>
+                                    <th>AFYC</th>
+                                    <th>PP</th>
+                                    <th>%</th>
+                                    <th>Target %</th>
+                                    <th>PP After Fix</th>
+                                </tr>
+                            </thead>
+                            <tbody>
 
                                 <tr>
-                                    <td class="expand-control" data-agent-id="@user.agent_id" data-generation="@generationGroup.Generation">
-                                        @if (user.role == "leader")
-                                        {
-                                            <a  style="font-size:18px; font-weight:800;cursor:pointer">
+                                    <td></td>
+                                    <td></td>
+
+                                    <td id="ace_group_@firstLevel.Generation" class="exclude">
+                                        @{var groupace = wholeGroupPolicies.Sum(x => x.ACE);}
+                                        @groupace.ToString("n2")
+
+
+                                    </td>
+                                    <td id="pp_group_@firstLevel.Generation">
+                                        @{ var pp = wholeGroupPolicies.Sum(x => x.PersistencyPremium);}
+                                        @pp.ToString("n2")
+
+
+                                    </td>
+                                    <td>
+                                        @{ var ratio = groupace == 0 ? 0 : ((pp / groupace) * 100);}
+                                        @ratio.ToString("n2") %
+                                    </td>
+                                    <td id="group_new_pp_ratio_@firstLevel.Generation">
+                                        @ratio.ToString("n2")  %
+                                    </td>
+                                    <td id="group_new_pp_@firstLevel.Generation">
+
+                                        @pp.ToString("n2")
+                                    </td>
+
+                                </tr>
+
+                                @foreach (var agentHierarchyPolicy in directGroupPolicies)
+                                {
+                                    var user = agentHierarchyPolicy.Agent;
+
+                                    <tr>
+                                        <td class="expand-control" data-agent-id="@user.agent_id" data-generation="@firstLevel.Generation">
+
+                                         
+                                        </td>
+                                        <td>
+                                            <a href="#" onclick="DisplayCalculator('@user.agent_id', 'g', '@Json.Encode(@user.agent_name)')">
+
+
+                                                @user.agent_id (  @user.role )<br />
+                                                @user.agent_name
+                                            </a>
+                                        </td>
+                                        <td id="ace_leader_@user.agent_id">
+
+                                            @agentHierarchyPolicy.ACE.ToString("n2")
+
+                                        </td>
+                                        <td id="pp_leader_@user.agent_id">
+
+                                            @agentHierarchyPolicy.PersistencyPremium.ToString("n2")
+
+
+                                        </td>
+                                        <td>
+
+                                            @agentHierarchyPolicy.Ratio.ToString("n2")
+
+                                            %
+                                        </td>
+                                        <td id="leder_new_pp_ratio_@user.agent_id">
+
+                                            <input type="number" class="form-control" id="new_ratio_@agentHierarchyPolicy.Agent.agent_id" min="@agentHierarchyPolicy.Ratio" value="@agentHierarchyPolicy.Ratio.ToString("n2")" onchange="PPRatioTextChange('@agentHierarchyPolicy.Agent.agent_id', 'to be find out', @firstLevel.Generation)" />
+                                            %
+                                        </td>
+                                        <td id="leder_new_pp_@user.agent_id">
+
+                                            @agentHierarchyPolicy.PersistencyPremium.ToString("n2")
+                                        </td>
+                                    </tr>
+                                    @*<tr id="collapse_@user.agent_id" class="collapse exclude-export" >
+                                <td colspan="8">
+                                    <div class="alert alert-primary border-0 alert-dismissible">
+                                        <span class="font-weight-semibold"> @user.agent_id</span>
+                                        <div id="agent-policy-table_@user.agent_id">
+                                            <table class="table table-border-dashed">
+                                                <thead>
+                                                    <tr id="action">
+                                                        <td>
+                                                            Action
+                                                        </td>
+                                                        <td>Agent</td>
+                                                        <td>Relation</td>
+                                                        <td>ACE</td>
+                                                        <td>PP</td>
+                                                        <td>PP %</td>
+                                                        <td>New %</td>
+                                                        <td>New PP</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td colspan="8"><i class="icon-spinner6 spinner mr-2"></i>Loading....</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>*@
+                                }
+
+                            </tbody>
+                        </table>
+                    }
+                    if (wholeGroupPolicies != null)
+                    {
+                        <h2>Whole Group</h2>
+                        <table class="table datatable-nested">
+                            <thead>
+                                <tr>
+                                    <th>
+
+                                    </th>
+                                    <th>
+
+                                    </th>
+                                    <th>AFYC</th>
+                                    <th>PP</th>
+                                    <th>%</th>
+                                    <th>Target %</th>
+                                    <th>PP After Fix</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+
+                                    <td id="ace_group_@firstLevel.Generation" class="exclude">
+                                        @{var groupace = wholeGroupPolicies.Sum(x => x.ACE);}
+                                        @groupace.ToString("n2")
+
+
+                                    </td>
+                                    <td id="pp_group_@firstLevel.Generation">
+                                        @{ var pp = wholeGroupPolicies.Sum(x => x.PersistencyPremium);}
+                                        @pp.ToString("n2")
+
+
+                                    </td>
+                                    <td>
+                                        @{ var ratio = groupace == 0 ? 0 : ((pp / groupace) * 100);}
+                                        @ratio.ToString("n2") %
+                                    </td>
+                                    <td id="group_new_pp_ratio_@firstLevel.Generation">
+                                        @ratio.ToString("n2")  %
+                                    </td>
+                                    <td id="group_new_pp_@firstLevel.Generation">
+
+                                        @pp.ToString("n2")
+                                    </td>
+
+                                </tr>
+
+                                @foreach (var agentHierarchyPolicy in wholeGroupPolicies)
+                                {
+                                    var user = agentHierarchyPolicy.Agent;
+
+                                    <tr>
+                                        <td class="expand-control" data-agent-id="@user.agent_id" data-generation="@firstLevel.Generation">
+
+                                            <a style="font-size:18px; font-weight:800;cursor:pointer">
                                                 +
                                             </a>
                                             <input type="hidden" id="expand_@user.agent_id" value="0" />
-                                        }
-                                    </td>
-                                    <td>
-                                        <a href="#" onclick="DisplayCalculator('@user.agent_id', 'g', '@Json.Encode(@user.agent_name)')">
+
+                                        </td>
+                                        <td>
+                                            <a href="#" onclick="DisplayCalculator('@user.agent_id', 'g', '@Json.Encode(@user.agent_name)')">
 
 
-                                            @user.agent_id (  @user.role )<br />
-                                            @user.agent_name
-                                        </a>
-                                    </td>
-                                    <td id="ace_leader_@user.agent_id">
+                                                @user.agent_id (  @user.role )<br />
+                                                @user.agent_name
+                                            </a>
+                                        </td>
+                                        <td id="ace_leader_@user.agent_id">
 
-                                        @agentHierarchyPolicy.ACE.ToString("n2")
+                                            @agentHierarchyPolicy.ACE.ToString("n2")
 
-                                    </td>
-                                    <td id="pp_leader_@user.agent_id">
+                                        </td>
+                                        <td id="pp_leader_@user.agent_id">
 
-                                        @agentHierarchyPolicy.PersistencyPremium.ToString("n2")
-
-
-                                    </td>
-                                    <td>
-
-                                        @agentHierarchyPolicy.Ratio.ToString("n2")
-
-                                        %
-                                    </td>
-                                    <td id="leder_new_pp_ratio_@user.agent_id">
+                                            @agentHierarchyPolicy.PersistencyPremium.ToString("n2")
 
 
-                                        @agentHierarchyPolicy.Ratio.ToString("n2")
+                                        </td>
+                                        <td>
 
-                                        %
-                                    </td>
-                                    <td id="leder_new_pp_@user.agent_id">
+                                            @agentHierarchyPolicy.Ratio.ToString("n2")
 
-                                        @agentHierarchyPolicy.PersistencyPremium.ToString("n2")
-                                    </td>
-                                </tr>
-                                @*<tr id="collapse_@user.agent_id" class="collapse exclude-export" >
-                                    <td colspan="8">
-                                        <div class="alert alert-primary border-0 alert-dismissible">
-                                            <span class="font-weight-semibold"> @user.agent_id</span>
-                                            <div id="agent-policy-table_@user.agent_id">
-                                                <table class="table table-border-dashed">
-                                                    <thead>
-                                                        <tr id="action">
-                                                            <td>
-                                                                Action
-                                                            </td>
-                                                            <td>Agent</td>
-                                                            <td>Relation</td>
-                                                            <td>ACE</td>
-                                                            <td>PP</td>
-                                                            <td>PP %</td>
-                                                            <td>New %</td>
-                                                            <td>New PP</td>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td colspan="8"><i class="icon-spinner6 spinner mr-2"></i>Loading....</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                            %
+                                        </td>
+                                        <td id="leder_new_pp_ratio_@user.agent_id">
+
+
+                                            @agentHierarchyPolicy.Ratio.ToString("n2")
+
+                                            %
+                                        </td>
+                                        <td id="leder_new_pp_@user.agent_id">
+
+                                            @agentHierarchyPolicy.PersistencyPremium.ToString("n2")
+                                        </td>
+                                    </tr>
+                                    @*<tr id="collapse_@user.agent_id" class="collapse exclude-export" >
+                                <td colspan="8">
+                                    <div class="alert alert-primary border-0 alert-dismissible">
+                                        <span class="font-weight-semibold"> @user.agent_id</span>
+                                        <div id="agent-policy-table_@user.agent_id">
+                                            <table class="table table-border-dashed">
+                                                <thead>
+                                                    <tr id="action">
+                                                        <td>
+                                                            Action
+                                                        </td>
+                                                        <td>Agent</td>
+                                                        <td>Relation</td>
+                                                        <td>ACE</td>
+                                                        <td>PP</td>
+                                                        <td>PP %</td>
+                                                        <td>New %</td>
+                                                        <td>New PP</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td colspan="8"><i class="icon-spinner6 spinner mr-2"></i>Loading....</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
-                                    </td>
-                                </tr>*@
-                            }
+                                    </div>
+                                </td>
+                            </tr>*@
+                                }
 
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    }
                 }
-
 
             </div>
 
@@ -268,7 +409,7 @@
                                                            </td>
                                                            <td>Agent</td>
                                                            <td>Relation</td>
-                                                           <td>ACE</td>
+                                                           <td>AFYC</td>
                                                            <td>PP</td>
                                                            <td>PP %</td>
                                                            <td>New %</td>
@@ -327,6 +468,10 @@
                 var tr = $(this).closest('tr');
                 var row = table.row(tr);
 
+                console.log("Clicked Row:", tr);
+                console.log("Row Data:", row.data());
+                console.log("Row.child():", row.child());
+
                 if (row.child.isShown()) {
                     // This row is already open, close it
                     row.child.hide();
@@ -355,9 +500,7 @@
             let html=''
             var hasExpand = $('#expand_' + agent).val();
 
-            if (hasExpand == 1) {
-                return;
-            }
+         
         @{ var filter = new CaliphWeb.ViewModel.PersistencyCalculatorViewModel();}
             var searchFilter = @Html.Raw(Json.Encode(filter));
             searchFilter.StartDate = $('#CreatedDate').data().daterangepicker.startDate._d.toJSON();

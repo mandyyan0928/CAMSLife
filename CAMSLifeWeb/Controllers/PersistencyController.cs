@@ -411,12 +411,12 @@ namespace CaliphWeb.Controllers
             var generationHierarchyRes = await _alcDataGetter.GetAgentHierarchyAsync(generationHierarchyReq);
 
             // add role leader filter 
-            var generationHierarchies = generationHierarchyRes.Where(x => x.role == "leader" || x.agent_id == username).ToList();
+            var leaderGenerationHierarchies = generationHierarchyRes.Where(x => x.role == "leader" || x.agent_id == username).ToList();
 
 
-            while (generationHierarchies.Count > 0)
+            while (leaderGenerationHierarchies.Count > 0)
             {
-                hierarchyPolicies = await GetHierarchyPolicies(persistencyCalculator, generationHierarchies);
+                hierarchyPolicies = await GetHierarchyPolicies(persistencyCalculator, leaderGenerationHierarchies);
                 persistencyCalculator.HierarchyPolicies.Add(new GenerationGroupPolicy
                 {
                     AgentHierarchyPolicies = hierarchyPolicies,
@@ -427,7 +427,7 @@ namespace CaliphWeb.Controllers
 
                 generationHierarchyReq = new AgentHierarchyRequest { agent_id = agentid, generation = startGeneration.ToString() };
                 generationHierarchyRes = await _alcDataGetter.GetAgentHierarchyAsync(generationHierarchyReq);
-                generationHierarchies = generationHierarchyRes.Where(x => x.role == "leader").ToList();
+                leaderGenerationHierarchies = generationHierarchyRes;
             }
 
             return persistencyCalculator;
@@ -527,9 +527,7 @@ namespace CaliphWeb.Controllers
             else
             {
                 var policyReq = new AgentPolicyRequest { date_from = startDate, date_to = endDate, agent_id = username };
-                var policyRes = await _alcDataGetter.GetPolicyDataAsync(policyReq);
-
-                return policyRes.Where(x => x.certificate_status.ToLower() != PolicyCertificateStatus.FreelookCancellation).ToList();
+                return await _alcDataGetter.GetPolicyDataAsync(policyReq);
             }
         }
 
@@ -571,10 +569,6 @@ namespace CaliphWeb.Controllers
                 type = searchVM.Type;
                 targetRatio = searchVM.TargetRatio;
             }
-
-
-         
-
          
             var policies =      new List<AgentPolicyResponse>();
             // if dummy , end generation = 2 
@@ -595,9 +589,9 @@ namespace CaliphWeb.Controllers
             }
 
             if (type == "g")
-                policies = policies.Where(x =>( x.leader_code == username || x.selling_agent_code == username)).ToList();//.Where(x => x.type.ToLower() == "u" || x.type.ToLower() == "p").ToList();
+                policies = policies.Where(x => (x.leader_code == username || x.selling_agent_code == username)).ToList();//.Where(x => x.type.ToLower() == "u" || x.type.ToLower() == "p").ToList();
             else if (type == "p")
-                    policies = policies.Where(x=>  x.selling_agent_code==username).ToList();
+                policies = policies.Where(x => x.selling_agent_code == username).ToList();
                   
             
             var persistencyCalculator = new PersistencyCalculatorViewModel
@@ -723,9 +717,9 @@ namespace CaliphWeb.Controllers
             }
             else
             {
-                var generationHierarchyReq = new AgentHierarchyRequest { agent_id = req.AgentId, generation = "0" };
+                var generationHierarchyReq = new AgentHierarchyRequest { agent_id = req.AgentId, generation = "1" };
                 var generationHierarchyRes = await _alcDataGetter.GetAgentHierarchyAsync(generationHierarchyReq);
-                var generationHierarchies = generationHierarchyRes.Where(x => x.role == "agent" || x.agent_id == req.AgentId).ToList();
+                var generationHierarchies = generationHierarchyRes;
                 hierarchyPolicies = await GetHierarchyPolicies(req, generationHierarchies, true);
             }
             var generation = new GenerationGroupPolicy
@@ -735,8 +729,8 @@ namespace CaliphWeb.Controllers
                 Generation= req.Generation
             };
 
-            if(page== PAGE_PERSISTENCY)
-            return PartialView("~/Views/Persistency/_AgentPolicySummary.cshtml", generation);
+            if (page == PAGE_PERSISTENCY)
+                return PartialView("~/Views/Persistency/_AgentPolicySummary.cshtml", generation);
             else
                 return PartialView("~/Views/Persistency/_BusinessReport_AgentPolicySummary.cshtml", generation);
         }

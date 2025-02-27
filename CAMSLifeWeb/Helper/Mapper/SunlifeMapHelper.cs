@@ -147,7 +147,6 @@ namespace CaliphWeb.Helper.Mapper
             {
                 _ = cfg.CreateMap<AgentPolicyRequest, SunlifePolicyRequest>()
                 .ForMember(dest => dest.advisorCode, opt => opt.MapFrom(src => src.agent_id))
-            .ForMember(dest => dest.level, opt => opt.MapFrom(src => src.Level))
             .ForMember(dest => dest.startDate, opt => opt.MapFrom(src => src.date_from))
             .ForMember(dest => dest.endDate, opt => opt.MapFrom(src => src.date_to));
 

@@ -28,7 +28,7 @@ public class SunlifePolicyResponse
 
 public class SunlifePolicyRequest {
     public string advisorCode { get; set; }
-    public string level { get; set; }
+    public int? level { get; set; }
     public DateTime startDate { get; set; }
     public DateTime endDate { get; set; }
 }

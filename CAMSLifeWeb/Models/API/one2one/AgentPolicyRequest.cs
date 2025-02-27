@@ -8,7 +8,6 @@ namespace CaliphWeb.Models.API.one2one
         public DateTime date_from { get; set; }
         public DateTime date_to { get; set; }
 
-        public int Level { get; set; }
     }
 
 

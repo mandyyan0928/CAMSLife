@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CaliphWeb.Helper;
 
 namespace CaliphWeb.Models.API.one2one
 {
@@ -30,6 +31,8 @@ namespace CaliphWeb.Models.API.one2one
         public string mobile { get; set; }
         public string email { get; set; }
         public int generation { get; set; }
+
+        public bool IsLeader => UserHelper.IsLeader(role);
     }
 
 

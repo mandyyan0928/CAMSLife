@@ -114,12 +114,12 @@ namespace CaliphWeb.ViewModel
 
     public class PolicyCertificateStatus
     {
-        public const string InForce = "in force";
-        public const string Lapsed = "lapsed";
+        public const string InForce = "In Force";
+        public const string Lapsed = "Lapsed";
        public const string FreelookCancellation = "freelook cancellation";
-        public const string ContractSurrended = "contract surrendered";
+        public const string ContractSurrended = "Surrendered";
         public const string RegisteredDeathClaim = "registered death claim";
-        public const string Postponed = "postponed";
+        public const string Postponed = "Postponed";
         public const string ApprovedDeathClaim = "approved death claim";
     }
 
@@ -140,7 +140,7 @@ namespace CaliphWeb.ViewModel
 
     }
 
-
+// home
     public class PersistencySummaryData
     {
 
