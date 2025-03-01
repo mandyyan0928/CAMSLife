@@ -17,15 +17,7 @@
         @foreach (var agentHierarchyPolicy in Model.AgentHierarchyPolicies)
         {
             <tr id="looping-@agentHierarchyPolicy.Agent.agent_id">
-                <td class="expand-control" data-agent-id="@agentHierarchyPolicy.Agent.agent_id" data-generation="1">
-                    @if (agentHierarchyPolicy.Agent.IsLeader)
-                    {
-                        <a style="font-size:18px; font-weight:800;cursor:pointer">
-                            +
-                        </a>
-                        <input type="hidden" id="expand_@agentHierarchyPolicy.Agent.agent_id" value="0" />
-                    }
-                </td>
+               
                 <td>
                     <a href="#" onclick="DisplayCalculator('@agentHierarchyPolicy.Agent.agent_id', 'p', '@agentHierarchyPolicy.Agent.agent_name')">
                         @agentHierarchyPolicy.Agent.agent_id (  @agentHierarchyPolicy.Agent.role )<br />

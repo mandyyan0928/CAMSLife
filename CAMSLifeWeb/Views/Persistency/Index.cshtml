@@ -144,14 +144,14 @@
                                     <td></td>
                                     <td></td>
 
-                                    <td id="ace_group_@firstLevel.Generation" class="exclude">
-                                        @{var groupace = wholeGroupPolicies.Sum(x => x.ACE);}
+                                    <td id="total_direct_ace" class="exclude">
+                                        @{var groupace = directGroupPolicies.Sum(x => x.ACE);}
                                         @groupace.ToString("n2")
 
 
                                     </td>
-                                    <td id="pp_group_@firstLevel.Generation">
-                                        @{ var pp = wholeGroupPolicies.Sum(x => x.PersistencyPremium);}
+                                    <td id="total_direct_pp">
+                                        @{ var pp = directGroupPolicies.Sum(x => x.PersistencyPremium);}
                                         @pp.ToString("n2")
 
 
@@ -160,10 +160,10 @@
                                         @{ var ratio = groupace == 0 ? 0 : ((pp / groupace) * 100);}
                                         @ratio.ToString("n2") %
                                     </td>
-                                    <td id="group_new_pp_ratio_@firstLevel.Generation">
+                                    <td id="total_direct_new_pp_ratio">
                                         @ratio.ToString("n2")  %
                                     </td>
-                                    <td id="group_new_pp_@firstLevel.Generation">
+                                    <td id="total_direct_new_pp">
 
                                         @pp.ToString("n2")
                                     </td>
@@ -180,19 +180,19 @@
                                          
                                         </td>
                                         <td>
-                                            <a href="#" onclick="DisplayCalculator('@user.agent_id', 'g', '@Json.Encode(@user.agent_name)')">
+                                            <a href="#" onclick="DisplayCalculator('@user.agent_id', 'p', '@Json.Encode(@user.agent_name)')">
 
 
                                                 @user.agent_id (  @user.role )<br />
                                                 @user.agent_name
                                             </a>
                                         </td>
-                                        <td id="ace_leader_@user.agent_id">
+                                        <td id="ace_direct_@user.agent_id">
 
                                             @agentHierarchyPolicy.ACE.ToString("n2")
 
                                         </td>
-                                        <td id="pp_leader_@user.agent_id">
+                                        <td id="pp_direct_@user.agent_id">
 
                                             @agentHierarchyPolicy.PersistencyPremium.ToString("n2")
 
@@ -204,12 +204,12 @@
 
                                             %
                                         </td>
-                                        <td id="leder_new_pp_ratio_@user.agent_id">
+                                        <td id="direct_new_pp_ratio_@user.agent_id">
 
-                                            <input type="number" class="form-control" id="new_ratio_@agentHierarchyPolicy.Agent.agent_id" min="@agentHierarchyPolicy.Ratio" value="@agentHierarchyPolicy.Ratio.ToString("n2")" onchange="PPRatioTextChange('@agentHierarchyPolicy.Agent.agent_id', 'to be find out', @firstLevel.Generation)" />
+                                            <input type="number" class="form-control" id="new_ratio_@agentHierarchyPolicy.Agent.agent_id" min="@agentHierarchyPolicy.Ratio" value="@agentHierarchyPolicy.Ratio.ToString("n2")" onchange="DirectPPRatioTextChange('@agentHierarchyPolicy.Agent.agent_id')" />
                                             %
                                         </td>
-                                        <td id="leder_new_pp_@user.agent_id">
+                                        <td id="direct_new_pp_@user.agent_id">
 
                                             @agentHierarchyPolicy.PersistencyPremium.ToString("n2")
                                         </td>
@@ -493,14 +493,14 @@
             });
         });
 
-         
+
 
 
         function ExpandGroup(agent, generation) {
             let html=''
             var hasExpand = $('#expand_' + agent).val();
 
-         
+
         @{ var filter = new CaliphWeb.ViewModel.PersistencyCalculatorViewModel();}
             var searchFilter = @Html.Raw(Json.Encode(filter));
             searchFilter.StartDate = $('#CreatedDate').data().daterangepicker.startDate._d.toJSON();
@@ -523,7 +523,7 @@
 
                 }
             });
-            
+
 
             return html
         }
@@ -612,6 +612,7 @@
             $('#leder_new_pp_' + leaderid).text(ReplaceNumberWithCommas(newGroupPP.toFixed(2)));
 
             var leaderRatio = (newGroupPP / currentGroupAce) * 100;
+
             $('#leder_new_pp_ratio_' + leaderid).text(ReplaceNumberWithCommas(leaderRatio.toFixed(2)) + '%');
 
 
@@ -692,12 +693,42 @@
 
 
         function ReplaceNumberWithCommas(yourNumber) {
+
+            if (isNaN(yourNumber)) {
+                return "0.00"
+            }
             //Seperates the components of the number
             var n = yourNumber.toString().split(".");
             //Comma-fies the first part
             n[0] = n[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             //Combines the two sections
             return n.join(".");
+        }
+
+
+        function DirectPPRatioTextChange(agentid) {
+
+            var ratio = $('#new_ratio_' + agentid).val();
+
+            if (ratio > 100)
+                ratio = 100;
+
+            var calculateRatio = ratio / 100;
+
+            var currentRowAce = parseFloat($('#ace_direct_' + agentid).text().replaceAll(',', ''));
+            var currentRowPP = parseFloat($('#pp_direct_' + agentid).text().replaceAll(',', ''));
+            var currentRowPreviousCalculatedPP = parseFloat($('#direct_new_pp_' + agentid).text().replaceAll(',', ''));
+            var newpp = currentRowAce * calculateRatio;
+            $('#direct_new_pp_' + agentid).text(ReplaceNumberWithCommas(newpp.toFixed(2)));
+          
+
+            var groupPP = parseFloat($('#total_direct_new_pp').text().replaceAll(',', ''));
+            var groupAce = parseFloat($('#total_direct_ace' ).text().replaceAll(',', ''));
+            var newGroupPP = groupPP - currentRowPreviousCalculatedPP + parseFloat(newpp.toFixed(2));
+            $('#total_direct_new_pp').text(ReplaceNumberWithCommas(newGroupPP.toFixed(2)));
+
+            var groupRatio = groupAce == 0 ? 0 : ((newGroupPP / groupAce) * 100);
+            $('#total_direct_new_pp_ratio' ).text(ReplaceNumberWithCommas(groupRatio.toFixed(2)) + '%');
         }
     </script>
 }

@@ -23,7 +23,8 @@ public class SunlifePolicyResponse
     public DateTime? lastStatusChangeDate { get; set; }
     public string productCode { get; set; }
     public string balancedScoreCard { get; set; }
-   
+    public string paymentTerm { get; set; }
+
 }
 
 public class SunlifePolicyRequest {

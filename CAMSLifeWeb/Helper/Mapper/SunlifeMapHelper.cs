@@ -49,12 +49,16 @@ namespace CaliphWeb.Helper.Mapper
             .ForMember(dest => dest.due_date, opt => opt.MapFrom(src => src.dueDate))
             .ForMember(dest => dest.contribution_amount, opt => opt.MapFrom(src => src.instalmentPremiumAmount))
             .ForMember(dest => dest.status_updated_date, opt => opt.MapFrom(src => src.lastInstalmentDate))
+            .ForMember(dest => dest.pay_mode, opt => opt.MapFrom(src => src.paymentTerm))
             .ForMember(dest => dest.certificate_status, opt => opt.MapFrom(src => src.policyStatus));
 
             });
 
+
+
             IMapper iMapper = config.CreateMapper();
             var result = iMapper.Map<List<SunlifePolicyResponse>, List<AgentPolicyResponse>>(source);
+            
             return result;
         }
 

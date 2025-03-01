@@ -717,10 +717,17 @@ namespace CaliphWeb.Controllers
             }
             else
             {
+
+                var personalHierarchyReq = new AgentHierarchyRequest { agent_id = req.AgentId, generation = "0" };
+                var personalHierarchyRes = await _alcDataGetter.GetAgentHierarchyAsync(personalHierarchyReq);
+                hierarchyPolicies = await GetHierarchyPolicies(req, personalHierarchyRes, true);
+
                 var generationHierarchyReq = new AgentHierarchyRequest { agent_id = req.AgentId, generation = "1" };
                 var generationHierarchyRes = await _alcDataGetter.GetAgentHierarchyAsync(generationHierarchyReq);
                 var generationHierarchies = generationHierarchyRes;
-                hierarchyPolicies = await GetHierarchyPolicies(req, generationHierarchies, true);
+                var groupPolicies= await GetHierarchyPolicies(req, generationHierarchies, true);
+
+                hierarchyPolicies.AddRange(groupPolicies);
             }
             var generation = new GenerationGroupPolicy
             {
