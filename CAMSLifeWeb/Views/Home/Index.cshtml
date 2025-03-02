@@ -380,36 +380,16 @@
             <ul class="nav nav-tabs nav-tabs-solid nav-tabs-solid-custom bg-primary rounded justify-content-center nav-justified">
                 <li class="nav-item">
                     <a href="#ace-p" class="nav-link active text-secondary" data-toggle="tab">
-                        P
+                        Personal
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="#ace-u" class="nav-link text-secondary" data-toggle="tab">
-                        D
+                    <a href="#ace-w" class="nav-link text-secondary" data-toggle="tab">
+                        Group
                     </a>
                 </li>
-
-                <li class="nav-item">
-                    <a href="#ace-g1" class="nav-link text-secondary" data-toggle="tab">
-                        G1
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#ace-g2" class="nav-link text-secondary" data-toggle="tab">
-                        G2
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#ace-g3" class="nav-link text-secondary" data-toggle="tab">
-                        G3
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#ace-g4" class="nav-link text-secondary" data-toggle="tab">
-                        G4
-                    </a>
-                </li>
+               
             </ul>
             <!-- /tabs -->
             <!-- Tabs content -->
@@ -827,11 +807,8 @@
                 $(document).ready(function () {
                    // InitCountdownTimer();
                     LoadACE('p');
-                    LoadACE('u');
-                    LoadACE('g1');
-                    LoadACE('g2');
-                    LoadACE('g3');
-                    LoadACE('g4');
+                    LoadACE('w');
+                   
                     LoadPersistency('d0');
                     LoadPersistency('d1');
                     LoadCPDPoint();
@@ -898,12 +875,14 @@
                         type: 'POST',
                         data: { type: type },
                         success: function (response) {
-
+                          
                             $('#ace-' + type + '-mtd').html(ReplaceNumberWithCommas(response.ace_mtd));
                             $('#ace-' + type + '-ytd').html(ReplaceNumberWithCommas(response.ace_ytd));
                             BlockUIHelper.unblockUI('ace-' + type);
                         },
                         error: function (response) {
+                            $('#ace-' + type + '-mtd').html('0.00');
+                            $('#ace-' + type + '-ytd').html('0.00');
                             BlockUIHelper.unblockUI('ace-' + type);
                         }
                     });

@@ -320,7 +320,7 @@
                                     @if (user.IsLeader || user.IsAgent)
                                     {
                                         <li class="nav-item">
-                                            <a href='/Persistency/index' class="nav-link">
+                                            <a href="@Url.Action("Index", "Persistency")"  class="nav-link">
                                                 Persistency Calculator
                                             </a>
                                         </li>

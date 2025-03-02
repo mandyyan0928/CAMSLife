@@ -413,7 +413,7 @@
 
                 var agentId = $(this).data('agent-id');
                 var expandText = $('#expand_icon_' + agentId).text();
- 
+
 
                 if (row.child.isShown()) {
                     // This row is already open, close it
@@ -427,8 +427,8 @@
 
                     console.log('agentId', agentId)
                     console.log('generation', generation)
-                  
-                    
+
+
 
                     const childRow = $('#expand-agents').html().replaceAll('{userid}', agentId)
                     row.child(childRow).show();
@@ -446,7 +446,7 @@
             let html=''
             var hasExpand = $('#expand_' + agent).val();
 
-          
+
 
         @{ var filter = new CaliphWeb.ViewModel.PersistencyCalculatorViewModel();}
             var searchFilter = @Html.Raw(Json.Encode(filter));
@@ -500,7 +500,8 @@
                 type: 'POST',
                 data: { req: searchFilter },
                 success: function (response) {
-                    window.open('/persistency/calculator?agentid=' + agent
+                    var url = '@Url.Action("Calculator", "Persistency")'
+                    window.open(url+'?agentid=' + agent
                         , '_blank');
                 }
             });
@@ -667,7 +668,7 @@
             var currentRowPreviousCalculatedPP = parseFloat($('#direct_new_pp_' + agentid).text().replaceAll(',', ''));
             var newpp = currentRowAce * calculateRatio;
             $('#direct_new_pp_' + agentid).text(ReplaceNumberWithCommas(newpp.toFixed(2)));
-          
+
 
             var groupPP = parseFloat($('#total_direct_new_pp').text().replaceAll(',', ''));
             var groupAce = parseFloat($('#total_direct_ace' ).text().replaceAll(',', ''));
