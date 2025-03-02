@@ -69,55 +69,7 @@
                     var wholeGroupPolicies = firstLevel.AgentHierarchyPolicies.Where(x => x.Agent.IsLeader);
                     var directGroupPolicies = firstLevel.AgentHierarchyPolicies.Where(x => !x.Agent.IsLeader);
 
-                    @*<h2>Direct Group</h2>
-            <table class="table datatable-button-html5-basic">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th></th>
-                        <th>AFYC</th>
-                        <th>PP</th>
-                        <th>%</th>
-                        <th>Target %</th>
-                        <th>PP After Fix</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    <tr>
-                        <td>
-                        </td>
-                        <td>
-                            <a href="#" onclick="DisplayCalculator('@loginUser.Username', 'w', '@Json.Encode(@loginUser.Fullname)')">
-                                @Html.Raw(loginUser.Username + "(" + loginUser.RoleName + ") <br/> " + loginUser.Fullname)
-
-                            </a>
-                        </td>
-                        <td id="ace_whole_@loginUser.Username">
-                            @Model.ACE.ToString("n2")
-                        </td>
-                        <td id="pp_whole_@loginUser.Username">
-                            @Model.PersistencyPremium.ToString("n2")
-
-                        </td>
-                        <td>
-
-                            @Model.Ratio.ToString("n2")
-                            %
-                        </td>
-                        <td id="whole_new_pp_ratio_@loginUser.Username">
-                            @Model.Ratio.ToString("n2")
-                            %
-                        </td>
-                        <td id="whole_new_pp_@loginUser.Username">
-                            @Model.PersistencyPremium.ToString("n2")
-
-                        </td>
-                    </tr>
-
-                </tbody>
-            </table>*@
+                 
 
                     if (directGroupPolicies != null)
                     {
@@ -142,7 +94,15 @@
 
                                 <tr>
                                     <td></td>
-                                    <td></td>
+                                    <td  >
+                                        <a href="#" onclick="DisplayCalculator('@loginUser.Username', 'd', '@Json.Encode(loginUser.Fullname)')">
+
+
+                                            @loginUser.Username (  @loginUser.RoleCode )<br />
+                                            @loginUser.Fullname
+                                        </a>
+                                    </td>
+
 
                                     <td id="total_direct_ace" class="exclude">
                                         @{var groupace = directGroupPolicies.Sum(x => x.ACE);}
@@ -176,7 +136,7 @@
 
                                     <tr>
                                         <td class="expand-control" data-agent-id="@user.agent_id" data-generation="@firstLevel.Generation">
-
+                                            -
                                          
                                         </td>
                                         <td>
@@ -214,36 +174,7 @@
                                             @agentHierarchyPolicy.PersistencyPremium.ToString("n2")
                                         </td>
                                     </tr>
-                                    @*<tr id="collapse_@user.agent_id" class="collapse exclude-export" >
-                                <td colspan="8">
-                                    <div class="alert alert-primary border-0 alert-dismissible">
-                                        <span class="font-weight-semibold"> @user.agent_id</span>
-                                        <div id="agent-policy-table_@user.agent_id">
-                                            <table class="table table-border-dashed">
-                                                <thead>
-                                                    <tr id="action">
-                                                        <td>
-                                                            Action
-                                                        </td>
-                                                        <td>Agent</td>
-                                                        <td>Relation</td>
-                                                        <td>ACE</td>
-                                                        <td>PP</td>
-                                                        <td>PP %</td>
-                                                        <td>New %</td>
-                                                        <td>New PP</td>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td colspan="8"><i class="icon-spinner6 spinner mr-2"></i>Loading....</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>*@
+                                  
                                 }
 
                             </tbody>
@@ -272,7 +203,15 @@
 
                                 <tr>
                                     <td></td>
-                                    <td></td>
+                                    <td>
+                                        <a href="#" onclick="DisplayCalculator('@loginUser.Username', 'd', '@Json.Encode(loginUser.Fullname)')">
+
+
+                                            @loginUser.Username (  @loginUser.RoleCode )<br />
+                                            @loginUser.Fullname
+                                        </a>
+                                    </td>
+
 
                                     <td id="ace_group_@firstLevel.Generation" class="exclude">
                                         @{var groupace = wholeGroupPolicies.Sum(x => x.ACE);}
@@ -307,8 +246,8 @@
                                     <tr>
                                         <td class="expand-control" data-agent-id="@user.agent_id" data-generation="@firstLevel.Generation">
 
-                                            <a style="font-size:18px; font-weight:800;cursor:pointer">
-                                                +
+                                            <a  style="font-size:18px; font-weight:800;cursor:pointer">
+                                               <span id="expand_icon_@user.agent_id">+</span> 
                                             </a>
                                             <input type="hidden" id="expand_@user.agent_id" value="0" />
 
@@ -472,17 +411,24 @@
                 console.log("Row Data:", row.data());
                 console.log("Row.child():", row.child());
 
+                var agentId = $(this).data('agent-id');
+                var expandText = $('#expand_icon_' + agentId).text();
+ 
+
                 if (row.child.isShown()) {
                     // This row is already open, close it
                     row.child.hide();
                     tr.removeClass('shown');
+                    $('#expand_icon_' + agentId).text('+');
                 } else {
                     // Get the agent ID and generation from the row data attributes
-                    var agentId = $(this).data('agent-id');
+                    $('#expand_icon_' + agentId).text('-');
                     var generation = $(this).data('generation');
 
                     console.log('agentId', agentId)
                     console.log('generation', generation)
+                  
+                    
 
                     const childRow = $('#expand-agents').html().replaceAll('{userid}', agentId)
                     row.child(childRow).show();
@@ -500,6 +446,7 @@
             let html=''
             var hasExpand = $('#expand_' + agent).val();
 
+          
 
         @{ var filter = new CaliphWeb.ViewModel.PersistencyCalculatorViewModel();}
             var searchFilter = @Html.Raw(Json.Encode(filter));
