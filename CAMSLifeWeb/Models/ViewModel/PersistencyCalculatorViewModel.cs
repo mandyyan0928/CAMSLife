@@ -116,11 +116,11 @@ namespace CaliphWeb.ViewModel
     {
         public const string InForce = "In Force";
         public const string Lapsed = "Lapsed";
-       public const string FreelookCancellation = "freelook cancellation";
+       public const string FreelookCancellation = "Free Look Cancellation";
         public const string ContractSurrended = "Surrendered";
-        public const string RegisteredDeathClaim = "registered death claim";
+        public const string RegisteredDeathClaim = "Death Registered";
         public const string Postponed = "Postponed";
-        public const string ApprovedDeathClaim = "approved death claim";
+        public const string ApprovedDeathClaim = "Death Claim";
     }
 
 

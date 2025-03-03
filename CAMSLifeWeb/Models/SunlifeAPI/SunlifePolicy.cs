@@ -24,6 +24,7 @@ public class SunlifePolicyResponse
     public string productCode { get; set; }
     public string balancedScoreCard { get; set; }
     public string paymentTerm { get; set; }
+    public string paymentMode { get; set; }
 
 }
 
