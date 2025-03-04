@@ -26,6 +26,8 @@ public class SunlifePolicyResponse
     public string paymentTerm { get; set; }
     public string paymentMode { get; set; }
 
+    public int premiumPaymentTerm { get; set; }
+
 }
 
 public class SunlifePolicyRequest {

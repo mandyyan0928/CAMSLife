@@ -13,7 +13,7 @@
                     <th>Traditional</th>
                     <th>Cases</th>
                     <th>%</th>
-                    <th>ACE</th>
+                    <th>AFYC</th>
                     <th>%</th>
                     <th>%</th>
                     <th>APS</th>
@@ -81,7 +81,7 @@
                 }
 
                 <tr>
-                    <th>Product 1</th>
+                    <th>Sun Hajj</th>
                     @{ var productCount = FWdFuturefirst.Count();
                         var productACE = FWdFuturefirst.Sum(x => x.AnnualisedPremium);
                         var ratio = (productACE / totalTradictionalAce) * 100;
@@ -105,78 +105,9 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>Product 2</th>
+                    <th>Sun Secure Saver-i</th>
                     @{ productCount = FWDCIFirst.Count();
                         productACE = FWDCIFirst.Sum(x => x.AnnualisedPremium);
-                        ratio = (productACE / totalTradictionalAce) * 100;
-                        avr = productCount == 0 ? 0 : productACE / productCount;
-                        totalAvr += avr;
-                        totalRatio += ratio;
-                    }
-                    <td>@productCount</td>
-                    <td>@((totalCases == 0 ? 0 :( ((double)productCount / totalCases)*100)).ToString("n2")  +"%")</td>
-                    <td>
-                        @productACE.ToString("n2")
-                    </td>
-                    <td></td>
-
-                    <td>
-                        @ratio.ToString("n2") %
-                    </td>
-                    <td>
-                        @avr.ToString("n2")
-                    </td>
-                </tr>
-                <tr>
-                    <th>Product 3</th>
-                    @{ productCount = FWDFamilyFirst.Count();
-                        productACE = FWDFamilyFirst.Sum(x => x.AnnualisedPremium);
-                        ratio = (productACE / totalTradictionalAce) * 100;
-                        avr = productCount==0?0: productACE / productCount;
-                        totalAvr += avr;
-                        totalRatio += ratio;
-                    }
-                    <td>@productCount</td>
-                    <td>@((totalCases == 0 ? 0 :( ((double)productCount / totalCases)*100)).ToString("n2")  +"%")</td>
-                    <td>
-                        @productACE.ToString("n2")
-                    </td>
-                    <td></td>
-
-                    <td>
-                        @ratio.ToString("n2") %
-                    </td>
-                    <td>
-                        @avr.ToString("n2")
-                    </td>
-                </tr>
-                <tr>
-                    <th>Product 4</th>
-                    @{ productCount = FWDIncomeFirst.Count();
-                        productACE = FWDIncomeFirst.Sum(x => x.AnnualisedPremium);
-                        ratio = (productACE / totalTradictionalAce) * 100;
-                        avr = productCount == 0 ? 0 : productACE / productCount;
-                        totalAvr += avr;
-                        totalRatio += ratio;
-                    }
-                    <td>@productCount</td>
-                    <td>@((totalCases == 0 ? 0 :( ((double)productCount / totalCases)*100)).ToString("n2")  +"%")</td>
-                    <td>
-                        @productACE.ToString("n2")
-                    </td>
-                    <td></td>
-
-                    <td>
-                        @ratio.ToString("n2") %
-                    </td>
-                    <td>
-                        @avr.ToString("n2")
-                    </td>
-                </tr>
-                <tr>
-                    <th>Product 5</th>
-                    @{ productCount = FWDLifeFirst.Count();
-                        productACE = FWDLifeFirst.Sum(x => x.AnnualisedPremium);
                         ratio = (productACE / totalTradictionalAce) * 100;
                         avr = productCount == 0 ? 0 : productACE / productCount;
                         totalAvr += avr;
@@ -221,14 +152,14 @@
                     <th>Investment Link</th>
                     <th>Cases</th>
                     <th>%</th>
-                    <th>ACE</th>
+                    <th>AFYC</th>
                     <th>%</th>
                     <th>%</th>
                     <th>APS</th>
                 </tr>
               
                 <tr>
-                    <th>Product 1</th>
+                    <th>Sun Heritage-i</th>
                     @{ productCount = InvestFirst_Wealth.Count();
                         productACE = InvestFirst_Wealth.Sum(x => x.AnnualisedPremium);
                         ratio = (productACE / totalInvestmentAce) * 100;
@@ -251,81 +182,9 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>Product 2</th>
+                    <th>Sun Prime Link-i </th>
                     @{ productCount = InvestFirst_Education.Count();
                         productACE = InvestFirst_Education.Sum(x => x.AnnualisedPremium);
-                        ratio = (productACE / totalInvestmentAce) * 100;
-                        avr = productCount == 0 ? 0 : productACE / productCount;
-                        totalAvr += avr;
-                        totalRatio += ratio;
-                    }
-                    <td>@productCount</td>
-                    <td>@((totalCases == 0 ? 0 :( ((double)productCount / totalCases)*100)).ToString("n2")  +"%")</td>
-                    <td>
-                        @productACE.ToString("n2")
-                    </td>
-                    <td></td>
-
-                    <td>
-                        @ratio.ToString("n2") %
-                    </td>
-                    <td>
-                        @avr.ToString("n2")
-                    </td>
-                </tr>
-
-
-
-                <tr>
-                    <th>Product 3</th>
-                    @{ productCount = InvestFirstPlus_Legacy.Count();
-                        productACE = InvestFirstPlus_Legacy.Sum(x => x.AnnualisedPremium);
-                        ratio = (productACE / totalInvestmentAce) * 100;
-                        avr = productCount == 0 ? 0 : productACE / productCount;
-                        totalAvr += avr;
-                        totalRatio += ratio;
-                    }
-                    <td>@productCount</td>
-                    <td>@((totalCases == 0 ? 0 :( ((double)productCount / totalCases)*100)).ToString("n2")  +"%")</td>
-                    <td>
-                        @productACE.ToString("n2")
-                    </td>
-                    <td></td>
-
-                    <td>
-                        @ratio.ToString("n2") %
-                    </td>
-                    <td>
-                        @avr.ToString("n2")
-                    </td>
-                </tr>
-                <tr>
-                    <th>Product 4</th>
-                    @{ productCount = InvestFirstPlus_Wealth.Count();
-                        productACE = InvestFirstPlus_Wealth.Sum(x => x.AnnualisedPremium);
-                        ratio = (productACE / totalInvestmentAce) * 100;
-                        avr = productCount == 0 ? 0 : productACE / productCount;
-                        totalAvr += avr;
-                        totalRatio += ratio;
-                    }
-                    <td>@productCount</td>
-                    <td>@((totalCases == 0 ? 0 :( ((double)productCount / totalCases)*100)).ToString("n2")  +"%")</td>
-                    <td>
-                        @productACE.ToString("n2")
-                    </td>
-                    <td></td>
-
-                    <td>
-                        @ratio.ToString("n2") %
-                    </td>
-                    <td>
-                        @avr.ToString("n2")
-                    </td>
-                </tr>
-                <tr>
-                    <th>Product 5</th>
-                    @{ productCount = InvestFirstPlus_Education.Count();
-                        productACE = InvestFirstPlus_Education.Sum(x => x.AnnualisedPremium);
                         ratio = (productACE / totalInvestmentAce) * 100;
                         avr = productCount == 0 ? 0 : productACE / productCount;
                         totalAvr += avr;
@@ -409,7 +268,7 @@
                     <th></th>
                     <th>Cases</th>
                     <th>%</th>
-                    <th>ACE</th>
+                    <th>AFYC</th>
                 </tr>
             </thead>
             <tbody>

@@ -546,6 +546,7 @@ namespace CaliphWeb.Controllers
                 var agent = list.Where(x => x.agent_id == agentid).FirstOrDefault();
                 name = agent == null ? "" : agent.agent_name;
             }
+
             // var name = TempData["PersistencyName"];
 
             var user = UserHelper.GetLoginUserViewModel();
@@ -592,8 +593,32 @@ namespace CaliphWeb.Controllers
                 policies = policies.Where(x => (x.leader_code == username || x.selling_agent_code == username)).ToList();//.Where(x => x.type.ToLower() == "u" || x.type.ToLower() == "p").ToList();
             else if (type == "p")
                 policies = policies.Where(x => x.selling_agent_code == username).ToList();
-                  
-            
+            else if (type == "d")
+            {
+                var generationHierarchyReq = new AgentHierarchyRequest { agent_id = agentid};
+                var generationHierarchyRes = await _alcDataGetter.GetAgentHierarchyAsync(generationHierarchyReq);
+
+                var directGroupagents = generationHierarchyRes.Where(x=>x.generation==1 && !x.IsLeader).ToList();
+                if (directGroupagents.Count > 0)
+                {
+                    var directGroupAgentIds = directGroupagents.Select(x => x.agent_id).ToList();
+                    policies = policies.Where(x => directGroupAgentIds.Contains(x.selling_agent_code)).ToList();
+                }
+            }
+            else if (type == "w") // whole group search by leader only
+            {
+                var generationHierarchyReq = new AgentHierarchyRequest { agent_id = agentid };
+                var generationHierarchyRes = await _alcDataGetter.GetAgentHierarchyAsync(generationHierarchyReq);
+
+                var directGroupagents = generationHierarchyRes.Where(x => x.IsLeader).ToList();
+                if (directGroupagents.Count > 0)
+                {
+                    var directGroupAgentIds = directGroupagents.Select(x => x.agent_id).ToList();
+                    policies = policies.Where(x => directGroupAgentIds.Contains(x.selling_agent_code) || x.selling_agent_code == username).ToList();
+                }
+            }
+
+
             var persistencyCalculator = new PersistencyCalculatorViewModel
             {
                 AgentId = username,

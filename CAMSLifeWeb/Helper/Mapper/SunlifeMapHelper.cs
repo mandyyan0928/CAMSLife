@@ -20,6 +20,7 @@ namespace CaliphWeb.Helper.Mapper
             .ForMember(dest => dest.join_date, opt => opt.MapFrom(src => src.recruitDate))
             .ForMember(dest => dest.role, opt => opt.MapFrom(src => src.roleCode))
             .ForMember(dest => dest.upline_agent_id, opt => opt.MapFrom(src => src.leaderAdvisorCode))
+            .ForMember(dest => dest.generation, opt => opt.MapFrom(src => src.level))
             .ForMember(dest => dest.upline_agent_name, opt => opt.Ignore());
             });
 
@@ -51,6 +52,7 @@ namespace CaliphWeb.Helper.Mapper
             .ForMember(dest => dest.status_updated_date, opt => opt.MapFrom(src => src.lastInstalmentDate))
             .ForMember(dest => dest.pay_mode, opt => opt.MapFrom(src => src.paymentTerm))
             .ForMember(dest => dest.payment_method_code, opt => opt.MapFrom(src => src.paymentMode??""))
+            .ForMember(dest => dest.term, opt => opt.MapFrom(src => src.premiumPaymentTerm))
             .ForMember(dest => dest.certificate_status, opt => opt.MapFrom(src => src.policyStatus));
 
             });

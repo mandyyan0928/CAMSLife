@@ -21,6 +21,7 @@
     public string bankAccountNumber { get; set; }
     public string recruitDate { get; set; }
     public string costCenterCode { get; set; }
+    public int level { get; set; }
 
 }
 
