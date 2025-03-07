@@ -554,6 +554,8 @@
 
             }
         }
+
+       
         function AddGroup() {
             var form = $("#add-group");
             form.validate();
@@ -635,6 +637,7 @@
                 type: 'POST',
                 data: { list: list },
                 success: function (response) {
+                    RefreshGroupCommission();
                     swalInit.fire({
                         title: 'Success!',
                         text: 'Updated successfully!',

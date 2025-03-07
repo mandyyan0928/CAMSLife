@@ -243,8 +243,7 @@
             if (form.valid()) {
                 var formData = $('#add-client').serialize();
                 $.ajax({
-                   // url: '@Url.Action("Add", "Client")',
-                        url: '/Client/Add',
+                    url: '@Url.Action("Add", "Client")',
                     type: 'POST',
                     data: formData,
                     success: function (response) {

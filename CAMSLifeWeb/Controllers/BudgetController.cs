@@ -49,10 +49,7 @@ namespace CaliphWeb.Controllers
             BudgetModel model = new BudgetModel();
             var response = await _caliphAPIHelper.PostAsync<BudgetFilter, ResponseData<List<BudgetView>>>(filter, "/api/v1/budget/simulator-get-by-filter");
             model.BudgetData.BudgetView = response.Data;
-
-
-           
-
+             
 
 
             model.Income.IncomeData = response.Data.Where(p => p.BudgetYear == DateTime.Now.Year).FirstOrDefault()?? new BudgetView { BudgetMonth=DateTime.Now.Month, BudgetYear=DateTime.Now.Year};
@@ -95,7 +92,7 @@ namespace CaliphWeb.Controllers
         {
             int userid = UserHelper.GetLoginUserViewModel().UserId;
             string userName = UserHelper.GetLoginUser();
-            if (model.Income.IncomeData == null)
+            if (model.Income.IncomeData == null|| model.Income.IncomeData.BudgetId==0)
             {
                 SimulatorAdd simulatorAdd = new SimulatorAdd { BudgetYear = year, BudgetMonth = 6, ProductStartMonth=1, CreatedBy = userName, UserId = userid };
                 var simulatorAddResponse = await _caliphAPIHelper.PostAsync<SimulatorAdd, ResponseData<string>>(simulatorAdd, "/api/v1/budget/simulator-add");
@@ -105,7 +102,7 @@ namespace CaliphWeb.Controllers
             }
 
 
-            if (model.Income.IncomeData.BudgetGroupList == null)
+            if (model.Income.IncomeData.BudgetGroupList == null|| model.Income.IncomeData.BudgetGroupList.Count==0)
                 model.Income.IncomeData.BudgetGroupList = new List<BudgetGroup>();
 
 
@@ -383,10 +380,8 @@ namespace CaliphWeb.Controllers
         public async Task<JsonResult> AddGroup(FormCollection formCollection)
         {
             var model = FormCollectionMapper.FormToModel<GroupAdd>(formCollection);
+            
 
-
-
-           
             model.UserId = UserHelper.GetLoginUserViewModel().UserId;
             model.CreatedBy = UserHelper.GetLoginUser();
             var response = await _caliphAPIHelper.PostAsync<GroupAdd, ResponseData<string>>(model, "/api/v1/budget/group-add");
