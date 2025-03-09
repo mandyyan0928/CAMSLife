@@ -354,12 +354,11 @@
                                             </a>
                                         </li>*@
 
-                                        //temp hide
-                                        @*<li class="nav-item">
-                                            <a href='/Persistency/BusinessReport' class="nav-link">
+                                        <li class="nav-item">
+                                            <a href='@Url.Action("BusinessReport", "Persistency")' class="nav-link">
                                                 Business Report
                                             </a>
-                                        </li>*@
+                                        </li>
                                     }
                                     @if (user.IsLeader)
                                     {

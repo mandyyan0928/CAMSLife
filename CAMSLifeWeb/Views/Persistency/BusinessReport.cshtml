@@ -33,121 +33,166 @@
             <div class="table datatable-header">
                 <div class="row">
                 </div>
-
-                <table class="table table-border-dashed">
-                    <tbody>
-                        <tr id="action">
-                            <th colspan="2">
-                                <h2>Whole Group</h2>
-                            </th>
-
-                            <th>ACE</th>
-                        </tr>
+                @{
+                    var firstLevel = Model.HierarchyPolicies.Where(x => x.Generation == 1).FirstOrDefault();
 
 
-                        <tr>
-                            <td>
-                            </td>
-                            <td>
-                                <a href="#" onclick="DisplayCalculator('@loginUser.Username', 'w', '@Json.Encode(@loginUser.Fullname)')">
-                                    @Html.Raw(loginUser.Username + "(" + loginUser.RoleName + ") <br/> " + loginUser.Fullname)
-
-                                </a>
-                            </td>
-                            <td id="ace_whole_@loginUser.Username">
-                                @Model.ACE.ToString("n2")
-                            </td>
-                        </tr>
-
-                    </tbody>
-                </table>
-                @foreach (var generationGroup in Model.HierarchyPolicies)
-                {
-                    <table class="table table-border-dashed mt-5">
-                        <tbody>
-                            <tr id="action">
-                                <th colspan="2" rowspan="2">
-                                    <h2>@generationGroup.GenerationName</h2>
-                                </th>
-                                <th>ACE</th>
-                            </tr>
-
-
-                            <tr>
-
-                                @if (generationGroup.Generation > 0)
-                                {
-                                    <td id="ace_group_@generationGroup.Generation">
-                                        @{var groupace = generationGroup.AgentHierarchyPolicies.Sum(x => x.ACE);}
-                                        @generationGroup.AgentHierarchyPolicies.Sum(x => x.ACE).ToString("n2")
-
-
-                                    </td>
-                                   
-                                }
-                            </tr>
-
-                            @foreach (var agentHierarchyPolicy in generationGroup.AgentHierarchyPolicies)
-                            {
-                                var user = agentHierarchyPolicy.Agent;
-
-                                <tr>
-                                    <td>
-                                        @if (user.role == "leader")
-                                        {
-                                            <a href="#collapse_@user.agent_id" data-toggle="collapse" onclick="ExpandGroup('@user.agent_id', @generationGroup.Generation)" style="font-size:18px; font-weight:800">
-                                                +
-                                            </a>
-                                            <input type="hidden" id="expand_@user.agent_id" value="0" />
-                                        }
-                                    </td>
-                                    <td>
-                                        <a href="#" onclick="DisplayCalculator('@user.agent_id', 'g', '@Json.Encode(@user.agent_name)')">
-
-
-                                            @user.agent_id (  @user.role )<br />
-                                            @user.agent_name
-                                        </a>
-                                    </td>
-                                    <td id="ace_leader_@user.agent_id">
-
-                                        @agentHierarchyPolicy.ACE.ToString("n2")
-
-                                    </td>
-                                    
-                                </tr>
-                                <tr id="collapse_@user.agent_id" class="collapse">
-                                    <td colspan="8">
-                                        <div class="alert alert-primary border-0 alert-dismissible">
-                                            <span class="font-weight-semibold"> @user.agent_id</span>
-                                            <div id="agent-policy-table_@user.agent_id">
-                                                <table class="table table-border-dashed">
-                                                    <thead>
-                                                        <tr id="action">
-                                                            <td>
-                                                                Action
-                                                            </td>
-                                                            <td>Agent</td>
-                                                            <td>ACE</td>
-                                                           
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td colspan="8"><i class="icon-spinner6 spinner mr-2"></i>Loading....</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
-
-                        </tbody>
-                    </table>
                 }
 
+                @if (firstLevel != null)
+                {
+
+                    var wholeGroupPolicies = firstLevel.AgentHierarchyPolicies.Where(x => x.Agent.IsLeader);
+                    var directGroupPolicies = firstLevel.AgentHierarchyPolicies.Where(x => !x.Agent.IsLeader);
+
+
+
+                    if (directGroupPolicies != null)
+                    {
+                        <h2>Direct Group</h2>
+                        <table class="table datatable-nested">
+                            <thead>
+                                <tr>
+                                    <th>
+
+                                    </th>
+                                    <th>
+
+                                    </th>
+                                    <th>AFYC</th>
+                                  
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <a href="#" onclick="DisplayCalculator('@loginUser.Username', 'd', '@Json.Encode(loginUser.Fullname)')">
+
+
+                                            @loginUser.Username (  @loginUser.RoleCode )<br />
+                                            @loginUser.Fullname
+                                        </a>
+                                    </td>
+
+
+                                    <td id="total_direct_ace" class="exclude">
+                                        @{var groupace = directGroupPolicies.Sum(x => x.ACE);}
+                                        @groupace.ToString("n2")
+
+
+                                    </td>
+                                 
+
+                                </tr>
+
+                                @foreach (var agentHierarchyPolicy in directGroupPolicies)
+                                {
+                                    var user = agentHierarchyPolicy.Agent;
+
+                                    <tr>
+                                        <td class="expand-control" data-agent-id="@user.agent_id" data-generation="@firstLevel.Generation">
+                                            -
+
+                                        </td>
+                                        <td>
+                                            <a href="#" onclick="DisplayCalculator('@user.agent_id', 'p', '@Json.Encode(@user.agent_name)')">
+
+
+                                                @user.agent_id (  @user.role )<br />
+                                                @user.agent_name
+                                            </a>
+                                        </td>
+                                        <td id="ace_direct_@user.agent_id">
+
+                                            @agentHierarchyPolicy.ACE.ToString("n2")
+
+                                        </td>
+                                    
+                                    </tr>
+
+                                }
+
+                            </tbody>
+                        </table>
+                    }
+                    if (wholeGroupPolicies != null)
+                    {
+                        <h2>Whole Group</h2>
+                        <table class="table datatable-nested">
+                            <thead>
+                                <tr>
+                                    <th>
+
+                                    </th>
+                                    <th>
+
+                                    </th>
+                                    <th>AFYC</th>
+                                   
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <a href="#" onclick="DisplayCalculator('@loginUser.Username', 'w', '@Json.Encode(loginUser.Fullname)')">
+
+
+                                            @loginUser.Username (  @loginUser.RoleCode )<br />
+                                            @loginUser.Fullname
+                                        </a>
+                                    </td>
+
+
+                                    <td id="ace_group_@firstLevel.Generation" class="exclude">
+                                        @{var groupace = wholeGroupPolicies.Sum(x => x.ACE);}
+                                        @groupace.ToString("n2")
+
+
+                                    </td>
+                                 
+
+                                </tr>
+
+                                @foreach (var agentHierarchyPolicy in wholeGroupPolicies)
+                                {
+                                    var user = agentHierarchyPolicy.Agent;
+
+                                    <tr>
+                                        <td class="expand-control" data-agent-id="@user.agent_id" data-generation="@firstLevel.Generation">
+
+                                            <a style="font-size:18px; font-weight:800;cursor:pointer">
+                                                <span id="expand_icon_@user.agent_id">+</span>
+                                            </a>
+                                            <input type="hidden" id="expand_@user.agent_id" value="0" />
+
+                                        </td>
+                                        <td>
+                                            <a href="#" onclick="DisplayCalculator('@user.agent_id', 'g', '@Json.Encode(@user.agent_name)')">
+
+
+                                                @user.agent_id (  @user.role )<br />
+                                                @user.agent_name
+                                            </a>
+                                        </td>
+                                        <td id="ace_leader_@user.agent_id">
+
+                                            @agentHierarchyPolicy.ACE.ToString("n2")
+
+                                        </td>
+                                        
+                                    </tr>
+                                 
+                                }
+
+                            </tbody>
+                        </table>
+                    }
+                }
+             
 
             </div>
 
