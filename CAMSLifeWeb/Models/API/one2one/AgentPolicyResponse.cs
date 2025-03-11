@@ -36,7 +36,7 @@ namespace CaliphWeb.Models.API.one2one
                     return 0;
                else if (pay_mode.ToLower() == "monthly")
                     return 12;
-                else if (pay_mode.ToLower() == "half-annual")
+                else if (pay_mode.ToLower() == "semi annually")
                     return 2;
                 else if (pay_mode.ToLower() == "yearly")
                     return 1;
