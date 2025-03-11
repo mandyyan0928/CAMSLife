@@ -140,7 +140,16 @@ namespace CaliphWeb.ViewModel
 
     }
 
-// home
+
+    public class SunlifeProduct
+    {
+        public static readonly List<string> SunHeritage = new List<string> { "ULFH", "ULFI", "ULFJ", "ULFK", "ULFL", "ULFM" };
+        public static readonly List<string> SunPrimeLink= new List<string> { "ULFA", "ULFB", "ULFC", "ULFD"};
+        public static readonly List<string> SunSecureSaver = new List<string> { "TTRG", "TTRH", "TTRJ"};
+        public static readonly List<string> SunHajj = new List<string> { "TTFL", "TTFM", "TTFU", "TTFV", "TTFW", "TTFX", "TTFY" };
+
+    }
+    // home
     public class PersistencySummaryData
     {
 

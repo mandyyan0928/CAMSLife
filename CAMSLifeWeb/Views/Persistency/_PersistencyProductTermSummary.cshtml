@@ -23,55 +23,32 @@
                 <tr>
                 </tr>
                 @{ var totalCases = Model.AgentPolicies.Count;
-                    var FWdFuturefirst = Model.AgentPolicies.Where(x => x.product_name == FWDProduct.FutureFirst).ToList();
-                    var FWDCIFirst = Model.AgentPolicies.Where(x => x.product_name == FWDProduct.CIFirst).ToList();
-                    var FWDFamilyFirst = Model.AgentPolicies.Where(x => x.product_name == FWDProduct.FamilyFirst).ToList();
-                    var FWDIncomeFirst = Model.AgentPolicies.Where(x => x.product_name == FWDProduct.IncomeFirst).ToList();
-                    var FWDLifeFirst = Model.AgentPolicies.Where(x => x.product_name == FWDProduct.LifeFirst).ToList();
+                    var sunHeritage = Model.AgentPolicies.Where(x => SunlifeProduct.SunHeritage.Contains( x.product_name)  ).ToList();
+                    var sunPrimeLink = Model.AgentPolicies.Where(x => SunlifeProduct.SunPrimeLink.Contains( x.product_name) ).ToList();
+                   
 
-                    var InvestFirst_Legacy = Model.AgentPolicies.Where(x => x.product_name == FWDProduct.InvestFirst_Legacy).ToList();
-                    var InvestFirst_Education = Model.AgentPolicies.Where(x => x.product_name == FWDProduct.InvestFirst_Education).ToList();
-                    var InvestFirst_Wealth = Model.AgentPolicies.Where(x => x.product_name == FWDProduct.InvestFirst_Wealth).ToList();
-
-
-                    var InvestFirstPlus_Legacy = Model.AgentPolicies.Where(x => x.product_name == FWDProduct.InvestFirstPlus_Legacy).ToList();
-                    var InvestFirstPlus_Education = Model.AgentPolicies.Where(x => x.product_name == FWDProduct.InvestFirstPlus_Education).ToList();
-                    var InvestFirstPlus_Wealth = Model.AgentPolicies.Where(x => x.product_name == FWDProduct.InvestFirstPlus_Wealth).ToList();
-
-
+                    var sunHajj = Model.AgentPolicies.Where(x => SunlifeProduct.SunHajj.Contains( x.product_name)).ToList();
+                    var sunSecureSaver = Model.AgentPolicies.Where(x => SunlifeProduct.SunSecureSaver.Contains( x.product_name)).ToList();
+ 
 
                     var totalTraditionalProduct =
-                        FWdFuturefirst.Count() +
-                        FWDCIFirst.Count() +
-                        FWDFamilyFirst.Count() +
-                        FWDIncomeFirst.Count()+
-                        FWDLifeFirst.Count();
+                        sunHajj.Count() +
+                        sunSecureSaver.Count() ;
 
 
-                    var totalInvestmentProduct = InvestFirst_Wealth.Count() +
-                        InvestFirst_Legacy.Count() +
-                        InvestFirst_Education.Count() +
-                        InvestFirstPlus_Wealth.Count() +
-                        InvestFirstPlus_Legacy.Count() +
-                        InvestFirstPlus_Education.Count();
+                    var totalInvestmentProduct = sunHeritage.Count() +
+                        sunPrimeLink.Count() ;
 
 
                     var traditionalRatio = totalCases == 0 ? 0 : totalTraditionalProduct / totalCases;
                     var investmentRatio = totalCases == 0 ? 0 : totalInvestmentProduct / totalCases;
 
-                    var totalTradictionalAce = FWdFuturefirst.Sum(x => x.AnnualisedPremium) +
-                        FWDCIFirst.Sum(x => x.AnnualisedPremium) +
-                        FWDFamilyFirst.Sum(x => x.AnnualisedPremium) +
-                        FWDIncomeFirst.Sum(x => x.AnnualisedPremium)+
-                        FWDLifeFirst.Sum(x => x.AnnualisedPremium);
+                    var totalTradictionalAce = sunHajj.Sum(x => x.AnnualisedPremium) +
+                        sunSecureSaver.Sum(x => x.AnnualisedPremium) ;
 
 
-                    var totalInvestmentAce = InvestFirst_Wealth.Sum(x => x.AnnualisedPremium) +
-                   InvestFirst_Legacy.Sum(x => x.AnnualisedPremium) +
-                   InvestFirst_Education.Sum(x => x.AnnualisedPremium) +
-                   InvestFirstPlus_Wealth.Sum(x => x.AnnualisedPremium) +
-                   InvestFirstPlus_Legacy.Sum(x => x.AnnualisedPremium) +
-                   InvestFirstPlus_Education.Sum(x => x.AnnualisedPremium);
+                    var totalInvestmentAce = sunHeritage.Sum(x => x.AnnualisedPremium) +
+                   sunPrimeLink.Sum(x => x.AnnualisedPremium) ;
 
 
                     var totalAce = totalInvestmentAce + totalTradictionalAce;
@@ -82,8 +59,8 @@
 
                 <tr>
                     <th>Sun Hajj</th>
-                    @{ var productCount = FWdFuturefirst.Count();
-                        var productACE = FWdFuturefirst.Sum(x => x.AnnualisedPremium);
+                    @{ var productCount = sunHajj.Count();
+                        var productACE = sunHajj.Sum(x => x.AnnualisedPremium);
                         var ratio = (productACE / totalTradictionalAce) * 100;
                         var avr = productCount == 0 ? 0 : productACE / productCount;
                         totalAvr += avr;
@@ -106,8 +83,8 @@
                 </tr>
                 <tr>
                     <th>Sun Secure Saver-i</th>
-                    @{ productCount = FWDCIFirst.Count();
-                        productACE = FWDCIFirst.Sum(x => x.AnnualisedPremium);
+                    @{ productCount = sunSecureSaver.Count();
+                        productACE = sunSecureSaver.Sum(x => x.AnnualisedPremium);
                         ratio = (productACE / totalTradictionalAce) * 100;
                         avr = productCount == 0 ? 0 : productACE / productCount;
                         totalAvr += avr;
@@ -160,8 +137,8 @@
               
                 <tr>
                     <th>Sun Heritage-i</th>
-                    @{ productCount = InvestFirst_Wealth.Count();
-                        productACE = InvestFirst_Wealth.Sum(x => x.AnnualisedPremium);
+                    @{ productCount = sunHeritage.Count();
+                        productACE = sunHeritage.Sum(x => x.AnnualisedPremium);
                         ratio = (productACE / totalInvestmentAce) * 100;
                         avr = productCount == 0 ? 0 : productACE / productCount;
                         totalAvr += avr;
@@ -183,8 +160,8 @@
                 </tr>
                 <tr>
                     <th>Sun Prime Link-i </th>
-                    @{ productCount = InvestFirst_Education.Count();
-                        productACE = InvestFirst_Education.Sum(x => x.AnnualisedPremium);
+                    @{ productCount = sunPrimeLink.Count();
+                        productACE = sunPrimeLink.Sum(x => x.AnnualisedPremium);
                         ratio = (productACE / totalInvestmentAce) * 100;
                         avr = productCount == 0 ? 0 : productACE / productCount;
                         totalAvr += avr;

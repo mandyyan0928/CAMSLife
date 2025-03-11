@@ -256,8 +256,9 @@
                 type: 'POST',
                 data: { req: searchFilter },
                 success: function (response) {
-                    window.open('/persistency/individualbusinessreport?agentid=' + agent
-                        , '_blank');
+
+                    var url = '@Url.Action("IndividualBusinessReport", "Persistency")'
+                    window.open(url + '?agentid=' + agent, '_blank');
                 }
             });
         }
@@ -291,7 +292,7 @@
         }
 
 
-       
+
 
     </script>
 }
