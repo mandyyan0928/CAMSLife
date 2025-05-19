@@ -416,6 +416,7 @@ namespace CaliphWeb.Controllers
 
             while (leaderGenerationHierarchies.Count > 0)
             {
+                
                 hierarchyPolicies = await GetHierarchyPolicies(persistencyCalculator, leaderGenerationHierarchies);
                 persistencyCalculator.HierarchyPolicies.Add(new GenerationGroupPolicy
                 {

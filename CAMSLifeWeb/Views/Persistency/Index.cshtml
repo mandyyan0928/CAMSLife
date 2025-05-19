@@ -68,8 +68,7 @@
 
                     var wholeGroupPolicies = firstLevel.AgentHierarchyPolicies.Where(x => x.Agent.IsLeader);
                     var directGroupPolicies = firstLevel.AgentHierarchyPolicies.Where(x => !x.Agent.IsLeader);
-
-                 
+                    var personalPolicies = Model.HierarchyPolicies.Where(x => x.Generation == 0).FirstOrDefault().AgentHierarchyPolicies.FirstOrDefault();
 
                     if (directGroupPolicies != null)
                     {
@@ -94,7 +93,7 @@
 
                                 <tr>
                                     <td></td>
-                                    <td  >
+                                    <td>
                                         <a href="#" onclick="DisplayCalculator('@loginUser.Username', 'd', '@Json.Encode(loginUser.Fullname)')">
 
 
@@ -129,6 +128,46 @@
                                     </td>
 
                                 </tr>
+                                <tr>
+                                    <td class="expand-control" data-agent-id="@loginUser.Username" data-generation="@firstLevel.Generation">
+                                        -
+
+                                    </td>
+                                    <td>
+                                        <a href="#" onclick="DisplayCalculator('@loginUser.Username', 'p', '@Json.Encode(loginUser.Fullname)')">
+
+
+                                            @loginUser.Username (  @loginUser.RoleCode )<br />
+                                            @loginUser.Fullname
+                                        </a>
+                                    </td>
+                                    <td id="ace_direct_@loginUser.Username">
+
+                                        @personalPolicies.ACE.ToString("n2")
+
+                                    </td>
+                                    <td id="pp_direct_@loginUser.Username">
+
+                                        @personalPolicies.PersistencyPremium.ToString("n2")
+
+
+                                    </td>
+                                    <td>
+
+                                        @personalPolicies.Ratio.ToString("n2")
+
+                                        %
+                                    </td>
+                                    <td id="direct_new_pp_ratio_@loginUser.Username">
+
+                                        <input type="number" class="form-control" id="new_ratio_@personalPolicies.Agent.agent_id" min="@personalPolicies.Ratio" value="@personalPolicies.Ratio.ToString("n2")" onchange="DirectPPRatioTextChange('@personalPolicies.Agent.agent_id')" />
+                                        %
+                                    </td>
+                                    <td id="direct_new_pp_@personalPolicies.Agent.agent_id">
+
+                                        @personalPolicies.PersistencyPremium.ToString("n2")
+                                    </td>
+                                </tr>
 
                                 @foreach (var agentHierarchyPolicy in directGroupPolicies)
                                 {
@@ -137,7 +176,7 @@
                                     <tr>
                                         <td class="expand-control" data-agent-id="@user.agent_id" data-generation="@firstLevel.Generation">
                                             -
-                                         
+
                                         </td>
                                         <td>
                                             <a href="#" onclick="DisplayCalculator('@user.agent_id', 'p', '@Json.Encode(@user.agent_name)')">
@@ -174,7 +213,7 @@
                                             @agentHierarchyPolicy.PersistencyPremium.ToString("n2")
                                         </td>
                                     </tr>
-                                  
+
                                 }
 
                             </tbody>
@@ -205,8 +244,6 @@
                                     <td></td>
                                     <td>
                                         <a href="#" onclick="DisplayCalculator('@loginUser.Username', 'w', '@Json.Encode(loginUser.Fullname)')">
-
-
                                             @loginUser.Username (  @loginUser.RoleCode )<br />
                                             @loginUser.Fullname
                                         </a>

@@ -300,8 +300,44 @@ namespace CaliphWeb.Controllers
             {
                 var mapaAchieved = await AchieveMapaAsync(groupType, lastYearstartDate, endDate);
 
-                var actualMapaAchieved = mapaAchieved.Where(x => x.Year == checkYear) ?? new List<MapaPlanning>();
-                var previousMapaAchieved = mapaAchieved.Where(x => x.Year ==  (checkYear-1)).ToList()?? new List<MapaPlanning>();
+                var currentYearActualMapaList = mapaAchieved.Where(x => x.Year == checkYear) ?? new List<MapaPlanning>();
+                var previousYearActualMapaList = mapaAchieved.Where(x => x.Year ==  (checkYear-1)).ToList()?? new List<MapaPlanning>();
+
+                var groupCurrentYearActualMapa = currentYearActualMapaList.GroupBy(x => new { x.Month, x.Year })
+                    .Select(g => new MapaPlanning
+                    {
+                        Month = g.Key.Month,
+                        Year = g.Key.Year,
+                        Manpower_YTDRecruit = g.Sum(x => x.Manpower_YTDRecruit),
+                        ActiveAgent_YTDRecruit = g.Sum(x => x.ActiveAgent_YTDRecruit),
+                        ActiveAgent_TotalCases = g.Sum(x => x.ActiveAgent_TotalCases),
+                        ACE_TotalCases = g.Sum(x => x.ACE_TotalCases),
+                        ACE = g.Sum(x => x.ACE),
+                        ActiveAgent = g.Sum(x => x.ActiveAgent),
+                        NewRecruit = g.Sum(x => x.NewRecruit),
+                        YtdRecruit = g.Sum(x => x.YtdRecruit),
+                        ActiveRatio = g.Average(x => x.ActiveRatio),
+                        TotalCases = g.Sum(x => x.TotalCases)
+                    })
+                    .ToList();
+
+                var groupPreviousYearActualMapa = previousYearActualMapaList.GroupBy(x => new { x.Month, x.Year })
+               .Select(g => new MapaPlanning
+               {
+                   Month = g.Key.Month,
+                   Year = g.Key.Year,
+                   Manpower_YTDRecruit = g.Sum(x => x.Manpower_YTDRecruit),
+                   ActiveAgent_YTDRecruit = g.Sum(x => x.ActiveAgent_YTDRecruit),
+                   ActiveAgent_TotalCases = g.Sum(x => x.ActiveAgent_TotalCases),
+                   ACE_TotalCases = g.Sum(x => x.ACE_TotalCases),
+                   ACE = g.Sum(x => x.ACE),
+                   ActiveAgent = g.Sum(x => x.ActiveAgent),
+                   NewRecruit = g.Sum(x => x.NewRecruit),
+                   YtdRecruit = g.Sum(x => x.YtdRecruit),
+                   ActiveRatio = g.Average(x => x.ActiveRatio),
+                   TotalCases = g.Sum(x => x.TotalCases)
+               })
+               .ToList();
 
 
                 for (int month = 1; month <= 12; month++)
@@ -328,12 +364,12 @@ namespace CaliphWeb.Controllers
 
 
                     // convert from one2one api mapa to monthly list
-                    var currentMonthAndYearAchieveMonth = actualMapaAchieved.Where(x => x.Month == month).FirstOrDefault() ?? new MapaPlanning { Month = month };
-                    var currentMonthAndPreviousYearAchieveMonth = previousMapaAchieved.Where(x => x.Month == month).FirstOrDefault() ?? new MapaPlanning { Month = month };
+                    var currentMonthAndYearAchieveMonth = groupCurrentYearActualMapa.Where(x => x.Month == month).FirstOrDefault() ?? new MapaPlanning { Month = month };
+                    var currentMonthAndPreviousYearAchieveMonth = groupPreviousYearActualMapa.Where(x => x.Month == month).FirstOrDefault() ?? new MapaPlanning { Month = month };
 
 
                     // if exist ,, sum all value , remove exist 1 , add new 1 (after sum all )
-                    var vmAddedAchievedMapa = vm.CurrentYearActualMapa.Where(x => x.Month== month).ToList();
+                    var vmAddedAchievedMapa = vm.CurrentYearActualMapa.Where(x => x.Month== month&& x.ACE>0).ToList();
                     if (vmAddedAchievedMapa != null)
                     {
                         vm.CurrentYearActualMapa.RemoveAll(x => x.Month == month);
@@ -451,7 +487,7 @@ namespace CaliphWeb.Controllers
                 var actualMapa = new MapaPlanning
                 {
 
-                    ACE = ConvertHelper.ConvertDecimal(mapa.ace_mtd),
+                    ACE = mapa.ace_mtd,
                     ActiveAgent = mapa.active_agent_mtd,
                     NewRecruit = mapa.recruit_mtd,
                     YtdRecruit = mapa.recruit_ytd,

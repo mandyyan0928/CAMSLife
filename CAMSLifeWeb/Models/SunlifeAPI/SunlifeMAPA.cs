@@ -6,8 +6,8 @@ public class SunlifeMAPAResponse
     public string advisorName { get; set; }
     public string roleCode { get; set; }
     public DateTime recruitmentDate { get; set; }
-    public int recruitmentMonth { get; set; }
-    public int recruitmentYear { get; set; }
+    public int month { get; set; }
+    public int year { get; set; }
     public decimal afycMtd { get; set; }
     public decimal afycYtd { get; set; }
     public int casesMtd { get; set; }
