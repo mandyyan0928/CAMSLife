@@ -416,8 +416,8 @@ namespace CaliphWeb.Controllers
 
             while (leaderGenerationHierarchies.Count > 0)
             {
-                
-                hierarchyPolicies = await GetHierarchyPolicies(persistencyCalculator, leaderGenerationHierarchies);
+                var isPersonal = startGeneration == 0 ? true : false; // if generation 0, it is personal hierarchy
+                hierarchyPolicies = await GetHierarchyPolicies(persistencyCalculator, leaderGenerationHierarchies, isPersonal);
                 persistencyCalculator.HierarchyPolicies.Add(new GenerationGroupPolicy
                 {
                     AgentHierarchyPolicies = hierarchyPolicies,
@@ -603,7 +603,9 @@ namespace CaliphWeb.Controllers
                 if (directGroupagents.Count > 0)
                 {
                     var directGroupAgentIds = directGroupagents.Select(x => x.agent_id).ToList();
-                    policies = policies.Where(x => directGroupAgentIds.Contains(x.selling_agent_code)).ToList();
+                    // due to changes in flow , personal sales have to display under direct group too
+                    policies = policies.Where(x => directGroupAgentIds.Contains(x.selling_agent_code)|| x.selling_agent_code ==username).ToList();
+                    
                 }
             }
             else if (type == "w") // whole group search by leader only

@@ -22,7 +22,6 @@ namespace CaliphWeb.ViewModel
         public string Type { get; set; }
         public string AgentName { get; set; }
         public List<AgentPolicyResponse> AgentPolicies { get; set; } = new List<AgentPolicyResponse>();
-        public List<AgentHierarchyResponse> DirectGroups { get; set; }
         public List<GenerationGroupPolicy> HierarchyPolicies { get; set; } = new List<GenerationGroupPolicy>();
         public int TotalMonthly => AgentPolicies.Where(x => x.Factor == 12).Count();
         public int TotalQuarterly => AgentPolicies.Where(x => x.Factor == 4).Count();

@@ -64,14 +64,15 @@
 
                 }
                 @if (firstLevel != null)
-                {
+                            {
 
-                    var wholeGroupPolicies = firstLevel.AgentHierarchyPolicies.Where(x => x.Agent.IsLeader);
-                    var directGroupPolicies = firstLevel.AgentHierarchyPolicies.Where(x => !x.Agent.IsLeader);
-                    var personalPolicies = Model.HierarchyPolicies.Where(x => x.Generation == 0).FirstOrDefault().AgentHierarchyPolicies.FirstOrDefault();
-
-                    if (directGroupPolicies != null)
-                    {
+                                var wholeGroupPolicies = firstLevel.AgentHierarchyPolicies.Where(x => x.Agent.IsLeader);
+                                var directGroupPolicies = firstLevel.AgentHierarchyPolicies.Where(x => !x.Agent.IsLeader);
+                                var personalPolicies = Model.HierarchyPolicies.Where(x => x.Generation == 0).FirstOrDefault().AgentHierarchyPolicies.FirstOrDefault();
+                    // due to changes in flow , personal sales have to display under direct group too
+                                directGroupPolicies = directGroupPolicies.Prepend(personalPolicies);
+                                if (directGroupPolicies != null)
+                                {
                         <h2>Direct Group</h2>
                         <table class="table datatable-nested">
                             <thead>
@@ -105,73 +106,43 @@
 
                                     <td id="total_direct_ace" class="exclude">
                                         @{var groupace = directGroupPolicies.Sum(x => x.ACE);}
-                                        @groupace.ToString("n2")
+                    @groupace.ToString("n2")
 
 
                                     </td>
                                     <td id="total_direct_pp">
                                         @{ var pp = directGroupPolicies.Sum(x => x.PersistencyPremium);}
-                                        @pp.ToString("n2")
+                @pp.ToString("n2")
 
 
-                                    </td>
-                                    <td>
+            </td>
+
+            <td>
                                         @{ var ratio = groupace == 0 ? 0 : ((pp / groupace) * 100);}
-                                        @ratio.ToString("n2") %
-                                    </td>
-                                    <td id="total_direct_new_pp_ratio">
-                                        @ratio.ToString("n2")  %
-                                    </td>
-                                    <td id="total_direct_new_pp">
+                @ratio.ToString("n2") %
 
-                                        @pp.ToString("n2")
-                                    </td>
+            </td>
 
-                                </tr>
-                                <tr>
-                                    <td class="expand-control" data-agent-id="@loginUser.Username" data-generation="@firstLevel.Generation">
-                                        -
+            <td id="total_direct_new_pp_ratio">
+                @ratio.ToString("n2")  %
 
-                                    </td>
-                                    <td>
-                                        <a href="#" onclick="DisplayCalculator('@loginUser.Username', 'p', '@Json.Encode(loginUser.Fullname)')">
+            </td>
+
+            <td id="total_direct_new_pp">
+
+                @pp.ToString("n2")
+            </td>
 
 
-                                            @loginUser.Username (  @loginUser.RoleCode )<br />
-                                            @loginUser.Fullname
-                                        </a>
-                                    </td>
-                                    <td id="ace_direct_@loginUser.Username">
+        </tr>
 
-                                        @personalPolicies.ACE.ToString("n2")
-
-                                    </td>
-                                    <td id="pp_direct_@loginUser.Username">
-
-                                        @personalPolicies.PersistencyPremium.ToString("n2")
-
-
-                                    </td>
-                                    <td>
-
-                                        @personalPolicies.Ratio.ToString("n2")
-
-                                        %
-                                    </td>
-                                    <td id="direct_new_pp_ratio_@loginUser.Username">
-
-                                        <input type="number" class="form-control" id="new_ratio_@personalPolicies.Agent.agent_id" min="@personalPolicies.Ratio" value="@personalPolicies.Ratio.ToString("n2")" onchange="DirectPPRatioTextChange('@personalPolicies.Agent.agent_id')" />
-                                        %
-                                    </td>
-                                    <td id="direct_new_pp_@personalPolicies.Agent.agent_id">
-
-                                        @personalPolicies.PersistencyPremium.ToString("n2")
-                                    </td>
-                                </tr>
+    
 
                                 @foreach (var agentHierarchyPolicy in directGroupPolicies)
                                 {
                                     var user = agentHierarchyPolicy.Agent;
+                                    var isCurrentUser = agentHierarchyPolicy.Agent.agent_id == loginUser.Username;
+                                    var text = isCurrentUser ? "*Personal":"";
 
                                     <tr>
                                         <td class="expand-control" data-agent-id="@user.agent_id" data-generation="@firstLevel.Generation">
@@ -182,7 +153,7 @@
                                             <a href="#" onclick="DisplayCalculator('@user.agent_id', 'p', '@Json.Encode(@user.agent_name)')">
 
 
-                                                @user.agent_id (  @user.role )<br />
+                                                @user.agent_id (  @user.role  @text )<br />
                                                 @user.agent_name
                                             </a>
                                         </td>
@@ -220,7 +191,7 @@
                         </table>
                     }
                     if (wholeGroupPolicies != null)
-                    {
+                {
                         <h2>Whole Group</h2>
                         <table class="table datatable-nested">
                             <thead>
@@ -252,39 +223,46 @@
 
                                     <td id="ace_group_@firstLevel.Generation" class="exclude">
                                         @{var groupace = wholeGroupPolicies.Sum(x => x.ACE);}
-                                        @groupace.ToString("n2")
+                @groupace.ToString("n2")
 
 
-                                    </td>
-                                    <td id="pp_group_@firstLevel.Generation">
+            </td>
+
+            <td id="pp_group_@firstLevel.Generation">
                                         @{ var pp = wholeGroupPolicies.Sum(x => x.PersistencyPremium);}
-                                        @pp.ToString("n2")
+                @pp.ToString("n2")
 
 
-                                    </td>
-                                    <td>
+            </td>
+
+            <td>
                                         @{ var ratio = groupace == 0 ? 0 : ((pp / groupace) * 100);}
-                                        @ratio.ToString("n2") %
-                                    </td>
-                                    <td id="group_new_pp_ratio_@firstLevel.Generation">
-                                        @ratio.ToString("n2")  %
-                                    </td>
-                                    <td id="group_new_pp_@firstLevel.Generation">
+                @ratio.ToString("n2") %
 
-                                        @pp.ToString("n2")
-                                    </td>
+            </td>
 
-                                </tr>
+            <td id="group_new_pp_ratio_@firstLevel.Generation">
+                @ratio.ToString("n2")  %
 
-                                @foreach (var agentHierarchyPolicy in wholeGroupPolicies)
+            </td>
+
+            <td id="group_new_pp_@firstLevel.Generation">
+
+                @pp.ToString("n2")
+            </td>
+
+
+        </tr>
+
+        @foreach (var agentHierarchyPolicy in wholeGroupPolicies)
                                 {
-                                    var user = agentHierarchyPolicy.Agent;
+                    var user = agentHierarchyPolicy.Agent;
 
                                     <tr>
                                         <td class="expand-control" data-agent-id="@user.agent_id" data-generation="@firstLevel.Generation">
 
                                             <a  style="font-size:18px; font-weight:800;cursor:pointer">
-                                               <span id="expand_icon_@user.agent_id">+</span> 
+                                               <span id="expand_icon_@user.agent_id">+</span>
                                             </a>
                                             <input type="hidden" id="expand_@user.agent_id" value="0" />
 
