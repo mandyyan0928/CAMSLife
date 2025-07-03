@@ -39324,8 +39324,8 @@ body {
         }
 
     .sidebar-dark .nav-sidebar .nav-item > .nav-link.active {
-        background-color: #596782;
-        color: #fff;
+        background-color: #f0c64f;
+        color: #252b36;
     }
 
     .sidebar-dark .nav-sidebar .nav-item-open > .nav-link:not(.disabled),
@@ -39334,10 +39334,10 @@ body {
         color: #fff;
     }
 
-    .sidebar-dark .nav-sidebar > .nav-item > .nav-link.active {
+    /*.sidebar-dark .nav-sidebar > .nav-item > .nav-link.active {
         background-color: #596782;
         color: #fff;
-    }
+    }*/
 
     .sidebar-dark .nav-sidebar .nav-item-header {
         color: rgba(255, 255, 255, 0.5);

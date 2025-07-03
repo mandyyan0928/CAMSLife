@@ -185,11 +185,11 @@ namespace CaliphWeb.Helper.Mapper
             if (type == MasterDataEnum.one2oneRelationType.WHOLE_GROUP)
                 return null;
 
-            return type == MasterDataEnum.one2oneRelationType.PERSONAL ? 0 :
-                   type == MasterDataEnum.one2oneRelationType.DIRECT_GROUP ? 1 :
-                   type == MasterDataEnum.one2oneRelationType.G1 ? 2 :
-                   type == MasterDataEnum.one2oneRelationType.G2 ? 3 :
-                   type == MasterDataEnum.one2oneRelationType.G3 ? 4 :
+            return 
+                   type == MasterDataEnum.one2oneRelationType.DIRECT_GROUP ? 0 :
+                   type == MasterDataEnum.one2oneRelationType.G1 ? 1 :
+                   type == MasterDataEnum.one2oneRelationType.G2 ? 2 :
+                   type == MasterDataEnum.one2oneRelationType.G3 ? 3 :
                    throw new ArgumentOutOfRangeException(nameof(type), $"Unhandled type: {type}");
         }
 

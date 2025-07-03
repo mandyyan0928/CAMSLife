@@ -42,14 +42,14 @@
 
         <div class="navbar-brand text-center text-lg-left">
             <a href="@Url.Action("Index", "Home")" class="d-inline-block" style="font-size:18px;color:white; font-weight:600">
-             <img src="~/global_assets/images/logo_new_light.png" style="width:180px;height:35px" />
+                <img src="~/global_assets/images/logo_new_light.png" style="width:180px;height:35px" />
             </a>
         </div>
 
         <div class="collapse navbar-collapse order-2 order-lg-1" id="navbar-mobile">
 
         </div>
-
+      
         <ul class="navbar-nav flex-row order-1 order-lg-2 flex-1 flex-lg-0 justify-content-end align-items-center">
 
             @if (User.Identity.IsAuthenticated && Session["user"] != null)
@@ -124,6 +124,16 @@
                 <!-- Main navigation -->
                 <div class="sidebar-section">
                     <ul class="nav nav-sidebar" data-nav-type="accordion">
+
+                        @{
+                            var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+                            var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+                            //update later
+                            var isActiveAgent = currentController == "Agent";
+                            var isActiveAnnouncement = currentController == "Announcement";
+                            var isActiveResource = currentController == "Resource";
+                            var isActiveEvent = currentController == "Event";
+                        }
                         @if (User.Identity.IsAuthenticated && Session["user"] != null)
                         {
 
@@ -137,7 +147,7 @@
                             </li>
 
                             <li class="nav-item">
-                                <a href=@Url.Action("Index", "Home") class="nav-link active">
+                                <a href=@Url.Action("Index", "Home") class="nav-link @(currentController == "Home" && currentAction == "Index" ? "active" : "")">
                                     <i class="icon-home4"></i>
                                     <span>
                                         Dashboard
@@ -168,17 +178,18 @@
                     </span>
                 </a>
             </li>*@
-                            if (user.IsAgent || user.IsLeader || user.IsPotentialAgent)
-                            {
+                        if (user.IsAgent || user.IsLeader || user.IsPotentialAgent)
+                        {
+                           
 
-                                <li class="nav-item nav-item-submenu">
+                                <li class="nav-item nav-item-submenu @(isActiveEvent ? "nav-item-open" : "")">
                                     <a href="#" class="nav-link"><i class="icon-accessibility"></i> <span>Training/Event</span></a>
 
-                                    <ul class="nav nav-group-sub" data-submenu-title="Agent">
-                                        <li class="nav-item"><a href="@Url.Action("UpcomingEvent", "Event")" class="nav-link">Upcoming Training/Events</a></li>
+                                    <ul class="nav nav-group-sub" data-submenu-title="Agent"  style="@(isActiveEvent ? "display:block;" : "")">
+                                        <li class="nav-item"><a href="@Url.Action("UpcomingEvent", "Event")" class="nav-link @(currentController == "Event" && currentAction == "UpcomingEvent" ? "active" : "")">Upcoming Training/Events</a></li>
                                         @if (user.IsAgent || user.IsLeader)
                                         {
-                                            <li class="nav-item"><a href="@Url.Action("CPDEarned", "Event")" class="nav-link">CPD Earned</a></li>
+                                            <li class="nav-item"><a href="@Url.Action("CPDEarned", "Event")" class="nav-link @(currentController == "Event" && currentAction == "CPDEarneds" ? "active" : "")">CPD Earned</a></li>
                                         }
 
 
@@ -190,7 +201,7 @@
                             if (user.IsAgent || user.IsLeader)
                             {
                                 <li class="nav-item">
-                                    <a href=@Url.Action("Index2", "Budget") class="nav-link">
+                                    <a href=@Url.Action("Index2", "Budget") class="nav-link @(currentController == "Budget" && currentAction == "Index2" ? "active" : "")">
                                         <i class="icon-calculator"></i>
                                         <span>
                                             Planning
@@ -203,124 +214,143 @@
                             if (user.IsAdmin)
                             {
 
-                                <li class="nav-item nav-item-submenu">
+
+                                var actionAgentMenus = new List<string> { "AddAgent", "List" };
+                                var controllerAgentMenus = new List<string> { "Agent", "User" };
+                                var isActiveAgentMenu =controllerAgentMenus.IndexOf(currentController) >= 0 && actionAgentMenus.IndexOf(currentAction) >= 0;
+                                var xx = isActiveAgentMenu;
+                                <li class="nav-item nav-item-submenu @(isActiveAnnouncement ? "nav-item-open" : "")">
                                     <a href="#" class="nav-link"><i class="icon-megaphone"></i> <span>Announcement</span></a>
 
-                                    <ul class="nav nav-group-sub" data-submenu-title="Announcement">
-                                        <li class="nav-item"><a href="@Url.Action("Add", "Announcement")" class="nav-link">Add Announcement</a></li>
-                                        <li class="nav-item"><a href="@Url.Action("List", "Announcement")" class="nav-link">Announcement List</a></li>
+                                    <ul class="nav nav-group-sub" data-submenu-title="Announcement" style="@(isActiveAnnouncement ? "display:block;" : "")">
+                                        <li class="nav-item"><a href="@Url.Action("Add", "Announcement")" class="nav-link @(currentController == "Announcement" && currentAction == "Add" ? "active" : "")">Add Announcement</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("List", "Announcement")" class="nav-link @(currentController == "Announcement" && currentAction == "List" ? "active" : "")">Announcement List</a></li>
 
                                     </ul>
                                 </li>
 
-                                <li class="nav-item nav-item-submenu">
+
+                                <li class="nav-item nav-item-submenu @(isActiveResource ? "nav-item-open" : "")">
                                     <a href="#" class="nav-link"><i class="icon-megaphone"></i> <span>Resource</span></a>
 
-                                    <ul class="nav nav-group-sub" data-submenu-title="Announcement">
-                                        <li class="nav-item"><a href="@Url.Action("List", "Resource")" class="nav-link">Resource List</a></li>
-                                        <li class="nav-item"><a href="@Url.Action("Add", "Resource")" class="nav-link">Add Resource</a></li>
+                                    <ul class="nav nav-group-sub" data-submenu-title="Announcement" style="@(isActiveResource ? "display:block;" : "")">
+                                        <li class="nav-item"><a href="@Url.Action("List", "Resource")" class="nav-link @(currentController == "Resource" && currentAction == "List" ? "active" : "")">Resource List</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("Add", "Resource")" class="nav-link @(currentController == "Resource" && currentAction == "Add" ? "active" : "")">Add Resource</a></li>
                                     </ul>
                                 </li>
 
-                                <li class="nav-item nav-item-submenu">
+
+                                <li class="nav-item nav-item-submenu @(isActiveEvent ? "nav-item-open" : "")">
                                     <a href="#" class="nav-link"><i class="icon-calendar2"></i> <span>Training / Event</span></a>
 
-                                    <ul class="nav nav-group-sub" data-submenu-title="Event">
-                                        <li class="nav-item"><a href="@Url.Action("Add", "Event")" class="nav-link">Add Training/Event</a></li>
-                                        <li class="nav-item"><a href="@Url.Action("List", "Event")" class="nav-link">Training/Event List</a></li>
-                                        <li class="nav-item"><a href="@Url.Action("PaymentList", "Event")" class="nav-link">Training/Event Payment List</a></li>
+                                    <ul class="nav nav-group-sub" data-submenu-title="Event" style="@(isActiveEvent ? "display:block;" : "")">
+                                        <li class="nav-item"><a href="@Url.Action("Add", "Event")" class="nav-link @(currentController == "Event" && currentAction == "Add" ? "active" : "")">Add Training/Event</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("List", "Event")" class="nav-link @(currentController == "Event" && currentAction == "List" ? "active" : "")">Training/Event List</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("PaymentList", "Event")" class="nav-link @(currentController == "Event" && currentAction == "PaymentList" ? "active" : "")">Training/Event Payment List</a></li>
                                         @if (user.IsAdmin)
-                                        {
-                                            <li class="nav-item"><a href="@Url.Action("ManualAttendance", "Event")" class="nav-link">Manual Attendance</a></li>
+                                {
+                                            <li class="nav-item"><a href="@Url.Action("ManualAttendance", "Event")" class="nav-link @(currentController == "Event" && currentAction == "ManualAttendance" ? "active" : "")">Manual Attendance</a></li>
                                         }
                                     </ul>
                                 </li>
-                                <li class="nav-item nav-item-submenu">
+                              
+                                      <li class="nav-item nav-item-submenu @(isActiveAgentMenu ? "nav-item-open" : "")">
                                     <a href="#" class="nav-link"><i class="icon-user"></i> <span>Agent</span></a>
 
-                                    <ul class="nav nav-group-sub" data-submenu-title="Agent">
-                                        <li class="nav-item"><a href="@Url.Action("AddAgent", "Agent")" class="nav-link">Add Potential Agent</a></li>
-                                        <li class="nav-item"><a href="@Url.Action("List", "User")" class="nav-link">Agent List</a></li>
+                                    <ul class="nav nav-group-sub" data-submenu-title="Agent" style="@(isActiveAgentMenu ? "display:block;" : "")">
+                                        <li class="nav-item"><a href="@Url.Action("AddAgent", "Agent")" class="nav-link @(currentController == "Agent" && currentAction == "AddAgent" ? "active" : "")">Add Potential Agent</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("List", "User")" class="nav-link @(currentController == "User" && currentAction == "List" ? "active" : "")">Agent List</a></li>
                                     </ul>
                                 </li>
                             }
 
-                            <li class="nav-item nav-item-submenu" id="Client">
+                        var actionMenus = new List<string> { "Add", "List", "Archive", "Kiv", "Referral", "ClientSummary" };
+                        var controllerMenus = new List<string> { "Client", "Report" };
+                        var isActiveClientMenu = controllerMenus.IndexOf(currentController) >= 0 && actionMenus.IndexOf(currentAction) >= 0;
+                            <li class="nav-item nav-item-submenu  @(isActiveClientMenu ? "nav-item-open" : "")" id="Client">
                                 <a href="#" class="nav-link"><i class="icon-users4"></i> <span>Client</span></a>
-                                <ul class="nav nav-group-sub" data-submenu-title="Client">
-                                    <li class="nav-item"><a href="@Url.Action("Add", "Client")" class="nav-link">Add Client</a></li>
-                                    <li class="nav-item"><a href="@Url.Action("List", "Client")" class="nav-link">Client List</a></li>
-                                    <li class="nav-item"><a href="@Url.Action("Archive", "Client")" class="nav-link">Archive List</a></li>
-                                    <li class="nav-item"><a href="@Url.Action("Kiv", "Client")" class="nav-link"> KIV List</a></li>
+                                <ul class="nav nav-group-sub" data-submenu-title="Client" style="@(isActiveClientMenu ? "display:block;" : "")">
+                                    <li class="nav-item"><a href="@Url.Action("Add", "Client")" class="nav-link @(currentController == "Client" && currentAction == "Add" ? "active" : "")">Add Client</a></li>
+                                    <li class="nav-item"><a href="@Url.Action("List", "Client")" class="nav-link @(currentController == "Client" && currentAction == "List" ? "active" : "")">Client List</a></li>
+                                    <li class="nav-item"><a href="@Url.Action("Archive", "Client")" class="nav-link @(currentController == "Client" && currentAction == "Archive" ? "active" : "")">Archive List</a></li>
+                                    <li class="nav-item"><a href="@Url.Action("Kiv", "Client")" class="nav-link @(currentController == "Client" && currentAction == "Kiv" ? "active" : "")"> KIV List</a></li>
                                     @if (!user.IsPotentialAgent)
                                     {
-                                        <li class="nav-item"><a href="@Url.Action("Referral", "Client")" class="nav-link">Referral List</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("Referral", "Client")" class="nav-link @(currentController == "Client" && currentAction == "Referral" ? "active" : "")">Referral List</a></li>
                                     }
-                                    <li class="nav-item"><a href="@Url.Action("ClientSummary", "Report")" class="nav-link">Client Summary</a></li>
+                                    <li class="nav-item"><a href="@Url.Action("ClientSummary", "Report")" class="nav-link @(currentController == "Report" && currentAction == "ClientSummary" ? "active" : "")">Client Summary</a></li>
 
                                 </ul>
                             </li>
                             if (!user.IsPotentialAgent)
                             {
-                                <li class="nav-item nav-item-submenu">
+                                var isActiveDeal = currentController == "Deal";
+                                <li class="nav-item nav-item-submenu  @(isActiveDeal ? "nav-item-open" : "")">
                                     <a href="#" class="nav-link"><i class="icon-coin-dollar"></i> <span>Deal</span></a>
 
-                                    <ul class="nav nav-group-sub" data-submenu-title="Deal">
-                                        <li class="nav-item"><a href="@Url.Action("Add", "Deal")" class="nav-link">Add Deal</a></li>
-                                        <li class="nav-item"><a href="@Url.Action("List", "Deal")" class="nav-link">Deal List</a></li>
+                                    <ul class="nav nav-group-sub" data-submenu-title="Deal"  style="@(isActiveDeal ? "display:block;" : "")">
+                                        <li class="nav-item"><a href="@Url.Action("Add", "Deal")" class="nav-link @(currentController == "Deal" && currentAction == "Add" ? "active" : "")">Add Deal</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("List", "Deal")" class="nav-link @(currentController == "Deal" && currentAction == "List" ? "active" : "")">Deal List</a></li>
                                     </ul>
                                 </li>
                             }
                             if (!user.IsPotentialAgent)
                             {
-                                <li class="nav-item nav-item-submenu">
+                                var isActiveActivity = currentController == "Activity";
+                                <li class="nav-item nav-item-submenu  @(isActiveActivity ? "nav-item-open" : "")">
                                     <a href="#" class="nav-link"><i class="icon-calendar3"></i> <span>Activity</span></a>
 
-                                    <ul class="nav nav-group-sub" data-submenu-title="Activity">
-                                        <li class="nav-item"><a href="@Url.Action("Add", "Activity")" class="nav-link">Add Activity</a></li>
-                                        <li class="nav-item"><a href="@Url.Action("List", "Activity")" class="nav-link">Activity List</a></li>
-                                        <li class="nav-item"><a href="@Url.Action("Calender", "Activity")" class="nav-link">Calendar</a></li>
+                                    <ul class="nav nav-group-sub" data-submenu-title="Activity"  style="@(isActiveActivity ? "display:block;" : "")">
+                                        <li class="nav-item"><a href="@Url.Action("Add", "Activity")" class="nav-link @(currentController == "Activity" && currentAction == "Add" ? "active" : "")">Add Activity</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("List", "Activity")" class="nav-link @(currentController == "Activity" && currentAction == "List" ? "active" : "")">Activity List</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("Calender", "Activity")" class="nav-link @(currentController == "Activity" && currentAction == "Calendar" ? "active" : "")">Calendar</a></li>
                                     </ul>
                                 </li>
-                                <li class="nav-item nav-item-submenu">
+
+                                var isActivePointSystem = currentController == "PointSystem";
+                                <li class="nav-item nav-item-submenu  @(isActivePointSystem ? "nav-item-open" : "")">
                                     <a href="#" class="nav-link"><i class="icon-dots"></i> <span>20 Point System</span></a>
 
-                                    <ul class="nav nav-group-sub" data-submenu-title="Point System">
-                                        <li class="nav-item"><a href="@Url.Action("Summary", "PointSystem")" class="nav-link">Point Summary</a></li>
+                                    <ul class="nav nav-group-sub" data-submenu-title="Point System"  style="@(isActivePointSystem ? "display:block;" : "")">
+                                        <li class="nav-item"><a href="@Url.Action("Summary", "PointSystem")" class="nav-link @(currentController == "PointSystem" && currentAction == "Summary" ? "active" : "")">Point Summary</a></li>
                                     </ul>
                                 </li>
                             }
 
                             if (user.IsLeader || user.IsAgent)
                             {
-
-                                <li class="nav-item nav-item-submenu">
+                                var actionRecruitmentMenus = new List<string> { "Add", "List", "ReferralList", "AgentRecruitSummary"};
+                                var controllerRecruitmentMenus = new List<string> {  "Report", "Agent" };
+                                var isActiveRecruitmentMenu = controllerRecruitmentMenus.IndexOf(currentController) >= 0 && actionRecruitmentMenus.IndexOf(currentAction) >= 0;
+                                <li class="nav-item nav-item-submenu  @(isActiveRecruitmentMenu ? "nav-item-open" : "")">
                                     <a href="#" class="nav-link"><i class="icon-collaboration"></i> <span>Recruitment</span></a>
 
-                                    <ul class="nav nav-group-sub" data-submenu-title="Agent">
-                                        <li class="nav-item"><a href="@Url.Action("Add", "Agent")" class="nav-link">Add Recruitment</a></li>
-                                        <li class="nav-item"><a href="@Url.Action("List", "Agent")" class="nav-link">Recruitment List</a></li>
-                                        <li class="nav-item"><a href="@Url.Action("ReferralList", "Agent")" class="nav-link">Referral List</a></li>
-                                        <li class="nav-item"><a href="@Url.Action("AgentRecruitSummary", "Report")" class="nav-link">Recruitment Summary</a></li>
+                                    <ul class="nav nav-group-sub" data-submenu-title="Agent"  style="@(isActiveRecruitmentMenu ? "display:block;" : "")">
+                                        <li class="nav-item"><a href="@Url.Action("Add", "Agent")" class="nav-link @(currentController == "Agent" && currentAction == "Add" ? "active" : "")">Add Recruitment</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("List", "Agent")" class="nav-link @(currentController == "Agent" && currentAction == "List" ? "active" : "")">Recruitment List</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("ReferralList", "Agent")" class="nav-link @(currentController == "Agent" && currentAction == "ReferralList" ? "active" : "")">Referral List</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("AgentRecruitSummary", "Report")" class="nav-link @(currentController == "Report" && currentAction == "AgentRecruitSummary" ? "active" : "")">Recruitment Summary</a></li>
                                     </ul>
                                 </li>
 
                             }
 
-
-                            <li class="nav-item nav-item-submenu">
+                            var actionReportMenus = new List<string> { "EventAttendanceReport", "Index", "Project100", "KIVHistory", "BusinessReport", "MapaCalculator" };
+                            var controllerReportMenus = new List<string> { "Persistency", "Report" , "Agent"};
+                            var isActiveReportMenu = controllerReportMenus.IndexOf(currentController) >= 0 && actionReportMenus.IndexOf(currentAction) >= 0;
+                            <li class="nav-item nav-item-submenu  @(isActiveReportMenu ? "nav-item-open" : "")">
                                 <a href="#" class="nav-link"><i class="icon-menu2"></i> <span>Report</span></a>
 
-                                <ul class="nav nav-group-sub" data-submenu-title="Point System">
+                                <ul class="nav nav-group-sub" data-submenu-title="Point System"  style="@(isActiveReportMenu ? "display:block;" : "")">
                                     @if (user.IsAdmin)
                                     {
-                                        <li class="nav-item"><a href="@Url.Action("EventAttendanceReport", "Report")" class="nav-link"> Attendance Report</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("EventAttendanceReport", "Report")" class="nav-link @(currentController == "Report" && currentAction == "EventAttendanceReport" ? "active" : "")"> Attendance Report</a></li>
                                     }
 
                                     @if (user.IsLeader || user.IsAgent)
                                     {
                                         <li class="nav-item">
-                                            <a href="@Url.Action("Index", "Persistency")"  class="nav-link">
+                                            <a href="@Url.Action("Index", "Persistency")" class="nav-link @(currentController == "Persistency" && currentAction == "Index" ? "active" : "")">
                                                 Persistency Calculator
                                             </a>
                                         </li>
@@ -333,37 +363,37 @@
                             </a>
                         </li>*@
                                     }
-                                    <li class="nav-item"><a href="@Url.Action("Project100", "Report")" class="nav-link">Project 100 (Pdf Export)</a></li>
+                                    <li class="nav-item"><a href="@Url.Action("Project100", "Report")" class="nav-link @(currentController == "Report" && currentAction == "Project100" ? "active" : "")">Project 100 (Pdf Export)</a></li>
                                     @if (user.IsLeader || user.IsAdmin)
                                     {
                                         @*<li class="nav-item"><a href="@Url.Action("Project100Recruit", "Report")" class="nav-link">Project 100 Recruitment (Pdf Export)</a></li>*@
                                     }
                                     @if (!user.IsPotentialAgent)
                                     {
-                                        <li class="nav-item"><a href="@Url.Action("KIVHistory", "Report")" class="nav-link">KIV Revert History</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("KIVHistory", "Report")" class="nav-link @(currentController == "Report" && currentAction == "KIVHistory" ? "active" : "")">KIV Revert History</a></li>
                                     }
                                     @if (user.IsLeader || user.IsAgent)
                                     {
 
 
                                         @*<li class="nav-item">
-                                            <a href=@Url.Action("Summary", "AgentCommission") class="nav-link">
-                                                <span>
-                                                    Commission History
-                                                </span>
-                                            </a>
-                                        </li>*@
+                            <a href=@Url.Action("Summary", "AgentCommission") class="nav-link">
+                                <span>
+                                    Commission History
+                                </span>
+                            </a>
+                        </li>*@
 
                                         <li class="nav-item">
-                                            <a href='@Url.Action("BusinessReport", "Persistency")' class="nav-link">
+                                            <a href='@Url.Action("BusinessReport", "Persistency")' class="nav-link @(currentController == "Persistency" && currentAction == "BusinessReport" ? "active" : "")">
                                                 Business Report
                                             </a>
                                         </li>
                                     }
                                     @if (user.IsLeader)
                                     {
-                                        <li class="nav-item"><a href="@Url.Action("MapaCalculator", "Agent", new {type =(int) CaliphWeb.ViewModel.Data.MasterDataEnum.AgentStimulatorType.DirectGroup, id = DateTime.Now.Year })" class="nav-link">Direct Group MAPA</a></li>
-                                        <li class="nav-item"><a href="@Url.Action("MapaCalculator", "Agent", new {type =(int) CaliphWeb.ViewModel.Data.MasterDataEnum.AgentStimulatorType.WholeGroup, id = DateTime.Now.Year })" class="nav-link">Whole Group MAPA</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("MapaCalculator", "Agent", new {type =(int) CaliphWeb.ViewModel.Data.MasterDataEnum.AgentStimulatorType.DirectGroup, id = DateTime.Now.Year })" class="nav-link @(currentController == "Agent" && currentAction == "MapaCalculator" ? "active" : "")">Direct Group MAPA</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("MapaCalculator", "Agent", new {type =(int) CaliphWeb.ViewModel.Data.MasterDataEnum.AgentStimulatorType.WholeGroup, id = DateTime.Now.Year })" class="nav-link" @(currentController == "Agent" && currentAction == "MapaCalculator" ? "active" : "")>Whole Group MAPA</a></li>
 
                                         @*<li class="nav-item">
                             <a href='/BonusTracker/LeaderBonusSummary' class="nav-link">
@@ -378,7 +408,7 @@
                             <!-- /main -->
 
                         }
-                        <li class="nav-item"><a href="@Url.Action("Logout", "Account")" class="nav-link"><i class="icon-switch2"></i> <span>Log Out</span></a></li>
+                        <li class="nav-item"><a href="@Url.Action("Logout", "Account")" class="nav-link @(currentController == "Account" && currentAction == "Logout" ? "active" : "")"><i class="icon-switch2"></i> <span>Log Out</span></a></li>
 
 
                     </ul>
