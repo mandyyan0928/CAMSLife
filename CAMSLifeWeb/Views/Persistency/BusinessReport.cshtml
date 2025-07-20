@@ -20,7 +20,7 @@
                             <span class="input-group-prepend">
                                 <span class="input-group-text"><i class="icon-calendar22"></i></span>
                             </span>
-                            <input type="text"   id="CreatedDate" class="form-control daterange-basic">
+                            <input type="text" id="CreatedDate" class="form-control daterange-basic">
                         </div>
                     </div>
                     <label class="m-1">
@@ -44,7 +44,9 @@
 
                     var wholeGroupPolicies = firstLevel.AgentHierarchyPolicies.Where(x => x.Agent.IsLeader);
                     var directGroupPolicies = firstLevel.AgentHierarchyPolicies.Where(x => !x.Agent.IsLeader);
-
+                    var personalPolicies = Model.HierarchyPolicies.Where(x => x.Generation == 0).FirstOrDefault().AgentHierarchyPolicies.FirstOrDefault();
+                    // due to changes in flow , personal sales have to display under direct group too
+                    directGroupPolicies = directGroupPolicies.Prepend(personalPolicies);
 
 
                     if (directGroupPolicies != null)
@@ -60,7 +62,7 @@
 
                                     </th>
                                     <th>AFYC</th>
-                                  
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -83,13 +85,15 @@
 
 
                                     </td>
-                                 
+
 
                                 </tr>
 
                                 @foreach (var agentHierarchyPolicy in directGroupPolicies)
                                 {
                                     var user = agentHierarchyPolicy.Agent;
+                                    var isCurrentUser = agentHierarchyPolicy.Agent.agent_id == loginUser.Username;
+                                    var text = isCurrentUser ? "*Personal" : "";
 
                                     <tr>
                                         <td class="expand-control" data-agent-id="@user.agent_id" data-generation="@firstLevel.Generation">
@@ -109,7 +113,7 @@
                                             @agentHierarchyPolicy.ACE.ToString("n2")
 
                                         </td>
-                                    
+
                                     </tr>
 
                                 }
@@ -130,7 +134,7 @@
 
                                     </th>
                                     <th>AFYC</th>
-                                   
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -153,7 +157,7 @@
 
 
                                     </td>
-                                 
+
 
                                 </tr>
 
@@ -183,16 +187,16 @@
                                             @agentHierarchyPolicy.ACE.ToString("n2")
 
                                         </td>
-                                        
+
                                     </tr>
-                                 
+
                                 }
 
                             </tbody>
                         </table>
                     }
                 }
-             
+
 
             </div>
 
@@ -205,7 +209,31 @@
 
 
 @section Scripts{
-
+    <script type="text/html" id="expand-agents">
+        <div class="alert alert-primary border-0 alert-dismissible">
+            <span class="font-weight-semibold"> {userid}</span>
+            <div id="agent-policy-table_{userid}">
+                <table class="table table-border-dashed">
+                    <thead>
+                        <tr id="action">
+                            <td>
+                                Action
+                            </td>
+                            <td>Agent</td>
+                            <td>Relation</td>
+                            <td>AFYC</td>
+                           
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="8"><i class="icon-spinner6 spinner mr-2"></i>Loading....</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </script>
     <script type="text/javascript">
         let startOfMonth = new Date('@Model.StartDate.ToString("yyyy-MM-dd")');
         let endOfMonth =new Date('@Model.EndDate.ToString("yyyy-MM-dd")');
@@ -217,13 +245,75 @@
 
         });
 
+        $(document).ready(function () {
+
+            var table = $('.datatable-nested').DataTable({
+                buttons: {
+                    customizeData: function (data) {
+                        data.filename = generateFileName() + '.xlsx';
+                    },
+
+                    exportOptions: {
+                        rows: function (idx, data, node) {
+                            return !$(node).hasClass('exclude-export');
+                        },
+                        columns: ':not(.exclude)'
+                    },
+                    dom: {
+                        button: {
+                            className: 'btn btn-light'
+                        }
+                    },
+
+                    buttons: [
+                        'copyHtml5',
+                        'excelHtml5',
+                        'csvHtml5',
+                        'pdfHtml5'
+                    ]
+                }
+            });
+            $('.datatable-nested tbody').on('click', 'td.expand-control', function () {
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
+
+                console.log("Clicked Row:", tr);
+                console.log("Row Data:", row.data());
+                console.log("Row.child():", row.child());
+
+                var agentId = $(this).data('agent-id');
+                var expandText = $('#expand_icon_' + agentId).text();
+
+
+                if (row.child.isShown()) {
+                    // This row is already open, close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                    $('#expand_icon_' + agentId).text('+');
+                } else {
+                    // Get the agent ID and generation from the row data attributes
+                    $('#expand_icon_' + agentId).text('-');
+                    var generation = $(this).data('generation');
+
+                    console.log('agentId', agentId)
+                    console.log('generation', generation)
+
+
+
+                    const childRow = $('#expand-agents').html().replaceAll('{userid}', agentId)
+                    row.child(childRow).show();
+                    // Open this row with the nested table
+                    ExpandGroup(agentId, generation)
+                    tr.addClass('shown');
+                }
+            });
+        });
+
         function ExpandGroup(agent, generation) {
 
             var hasExpand = $('#expand_' + agent).val();
 
-            if (hasExpand == 1) {
-                return;
-            }
+
         @{ var filter = new CaliphWeb.ViewModel.PersistencyCalculatorViewModel();}
             var searchFilter = @Html.Raw(Json.Encode(filter));
             searchFilter.StartDate = $('#CreatedDate').data().daterangepicker.startDate._d.toJSON();

@@ -189,7 +189,7 @@
                                         <li class="nav-item"><a href="@Url.Action("UpcomingEvent", "Event")" class="nav-link @(currentController == "Event" && currentAction == "UpcomingEvent" ? "active" : "")">Upcoming Training/Events</a></li>
                                         @if (user.IsAgent || user.IsLeader)
                                         {
-                                            <li class="nav-item"><a href="@Url.Action("CPDEarned", "Event")" class="nav-link @(currentController == "Event" && currentAction == "CPDEarneds" ? "active" : "")">CPD Earned</a></li>
+                                            <li class="nav-item"><a href="@Url.Action("CPDEarned", "Event")" class="nav-link @(currentController == "Event" && currentAction == "CPDEarned" ? "active" : "")">CPD Earned</a></li>
                                         }
 
 
