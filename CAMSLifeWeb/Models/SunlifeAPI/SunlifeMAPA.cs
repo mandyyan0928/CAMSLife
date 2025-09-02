@@ -17,7 +17,7 @@ public class SunlifeMAPAResponse
     public int recruitMtd { get; set; }
     public int recruitYtd { get; set; }
     public int activeAdvisorMtd { get; set; }
-    public int activeAdvisorYtd { get; set; }
+    public decimal activeAdvisorYtd { get; set; }
 }
 
 public class SunlifeMAPARequest

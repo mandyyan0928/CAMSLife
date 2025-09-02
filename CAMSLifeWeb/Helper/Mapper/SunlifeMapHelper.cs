@@ -85,7 +85,7 @@ namespace CaliphWeb.Helper.Mapper
             .ForMember(dest => dest.recruit_mtd, opt => opt.MapFrom(src => src.recruitMtd))
             .ForMember(dest => dest.recruit_ytd, opt => opt.MapFrom(src => src.recruitYtd))
             .ForMember(dest => dest.active_agent_mtd, opt => opt.MapFrom(src => src.activeAdvisorMtd))
-            .ForMember(dest => dest.active_agent_ytd, opt => opt.MapFrom(src => src.activeAdvisorYtd));
+            .ForMember(dest => dest.active_agent_ytd, opt => opt.MapFrom(src => (int)src.activeAdvisorYtd));
             });
 
             IMapper iMapper = config.CreateMapper();
@@ -186,10 +186,10 @@ namespace CaliphWeb.Helper.Mapper
                 return null;
 
             return 
-                   type == MasterDataEnum.one2oneRelationType.DIRECT_GROUP ? 0 :
-                   type == MasterDataEnum.one2oneRelationType.G1 ? 1 :
-                   type == MasterDataEnum.one2oneRelationType.G2 ? 2 :
-                   type == MasterDataEnum.one2oneRelationType.G3 ? 3 :
+                   type == MasterDataEnum.one2oneRelationType.DIRECT_GROUP ? 1 :
+                   type == MasterDataEnum.one2oneRelationType.G1 ? 2 :
+                   type == MasterDataEnum.one2oneRelationType.G2 ? 3 :
+                   type == MasterDataEnum.one2oneRelationType.G3 ? 4 :
                    throw new ArgumentOutOfRangeException(nameof(type), $"Unhandled type: {type}");
         }
 

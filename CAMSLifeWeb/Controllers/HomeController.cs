@@ -210,10 +210,12 @@ namespace CaliphWeb.Controllers
 
             };
             var responseData = await _alcDataGetter.GetPolicyDataAsync(req);
-            var vm = new PersistencySummaryData{ StartDate = startDate, EndDate = endDate, PersistencyDate = persistencyDate, AgentId = user, GroupPolicies  = responseData};
+            var vm = new PersistencySummaryData { StartDate = startDate, EndDate = endDate, PersistencyDate = persistencyDate, AgentId = user, GroupPolicies = responseData };
             var personalPolicies = vm.GroupPolicies.Where(x => x.selling_agent_code == user).ToList();
-            vm.PersonalPolicies = (personalPolicies == null ) ? new List<AgentPolicyResponse>() : personalPolicies;
-            return Json(new PersistencySummary { GroupRatio = vm.GroupRatio, PersonalRatio=vm.PersonalRatio, PersistencyDate=vm.PersistencyDate});
+            vm.PersonalPolicies = (personalPolicies == null) ? new List<AgentPolicyResponse>() : personalPolicies;
+            return Json(new PersistencySummary { GroupRatio = vm.GroupRatio, PersonalRatio = vm.PersonalRatio, PersistencyDate = vm.PersistencyDate });
+
+          //  return Json(new PersistencySummary { GroupRatio = 0, PersonalRatio = 0, PersistencyDate = DateTime.Now });
         }
 
 

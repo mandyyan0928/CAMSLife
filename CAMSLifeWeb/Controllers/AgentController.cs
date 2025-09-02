@@ -293,15 +293,22 @@ namespace CaliphWeb.Controllers
                 groupTypes.Add(MasterDataEnum.one2oneRelationType.WHOLE_GROUP);
 
 
-            var lastYearstartDate = new DateTime(checkYear - 1, 1, 1);
-            var lastYearendDate = lastYearstartDate.AddYears(2).AddDays(-1);
+            var lastYear = checkYear - 1;
+            var lastYearStartDate = new DateTime(lastYear, 1, 1);
+            var lastYearEndDate = new DateTime(lastYear, 12, 31);
+            var thisYearStartDate = new DateTime(checkYear, 1, 1);
+            var thisYearEndDate = DateTime.Now;
 
             foreach (var groupType in groupTypes)
             {
-                var mapaAchieved = await AchieveMapaAsync(groupType, lastYearstartDate, endDate);
+               var mapaAchieved = new List<MapaPlanning>();
+             
 
-                var currentYearActualMapaList = mapaAchieved.Where(x => x.Year == checkYear) ?? new List<MapaPlanning>();
-                var previousYearActualMapaList = mapaAchieved.Where(x => x.Year ==  (checkYear-1)).ToList()?? new List<MapaPlanning>();
+                            var previousYearActualMapaList = await AchieveMapaAsync(groupType, lastYearStartDate, lastYearEndDate);
+                var currentYearActualMapaList  = await AchieveMapaAsync(groupType, thisYearStartDate, thisYearEndDate);
+
+                if (previousYearActualMapaList != null) mapaAchieved.AddRange(previousYearActualMapaList);
+                if (currentYearActualMapaList != null) mapaAchieved.AddRange(currentYearActualMapaList);
 
                 var groupCurrentYearActualMapa = currentYearActualMapaList.GroupBy(x => new { x.Month, x.Year })
                     .Select(g => new MapaPlanning
@@ -376,7 +383,7 @@ namespace CaliphWeb.Controllers
 
                         vmAddedAchievedMapa.Add(currentMonthAndYearAchieveMonth);
 
-                        var sumAndGroupCurrentMonthAchievedMapa = new MapaPlanning { Month = month };
+                        var sumAndGroupCurrentMonthAchievedMapa = new MapaPlanning { Month = month, Year= DateTime.Now.Year };
                         foreach (var mapa in vmAddedAchievedMapa)
                         {
                             sumAndGroupCurrentMonthAchievedMapa.ACE += mapa.ACE;
@@ -411,7 +418,7 @@ namespace CaliphWeb.Controllers
 
                         vmAddedPreviousYearAchievedMapa.Add(currentMonthAndPreviousYearAchieveMonth);
 
-                        var sumAndGroupCurrentMonthAchievedMapa = new MapaPlanning { Month = month };
+                        var sumAndGroupCurrentMonthAchievedMapa = new MapaPlanning { Month = month, Year= DateTime.Now.Year-1 };
                         foreach (var mapa in vmAddedPreviousYearAchievedMapa)
                         {
                             sumAndGroupCurrentMonthAchievedMapa.ACE += mapa.ACE;
@@ -450,6 +457,21 @@ namespace CaliphWeb.Controllers
             
             vm.ID = agent.AgentSimulatorId;
 
+            var sideMenuName = string.Empty;
+
+            switch ((MasterDataEnum.AgentStimulatorType)type)
+            {
+                case MasterDataEnum.AgentStimulatorType.DirectGroup:
+                    sideMenuName = "mapadirect";
+                    break;
+                case MasterDataEnum.AgentStimulatorType.WholeGroup:
+                    sideMenuName = "mapagroup";
+                    break;
+            }
+
+            ViewBag.MenuPage = sideMenuName;
+
+
             return View(vm);
         }
 
@@ -484,19 +506,21 @@ namespace CaliphWeb.Controllers
             // map from api to mapa planning modal 
             foreach (var mapa in agentMapa)
             {
+                var isCurrentUser = string.Equals(mapa.agent_id, username, StringComparison.OrdinalIgnoreCase);
+
                 var actualMapa = new MapaPlanning
                 {
 
                     ACE = mapa.ace_mtd,
-                    ActiveAgent = mapa.active_agent_mtd,
+                    ActiveAgent = isCurrentUser ? mapa.active_agent_mtd : 0,
                     NewRecruit = mapa.recruit_mtd,
                     YtdRecruit = mapa.recruit_ytd,
                     TotalCases = mapa.case_mtd,
                     Month = mapa.month,
+                    Manpower_YTDRecruit = isCurrentUser? mapa.manpower : 0,
 
                 };
 
-                actualMapa.Manpower_YTDRecruit = mapa.manpower;
                 actualMapa.ActiveAgent_TotalCases = actualMapa.ActiveAgent == 0 ? 0 : ((decimal)actualMapa.TotalCases / (decimal)actualMapa.ActiveAgent);
                 actualMapa.ActiveAgent_YTDRecruit = actualMapa.YtdRecruit == 0 ? 0 : (int)(((decimal)actualMapa.ActiveAgent / (decimal)actualMapa.YtdRecruit) * 100); ;
                 actualMapa.ACE_TotalCases = actualMapa.TotalCases == 0 ? 0 : actualMapa.ACE / actualMapa.TotalCases; ;
