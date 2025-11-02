@@ -9,9 +9,9 @@ namespace CaliphWeb.Models
     public class EmailSetting
     {
 
-        public string Username => ConfigurationManager.AppSettings["EmailUser"] ?? "cams@caliphgroup.com";
+        public string Username => ConfigurationManager.AppSettings["EmailUser"] ?? "cams@caliphgroup.com";//"cams@caliphgroup.com";
         public string Host => ConfigurationManager.AppSettings["EmailServer"] ?? "smtp.gmail.com";
-        public string Password => ConfigurationManager.AppSettings["EmailPass"] ?? "caliph@588";
+        public string Password => ConfigurationManager.AppSettings["EmailPass"] ?? "ungb erdq bcdv oyqr";//"TF3am<TW3<mA7mC>";
         public string Port => ConfigurationManager.AppSettings["EmailPort"] ?? "587";
     }
 

@@ -1,4 +1,5 @@
 ﻿using CaliphWeb.Models.API.one2one;
+using DocumentFormat.OpenXml.Bibliography;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -156,10 +157,12 @@ namespace CaliphWeb.ViewModel
         public PersistencySummaryData()
         {
             GroupPolicies = new List<AgentPolicyResponse>();
-            PersonalPolicies = new List<AgentPolicyResponse>();
+            Month = DateTime.Now.Month;
+            
         }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public int Month { get; set; }
         public DateTime PersistencyDate { get; set; }
         public string AgentId { get; set; }
         public string AgentName { get; set; }
@@ -167,12 +170,18 @@ namespace CaliphWeb.ViewModel
         public double GroupACE => GroupPolicies.Sum(x => x.AnnualisedPremium);
         public double GroupPersistencyPremium => GroupPolicies.Where(x => x.due_date >= PersistencyDate).Sum(x => x.AnnualisedPremium);
         public double GroupRatio => GroupACE > 0 ? (GroupPersistencyPremium / GroupACE) * 100 : 0;
+        public double GroupAFYCMTD => GroupPolicies
+             .Where(x =>  x.due_date >= DateTime.Now)
+.Sum(x => x.AnnualisedPremium);
 
-
-        public List<AgentPolicyResponse> PersonalPolicies { get; set; } = new List<AgentPolicyResponse>();
+        public List<AgentPolicyResponse> PersonalPolicies => (GroupPolicies == null) ? new List<AgentPolicyResponse>():GroupPolicies.Where(x => x.selling_agent_code == AgentId).ToList();
         public double PersonalACE => PersonalPolicies.Sum(x => x.AnnualisedPremium);
         public double PersonalPersistencyPremium => PersonalPolicies.Where(x => x.due_date >= PersistencyDate).Sum(x => x.AnnualisedPremium);
         public double PersonalRatio => PersonalACE > 0 ? (PersonalPersistencyPremium / PersonalACE) * 100 : 0;
+        public double PersonalAFYCMTD => PersonalPolicies
+     .Where(x => x.selling_agent_code == AgentId && x.due_date>= DateTime.Now )
+     .Sum(x => x.AnnualisedPremium);
+
     }
 
 
@@ -190,5 +199,9 @@ namespace CaliphWeb.ViewModel
         public string AgentName { get; set; }
         public double GroupRatio { get; set; }
         public double PersonalRatio { get; set; }
+        public double PersonalAFYCYTD { get; set; }
+        public double PersonalAFYCMTD { get; set; }
+        public double GroupAFYCYTD { get; set; }
+        public double GroupAFYCMTD { get; set; }
     }
 }

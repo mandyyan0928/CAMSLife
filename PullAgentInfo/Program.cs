@@ -31,7 +31,8 @@ namespace PullAgentInfo
             var caliphAPIHelper = serviceProvider.GetService<ICaliphAPIHelper>();
             var dataGetter = serviceProvider.GetService<IALCDataGetter>();
 
-            GrabAgentInfo(caliphAPIHelper, dataGetter);
+   
+             GrabAgentInfo(caliphAPIHelper, dataGetter);
             //GrabAgentCommission(caliphAPIHelper, one2OneAPIHelper);
         }
 
@@ -85,8 +86,8 @@ namespace PullAgentInfo
 
         private static void GrabAgentInfo(ICaliphAPIHelper caliphAPIHelper, IALCDataGetter dataGetter)
         {
-            var startDate = new DateTime(2024, 1, 1);   //DateTime.Now.Date.AddDays(-1);
-            var endDate = new DateTime(2024, 1, 1);//DateTime.Now.Date.AddDays(-1);
+            var startDate = new DateTime(2023, 1, 1);   //DateTime.Now.Date.AddDays(-1);
+            var endDate = DateTime.Now.Date.AddDays(-1);
 
             var exportFile = "User_" + DateTime.Now.ToString("yyyyMMddhhmmssttt") + ".txt";
             var failedExportFile = "UserFailed_" + DateTime.Now.ToString("yyyyMMddhhmmssttt") + ".txt";
@@ -146,8 +147,8 @@ namespace PullAgentInfo
                                 if (response.IsSuccess)
                                 {
                                     var helper = new EmailHelper();
-                                    var email = helper.GetRegisterEmail(userRequest, pass);
-                                    helper.SendEmail(email);
+                                    //var email = helper.GetRegisterEmail(userRequest, pass);
+                                    //helper.SendEmail(email);
                                 }
                                 streamWriter.WriteLine(one2oneAgent.Agent_Id + "," + one2oneAgent.Agent_Name + "," + pass + "," + one2oneAgent.Upline_Agent_Id + "," + one2oneAgent.Upline_Agent_Name + "," + one2oneAgent.Join_Date + "," + one2oneAgent.Agent_Branch + "," + one2oneAgent.IC + "," + one2oneAgent.Mobile + "," + one2oneAgent.Email, "convert");
                             }
@@ -160,8 +161,8 @@ namespace PullAgentInfo
                             {
                                 var helper = new EmailHelper();
                                 
-                                var email = helper.GetRegisterEmail(userRequest, pass);
-                                helper.SendEmail(email);
+                               // var email = helper.GetRegisterEmail(userRequest, pass);
+                               // helper.SendEmail(email);
                             }
 
                             if (!response.IsSuccess)
@@ -183,6 +184,7 @@ namespace PullAgentInfo
                     }
 
                     streamWriter.Close();
+                    failedStreamWriter.Close();
 
                 }
                 startDate = startDate.AddDays(1);

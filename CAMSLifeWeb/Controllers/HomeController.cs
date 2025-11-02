@@ -159,22 +159,22 @@ namespace CaliphWeb.Controllers
             return View(vm);
         }
 
+        //No longer in use
+        //[HttpPost]
+        //public async Task<ActionResult> GetACE(string type )
+        //{
+        //    var user = UserHelper.GetTopLeader();
 
-        [HttpPost]
-        public async Task<ActionResult> GetACE(string type )
-        {
-            var user = UserHelper.GetTopLeader();
+        //    var req = new AgentMapaRequest { agent_id = user, type = type, start_month = 1,
+        //        end_month = DateTime.Now.Month,
+        //        start_year = DateTime.Now.Year, end_year = DateTime.Now.Year
 
-            var req = new AgentMapaRequest { agent_id = user, type = type, start_month = 1,
-                end_month = DateTime.Now.Month,
-                start_year = DateTime.Now.Year, end_year = DateTime.Now.Year
+        //    };
+        //    var responseData = await _alcDataGetter.GetMapaAsync(req);
+        //    var ace = responseData.OrderByDescending(x => x.month).FirstOrDefault();
 
-            };
-            var responseData = await _alcDataGetter.GetMapaAsync(req);
-            var ace = responseData.OrderByDescending(x => x.month).FirstOrDefault();
-
-            return Json(ace);
-        }
+        //    return Json(ace);
+        //}
 
         [HttpPost]
         public async Task<ActionResult> GetPersistency(string type)
@@ -197,7 +197,7 @@ namespace CaliphWeb.Controllers
                 endDate = new DateTime( DateTime.Now.Year - 1, 12, 31);
                 var lastMonth = DateTime.Now.AddMonths(-1);
                 var daysInMonth = DateTime.DaysInMonth(lastMonth.Year, lastMonth.Month);
-                persistencyDate = new DateTime(lastMonth.Year, lastMonth.Month, daysInMonth);
+                persistencyDate = new DateTime(endDate.Year, endDate.Month, daysInMonth);
             }
 
 
@@ -211,9 +211,18 @@ namespace CaliphWeb.Controllers
             };
             var responseData = await _alcDataGetter.GetPolicyDataAsync(req);
             var vm = new PersistencySummaryData { StartDate = startDate, EndDate = endDate, PersistencyDate = persistencyDate, AgentId = user, GroupPolicies = responseData };
-            var personalPolicies = vm.GroupPolicies.Where(x => x.selling_agent_code == user).ToList();
-            vm.PersonalPolicies = (personalPolicies == null) ? new List<AgentPolicyResponse>() : personalPolicies;
-            return Json(new PersistencySummary { GroupRatio = vm.GroupRatio, PersonalRatio = vm.PersonalRatio, PersistencyDate = vm.PersistencyDate });
+
+            // return new object because PersistencySummaryData hitting json max error for GroupPolicies
+            return Json(new PersistencySummary
+            {
+                GroupRatio = vm.GroupRatio,
+                PersonalRatio = vm.PersonalRatio,
+                PersistencyDate = vm.PersistencyDate,
+                GroupAFYCYTD = vm.GroupACE,
+                GroupAFYCMTD = vm.GroupAFYCMTD,
+                PersonalAFYCYTD = vm.PersonalACE,
+                PersonalAFYCMTD = vm.PersonalAFYCMTD
+            });
 
           //  return Json(new PersistencySummary { GroupRatio = 0, PersonalRatio = 0, PersistencyDate = DateTime.Now });
         }

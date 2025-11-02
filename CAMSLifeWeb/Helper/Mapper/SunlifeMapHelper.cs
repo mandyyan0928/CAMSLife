@@ -81,7 +81,7 @@ namespace CaliphWeb.Helper.Mapper
             .ForMember(dest => dest.ace_ytd, opt => opt.MapFrom(src => src.afycYtd))
             .ForMember(dest => dest.case_mtd, opt => opt.MapFrom(src => src.casesMtd))
             .ForMember(dest => dest.case_ytd, opt => opt.MapFrom(src => src.casesYtd))
-            .ForMember(dest => dest.manpower, opt => opt.MapFrom(src => src.manpowerYtd))
+            .ForMember(dest => dest.manpower, opt => opt.MapFrom(src => src.manpowerMtd))
             .ForMember(dest => dest.recruit_mtd, opt => opt.MapFrom(src => src.recruitMtd))
             .ForMember(dest => dest.recruit_ytd, opt => opt.MapFrom(src => src.recruitYtd))
             .ForMember(dest => dest.active_agent_mtd, opt => opt.MapFrom(src => src.activeAdvisorMtd))

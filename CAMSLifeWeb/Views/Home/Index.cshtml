@@ -385,7 +385,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="#ace-w" class="nav-link text-secondary" data-toggle="tab">
+                    <a href="#ace-g" class="nav-link text-secondary" data-toggle="tab">
                         Group
                     </a>
                 </li>
@@ -423,14 +423,14 @@
                     <!-- /numbers -->
                 </div>
 
-                <div class="tab-pane fade" id="ace-u">
+                <div class="tab-pane fade" id="ace-g">
                     <!-- Numbers -->
                     <div class="card-body py-0">
                         <div class="row text-center">
                             <div class="col-6">
                                 <div class="mb-3">
                                     <h5 class="font-weight-semibold mb-0">
-                                        <span id="ace-u-ytd"></span>
+                                        <span id="ace-g-ytd"></span>
                                     </h5>
                                     <span class="text-muted font-size-sm">YTD</span>
                                 </div>
@@ -439,7 +439,7 @@
                             <div class="col-6">
                                 <div class="mb-3">
                                     <h5 class="font-weight-semibold mb-0">
-                                        <span id="ace-u-mtd"></span>
+                                        <span id="ace-g-mtd"></span>
                                     </h5>
                                     <span class="text-muted font-size-sm">MTD</span>
                                 </div>
@@ -451,117 +451,7 @@
                     <!-- /numbers -->
 
                 </div>
-                <div class="tab-pane fade" id="ace-g1">
-                    <!-- Numbers -->
-                    <div class="card-body py-0">
-                        <div class="row text-center">
-                            <div class="col-6">
-                                <div class="mb-3">
-                                    <h5 class="font-weight-semibold mb-0">
-                                        <span id="ace-g1-ytd"></span>
-                                    </h5>
-                                    <span class="text-muted font-size-sm">YTD</span>
-                                </div>
-                            </div>
-
-                            <div class="col-6">
-                                <div class="mb-3">
-                                    <h5 class="font-weight-semibold mb-0">
-                                        <span id="ace-g1-mtd"></span>
-                                    </h5>
-                                    <span class="text-muted font-size-sm">MTD</span>
-                                </div>
-                            </div>
-
-
-                        </div>
-                    </div>
-                    <!-- /numbers -->
-                </div>
-
-                <div class="tab-pane fade" id="ace-g2">
-                    <!-- Numbers -->
-                    <div class="card-body py-0">
-                        <div class="row text-center">
-                            <div class="col-6">
-                                <div class="mb-3">
-                                    <h5 class="font-weight-semibold mb-0">
-                                        <span id="ace-g2-ytd"></span>
-                                    </h5>
-                                    <span class="text-muted font-size-sm">YTD</span>
-                                </div>
-                            </div>
-
-                            <div class="col-6">
-                                <div class="mb-3">
-                                    <h5 class="font-weight-semibold mb-0">
-                                        <span id="ace-g2-mtd"></span>
-                                    </h5>
-                                    <span class="text-muted font-size-sm">MTD</span>
-                                </div>
-                            </div>
-
-
-                        </div>
-                    </div>
-                    <!-- /numbers -->
-                </div>
-
-                <div class="tab-pane fade" id="ace-g3">
-                    <!-- Numbers -->
-                    <div class="card-body py-0">
-                        <div class="row text-center">
-                            <div class="col-6">
-                                <div class="mb-3">
-                                    <h5 class="font-weight-semibold mb-0">
-                                        <span id="ace-g3-ytd"></span>
-                                    </h5>
-                                    <span class="text-muted font-size-sm">YTD</span>
-                                </div>
-                            </div>
-
-                            <div class="col-6">
-                                <div class="mb-3">
-                                    <h5 class="font-weight-semibold mb-0">
-                                        <span id="ace-g3-mtd"></span>
-                                    </h5>
-                                    <span class="text-muted font-size-sm">MTD</span>
-                                </div>
-                            </div>
-
-
-                        </div>
-                    </div>
-                    <!-- /numbers -->
-                </div>
-
-                <div class="tab-pane fade" id="ace-g4">
-                    <!-- Numbers -->
-                    <div class="card-body py-0">
-                        <div class="row text-center">
-                            <div class="col-6">
-                                <div class="mb-3">
-                                    <h5 class="font-weight-semibold mb-0">
-                                        <span id="ace-g4-ytd"></span>
-                                    </h5>
-                                    <span class="text-muted font-size-sm">YTD</span>
-                                </div>
-                            </div>
-
-                            <div class="col-6">
-                                <div class="mb-3">
-                                    <h5 class="font-weight-semibold mb-0">
-                                        <span id="ace-g4-mtd"></span>
-                                    </h5>
-                                    <span class="text-muted font-size-sm">MTD</span>
-                                </div>
-                            </div>
-
-
-                        </div>
-                    </div>
-                    <!-- /numbers -->
-                </div>
+               
 
             </div>
             <!-- /tabs content -->
@@ -806,8 +696,8 @@
 
                 $(document).ready(function () {
                    // InitCountdownTimer();
-                    LoadACE('p');
-                    LoadACE('w');
+                  // LoadACE('p');
+                   // LoadACE('w');
                    
                     LoadPersistency('d0');
                     LoadPersistency('d1');
@@ -856,8 +746,14 @@
                             $('#persistency-g-' + type).html(response.GroupRatio.toFixed(2) + '%');
                             $('#persistency-date-' + type).html(response.PersistencyDateDisplay);
                             $('#persistency-g-date-' + type).html(response.PersistencyDateDisplay);
+                            
                             BlockUIHelper.unblockUI('persistency-p-' + type);
                             BlockUIHelper.unblockUI('persistency-g-' + type);
+
+                            // if current year then refresh ACE data 
+                            if (type === 'd0') {
+                                LoadACE(response);
+                            }
                         },
                         error: function (response) {
                             BlockUIHelper.unblockUI('persistency-p-' + type);
@@ -868,24 +764,20 @@
 
                 }
 
-                   function LoadACE(type) {
-                    BlockUIHelper.blockUI('ace-' + type);
-                    $.ajax({
-                        url: '@Url.Action("GetACE", "Home")',
-                        type: 'POST',
-                        data: { type: type },
-                        success: function (response) {
-                          
-                            $('#ace-' + type + '-mtd').html(ReplaceNumberWithCommas(response.ace_mtd));
-                            $('#ace-' + type + '-ytd').html(ReplaceNumberWithCommas(response.ace_ytd));
-                            BlockUIHelper.unblockUI('ace-' + type);
-                        },
-                        error: function (response) {
-                            $('#ace-' + type + '-mtd').html('0.00');
-                            $('#ace-' + type + '-ytd').html('0.00');
-                            BlockUIHelper.unblockUI('ace-' + type);
-                        }
-                    });
+                   function LoadACE(persistency) {
+                       
+                       BlockUIHelper.blockUI('ace-p');
+                       BlockUIHelper.blockUI('ace-g');
+                       console.log('get ace response from persistency  ', persistency)
+                       $('#ace-p-mtd').html(ReplaceNumberWithCommas(persistency.PersonalAFYCMTD));
+                       $('#ace-p-ytd').html(ReplaceNumberWithCommas(persistency.PersonalAFYCYTD));
+                       $('#ace-g-mtd').html(ReplaceNumberWithCommas(persistency.GroupAFYCMTD));
+                       $('#ace-g-ytd').html(ReplaceNumberWithCommas(persistency.GroupAFYCYTD));
+
+                       BlockUIHelper.unblockUI('ace-p');
+                       BlockUIHelper.unblockUI('ace-g');
+
+                   
 
                 }
 

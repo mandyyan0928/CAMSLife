@@ -94,7 +94,7 @@ namespace CaliphWeb.Helper
             var subject = "Caliph Activity Mangement System Agent Account";
 
             return new EmailSender { Body = content
-                .Replace("{{url}}", System.Configuration.ConfigurationManager.AppSettings["LoginUrl"]?? "https://login.caliphacademy.net")
+                .Replace("{{url}}", System.Configuration.ConfigurationManager.AppSettings["LoginUrl"]?? "https://login.caliphgroup.com")
                 .Replace("{{agentid}}", user.Username)
                 .Replace("{{password}}", pass), Subject = subject, Email = user.Email };
         }

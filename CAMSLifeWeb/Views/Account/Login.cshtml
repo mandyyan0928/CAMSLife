@@ -68,7 +68,7 @@
     }
 </style>
 <!-- Content area -->
-<div class="content d-flex justify-content-center align-items-center">
+<div class="content justify-content-center align-items-center">
 
     <!-- Login form -->
 
@@ -76,48 +76,48 @@
     {
         @Html.AntiForgeryToken()
     <form>
-        <div class="row align-content-center justify-content-center ">
-            <div class="col-md-2 m-0 p-0 d-flex">
-                </div>
-                <div class="col-md-2 m-0 p-0 d-flex">
-                    <div class="card w-100 m-0">
-                        <div class="card-body flex-1">
-                            <div class="text-center mb-3">
-                                <i class="icon-reading icon-2x text-secondary border-secondary border-3 rounded-pill p-3 mb-3 mt-1"></i>
-                                <h5 class="mb-0">Login to your account</h5>
-                                <span class="d-block text-muted">Enter your credentials below</span>
-                            </div>
-                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                            <div class="form-group form-group-feedback form-group-feedback-left">
-                                @*<input type="text" class="form-control" placeholder="Username">*@
-                                @Html.TextBoxFor(l => l.Username, new { @class = "form-control", @placeholder = "Username" })
-                                @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
-                                <div class="form-control-feedback">
-                                    <i class="icon-user text-muted"></i>
-                                </div>
-                            </div>
-
-                            <div class="form-group form-group-feedback form-group-feedback-left">
-                                @*<input type="password" class="form-control" placeholder="Password">*@
-                                @Html.PasswordFor(l => l.Password, new { @class = "form-control", @placeholder = "Password" })
-                                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-                                <div class="form-control-feedback">
-                                    <i class="icon-lock2 text-muted"></i>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary btn-block">Sign in</button>
-                            </div>
-                            @*<div class="text-center">
-                                <a href="login_password_recover.html">Forgot password?</a>
-                            </div>*@
+        <div class="row align-content-center justify-content-center" style="margin-top:15%">
+            <div class="col-md-0 col-lg-2 m-0 p-0 d-flex">
+            </div>
+            <div class="col-md-4 col-lg-2 m-0 p-0 d-flex">
+                <div class="card w-100 m-0">
+                    <div class="card-body flex-1">
+                        <div class="text-center mb-3">
+                            <i class="icon-reading icon-2x text-secondary border-secondary border-3 rounded-pill p-3 mb-3 mt-1"></i>
+                            <h5 class="mb-0">Login to your account</h5>
+                            <span class="d-block text-muted">Enter your credentials below</span>
                         </div>
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group form-group-feedback form-group-feedback-left">
+                            @*<input type="text" class="form-control" placeholder="Username">*@
+                            @Html.TextBoxFor(l => l.Username, new { @class = "form-control", @placeholder = "Username" })
+                            @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                            <div class="form-control-feedback">
+                                <i class="icon-user text-muted"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group form-group-feedback form-group-feedback-left">
+                            @*<input type="password" class="form-control" placeholder="Password">*@
+                            @Html.PasswordFor(l => l.Password, new { @class = "form-control", @placeholder = "Password" })
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                            <div class="form-control-feedback">
+                                <i class="icon-lock2 text-muted"></i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+                        </div>
+                        @*<div class="text-center">
+                        <a href="login_password_recover.html">Forgot password?</a>
+                    </div>*@
                     </div>
                 </div>
-                <div class="col-md-7 m-0 p-0 d-flex ">
-                    <img src="~/global_assets/images/login_side_new.png" id="imgBackground" alt="Snow" style="max-width: 70%;object-fit: cover; flex:1;height:100%">
-                </div>
             </div>
+            <div class="col-lg-6 col-md-0 d-none d-lg-block m-0 p-0">
+                <img src="~/global_assets/images/login_side_new.png" id="imgBackground" alt="Snow" style="max-width: 70%;object-fit: cover; flex:1;height:100%">
+            </div>
+        </div>
 </form>
     }
     <!-- /login form -->s
