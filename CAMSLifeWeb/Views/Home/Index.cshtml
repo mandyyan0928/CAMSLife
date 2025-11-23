@@ -384,11 +384,20 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a href="#ace-g" class="nav-link text-secondary" data-toggle="tab">
-                        Group
-                    </a>
-                </li>
+                @if (user.IsLeader)
+                {
+                    <li class="nav-item">
+                        <a href="#ace-dg" class="nav-link text-secondary" data-toggle="tab">
+                            Direct Group
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="#ace-g" class="nav-link text-secondary" data-toggle="tab">
+                            Whole Group
+                        </a>
+                    </li>
+                }
                
             </ul>
             <!-- /tabs -->
@@ -412,6 +421,34 @@
                                 <div class="mb-3">
                                     <h5 class="font-weight-semibold mb-0">
                                         <span id="ace-p-mtd"></span>
+                                    </h5>
+                                    <span class="text-muted font-size-sm">MTD</span>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <!-- /numbers -->
+                </div>
+
+                <div class="tab-pane fade" id="ace-dg">
+                    <!-- Numbers -->
+                    <div class="card-body py-0">
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <div class="mb-3">
+                                    <h5 class="font-weight-semibold mb-0">
+                                        <span id="ace-dg-ytd"></span>
+                                    </h5>
+                                    <span class="text-muted font-size-sm">YTD</span>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="mb-3">
+                                    <h5 class="font-weight-semibold mb-0">
+                                        <span id="ace-dg-mtd"></span>
                                     </h5>
                                     <span class="text-muted font-size-sm">MTD</span>
                                 </div>
@@ -471,7 +508,7 @@
                 {
                     <li class="nav-item">
                         <a href="#persistency-g" class="nav-link text-secondary" data-toggle="tab">
-                            Group
+                            Whole Group
                         </a>
                     </li>
                 }
@@ -767,14 +804,18 @@
                    function LoadACE(persistency) {
                        
                        BlockUIHelper.blockUI('ace-p');
+                       BlockUIHelper.blockUI('ace-dg');
                        BlockUIHelper.blockUI('ace-g');
                        console.log('get ace response from persistency  ', persistency)
                        $('#ace-p-mtd').html(ReplaceNumberWithCommas(persistency.PersonalAFYCMTD));
                        $('#ace-p-ytd').html(ReplaceNumberWithCommas(persistency.PersonalAFYCYTD));
+                       $('#ace-dg-mtd').html(ReplaceNumberWithCommas(persistency.DirectGroupAFYCMTD));
+                       $('#ace-dg-ytd').html(ReplaceNumberWithCommas(persistency.DirectGroupAFYCYTD));
                        $('#ace-g-mtd').html(ReplaceNumberWithCommas(persistency.GroupAFYCMTD));
                        $('#ace-g-ytd').html(ReplaceNumberWithCommas(persistency.GroupAFYCYTD));
 
                        BlockUIHelper.unblockUI('ace-p');
+                       BlockUIHelper.unblockUI('ace-dg');
                        BlockUIHelper.unblockUI('ace-g');
 
                    

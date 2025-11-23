@@ -174,6 +174,15 @@ namespace CaliphWeb.ViewModel
              .Where(x =>  x.due_date >= DateTime.Now)
 .Sum(x => x.AnnualisedPremium);
 
+        public List<string> DirectGroupAgentIds { get; set; } = new List<string>();
+        public List<AgentPolicyResponse> DirectGroupPolicies => (GroupPolicies == null || DirectGroupAgentIds == null) 
+            ? new List<AgentPolicyResponse>() 
+            : GroupPolicies.Where(x => DirectGroupAgentIds.Contains(x.selling_agent_code) || x.selling_agent_code == AgentId).ToList();
+        public double DirectGroupACE => DirectGroupPolicies.Sum(x => x.AnnualisedPremium);
+        public double DirectGroupAFYCMTD => DirectGroupPolicies
+             .Where(x => x.due_date >= DateTime.Now)
+             .Sum(x => x.AnnualisedPremium);
+
         public List<AgentPolicyResponse> PersonalPolicies => (GroupPolicies == null) ? new List<AgentPolicyResponse>():GroupPolicies.Where(x => x.selling_agent_code == AgentId).ToList();
         public double PersonalACE => PersonalPolicies.Sum(x => x.AnnualisedPremium);
         public double PersonalPersistencyPremium => PersonalPolicies.Where(x => x.due_date >= PersistencyDate).Sum(x => x.AnnualisedPremium);
@@ -201,6 +210,8 @@ namespace CaliphWeb.ViewModel
         public double PersonalRatio { get; set; }
         public double PersonalAFYCYTD { get; set; }
         public double PersonalAFYCMTD { get; set; }
+        public double DirectGroupAFYCYTD { get; set; }
+        public double DirectGroupAFYCMTD { get; set; }
         public double GroupAFYCYTD { get; set; }
         public double GroupAFYCMTD { get; set; }
     }

@@ -210,7 +210,22 @@ namespace CaliphWeb.Controllers
 
             };
             var responseData = await _alcDataGetter.GetPolicyDataAsync(req);
-            var vm = new PersistencySummaryData { StartDate = startDate, EndDate = endDate, PersistencyDate = persistencyDate, AgentId = user, GroupPolicies = responseData };
+
+            // Get hierarchy level 1 for direct group
+            var generationHierarchyReq = new AgentHierarchyRequest { agent_id = user };
+            var generationHierarchyRes = await _alcDataGetter.GetAgentHierarchyAsync(generationHierarchyReq);
+            var directGroupAgents = generationHierarchyRes.Where(x => x.generation == 1 && !x.IsLeader).ToList();
+            var directGroupAgentIds = directGroupAgents.Select(x => x.agent_id).ToList();
+
+            var vm = new PersistencySummaryData 
+            { 
+                StartDate = startDate, 
+                EndDate = endDate, 
+                PersistencyDate = persistencyDate, 
+                AgentId = user, 
+                GroupPolicies = responseData,
+                DirectGroupAgentIds = directGroupAgentIds
+            };
 
             // return new object because PersistencySummaryData hitting json max error for GroupPolicies
             return Json(new PersistencySummary
@@ -220,6 +235,8 @@ namespace CaliphWeb.Controllers
                 PersistencyDate = vm.PersistencyDate,
                 GroupAFYCYTD = vm.GroupACE,
                 GroupAFYCMTD = vm.GroupAFYCMTD,
+                DirectGroupAFYCYTD = vm.DirectGroupACE,
+                DirectGroupAFYCMTD = vm.DirectGroupAFYCMTD,
                 PersonalAFYCYTD = vm.PersonalACE,
                 PersonalAFYCMTD = vm.PersonalAFYCMTD
             });

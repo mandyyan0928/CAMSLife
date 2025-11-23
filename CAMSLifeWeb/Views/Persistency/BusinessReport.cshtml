@@ -35,13 +35,88 @@
                 </div>
                 @{
                     var firstLevel = Model.HierarchyPolicies.Where(x => x.Generation == 1).FirstOrDefault();
-
-
                 }
-
-                @if (firstLevel != null)
+                
+                @* If user is Agent (not Leader), show only personal data (generation 0) *@
+                @if (!loginUser.IsLeader)
                 {
+                    var generation0 = Model.HierarchyPolicies.Where(x => x.Generation == 0).FirstOrDefault();
+                    if (generation0 != null && generation0.AgentHierarchyPolicies != null)
+                    {
+                        var personalData = generation0.AgentHierarchyPolicies;
+                        <h2>Personal</h2>
+                        <table class="table datatable-nested">
+                            <thead>
+                                <tr>
+                                    <th>
 
+                                    </th>
+                                    <th>
+
+                                    </th>
+                                    <th>AFYC</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <a href="#" onclick="DisplayCalculator('@loginUser.Username', 'd', '@Json.Encode(loginUser.Fullname)')">
+
+
+                                            @loginUser.Username (  @loginUser.RoleCode )<br />
+                                            @loginUser.Fullname
+                                        </a>
+                                    </td>
+
+
+                                    <td id="total_direct_ace" class="exclude">
+                                        @{var groupace = personalData.Sum(x => x.ACE);}
+                                        @groupace.ToString("n2")
+
+
+                                    </td>
+
+
+                                </tr>
+
+                                @foreach (var agentHierarchyPolicy in personalData)
+                                {
+                                    var user = agentHierarchyPolicy.Agent;
+                                    var isCurrentUser = agentHierarchyPolicy.Agent.agent_id == loginUser.Username;
+                                    var text = isCurrentUser ? "*Personal" : "";
+
+                                    <tr>
+                                        <td class="expand-control" data-agent-id="@user.agent_id" data-generation="0">
+                                            -
+
+                                        </td>
+                                        <td>
+                                            <a href="#" onclick="DisplayCalculator('@user.agent_id', 'p', '@Json.Encode(@user.agent_name)')">
+
+
+                                                @user.agent_id (  @user.role  @text )<br />
+                                                @user.agent_name
+                                            </a>
+                                        </td>
+                                        <td id="ace_direct_@user.agent_id">
+
+                                            @agentHierarchyPolicy.ACE.ToString("n2")
+
+                                        </td>
+
+                                    </tr>
+
+                                }
+
+                            </tbody>
+                        </table>
+                    }
+                }
+                else if (firstLevel != null)
+                {
                     var wholeGroupPolicies = firstLevel.AgentHierarchyPolicies.Where(x => x.Agent.IsLeader);
                     var directGroupPolicies = firstLevel.AgentHierarchyPolicies.Where(x => !x.Agent.IsLeader);
                     var personalPolicies = Model.HierarchyPolicies.Where(x => x.Generation == 0).FirstOrDefault().AgentHierarchyPolicies.FirstOrDefault();
@@ -195,6 +270,24 @@
                             </tbody>
                         </table>
                     }
+                    
+                    <div class="card mt-4" style="background: linear-gradient(135deg, #F2C74F 0%, #f5d574 100%); border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                        <div class="card-body py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h3 class="mb-0" style="font-weight: 600; letter-spacing: 0.5px;">
+                                    <i class="icon-stack2 mr-2"></i>Total Group AFYC
+                                </h3>
+                                <h2 class="mb-0" style="font-weight: 700; font-size: 2rem;">
+                                    @{
+                                        var totalDirectAce = directGroupPolicies.Sum(x => x.ACE);
+                                        var totalWholeAce = wholeGroupPolicies.Sum(x => x.ACE);
+                                        var totalGroupAce = totalDirectAce + totalWholeAce;
+                                    }
+                                    <span id="total_group_afyc">@totalGroupAce.ToString("n2")</span>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
                 }
 
 
