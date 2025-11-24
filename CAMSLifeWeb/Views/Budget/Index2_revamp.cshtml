@@ -1,0 +1,1089 @@
+﻿<script src="~/global_assets/js/plugins/visualization/echarts/echarts.min.js"></script>
+<script src="~/global_assets/js/demo_pages/form_validation.js"></script>
+<script src="~/global_assets/js/demo_pages/form_select2.js"></script>
+
+<script src="~/global_assets/js/demo_pages/form_input_groups.js"></script>
+
+
+
+  
+@*<script src="~/global_assets/js/pages/budget.js?v1"></script>*@
+<!-- Page header -->
+@using Newtonsoft.Json
+@using CaliphWeb.ViewModel.Data;
+@using CaliphWeb.Helper
+@model CaliphWeb.Models.API.Budget.BudgetModel
+
+<div class="page-header page-header-light">
+    <div class="page-header-content header-elements-lg-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-list"></i> <span class="font-weight-semibold">Agent Budget</span> </h4>
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+    </div>
+
+    <div class="breadcrumb-line breadcrumb-line-light header-elements-lg-inline">
+        <div class="d-flex">
+            <div class="breadcrumb">
+                <a href="@Url.Action("Index","Home")" class="breadcrumb-item"><i class="icon-calculator mr-2"></i> Home</a>
+                <a class="breadcrumb-item">Agent Budget</a>
+            </div>
+
+            <a href="#" class="header-elements-toggle text-body d-lg-none"><i class="icon-more"></i></a>
+        </div>
+
+    </div>
+</div>
+<!-- /page header -->
+<!-- Basic datatable -->
+<div class="card">
+    <div class="card-header">
+    </div>
+    <div class="card-body" id="body">
+        <div class="row form-group">
+            <div class="col-md-3">
+                Year
+            </div>
+            <div class="col-md-2">
+                <select required data-placeholder="Year" id="incomeYear" name="incomeYear" class="form-control" onchange="IncomeYear()">
+                    @foreach (var item in DateTimeExtensions.Years())
+                    {
+                        var years = Model.Income.IncomeData != null ? Model.Income.IncomeData.BudgetYear : null;
+                        var selected = string.Empty;
+                        if (years != null)
+                        {
+                            selected = years == item ? "selected" : "";
+                        }
+
+                        <option value="@item" @selected>@item</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-3">
+                Start Month
+            </div>
+            <div class="col-md-2">
+                <select required data-placeholder="StartMonth" id="startMonth" name="ProductStartMonth" class="form-control" onchange="RefreshStartMonth()">
+
+                    @{int month = 1;}
+
+                    @while (month <= 12)
+                    {
+                        var date = new DateTime(DateTime.Now.Year, month, 1);
+                        var years = Model.Income.IncomeData != null ? Model.Income.IncomeData.BudgetYear : null;
+                        var selected = month == Model.Income.IncomeData.ProductStartMonth ? "selected" : "";
+
+
+                        <option value="@month" @selected>@date.ToString("MMMM")</option>
+
+                        month++;
+                    }
+                </select>
+
+            </div>
+
+        </div>
+        <div class="row form-group">
+            <div class="col-md-3">
+                Months
+            </div>
+            <div class="col-md-2">
+                <select required data-placeholder="Month" onchange="IncomeMonthChange(this.value)" id="incomeMonth" name="BudgetMonth" class="form-control">
+                    @foreach (var item in DateTimeExtensions.QuarterMonths())
+                    {
+                        var months = Model.Income.IncomeData != null ? Model.Income.IncomeData.BudgetMonth : null;
+                        // var months = Model.IncomeData.BudgetView.Where(p => p.BudgetYear == year).OrderByDescending(p => p.BudgetMonth).FirstOrDefault();
+                        var selected = string.Empty;
+                        if (months != null)
+                        {
+                            selected = months == item ? "selected" : "";
+                        }
+                        //if (months != null)
+                        //{
+                        //    selected = months.BudgetMonth == item ? "selected" : "";
+                        //    month = months.BudgetMonth;
+                        //}
+                        <option value="@item" @selected>@item</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <ul class="nav nav-tabs nav-tabs-highlight nav-justified">
+            <li class="nav-item"><a href="#justified-left-tab1" class="nav-link active" data-toggle="tab"><i class="icon-calculator2"></i> Income Stimulator</a></li>
+            <li class="nav-item"><a href="#justified-left-tab4" class="nav-link" data-toggle="tab" onclick="CalStrategy()"><i class="icon-tree6"></i> Budget Strategies</a></li>
+            <li class="nav-item"><a href="#justified-left-tab2" class="nav-link " data-toggle="tab" onclick="LoadCharts()"><i class="icon-stats-bars2"></i> Budget Propotion</a></li>
+            <li class="nav-item"><a href="#justified-left-tab3" class="nav-link " data-toggle="tab" onclick="MonthlyBudget()"><i class="icon-table"></i> Monthly Budget</a></li>
+            <li class="nav-item"><a href="#justified-left-tab5" class="nav-link " data-toggle="tab" onclick="CalSalesApptEstimate()"><i class="icon-table"></i> Target Appt</a></li>
+
+        </ul>
+        <div class="tab-content">
+
+            <!--Income Simulator-->
+            <div class="tab-pane fade show active" id="justified-left-tab1">
+                @*@Html.Partial("_IncomeSimulator")*@
+                @Html.Partial("_IncomeSimulator2", Model.Income)
+            </div>
+
+            <!--Propotion-->
+            <div class="tab-pane fade" id="justified-left-tab2">
+                @Html.Partial("_Propotion", Model)
+            </div>
+
+            <!--Monthly Budget-->
+            <div class="tab-pane fade" id="justified-left-tab3">
+                @Html.Partial("_MonthlyBudget", Model)
+            </div>
+
+            <!--Strategies-->
+            <div class="tab-pane fade" id="justified-left-tab4">
+                @Html.Partial("_Strategies", Model)
+            </div>
+            <!--Strategies-->
+            <div class="tab-pane fade" id="justified-left-tab5">
+                @Html.Partial("_SalesApptEstimate", Model.Income)
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- /basic datatable -->
+<script type="text/template" id="loading">
+    <div class="text-center mt-2 mb-3">
+        <div class="pace-demo">
+            <div class="theme_xbox_lg">
+                <div class="pace_progress" data-progress-text="60%" data-progress="60" style="width: 60%;"></div>
+                <div class="pace_activity"></div>
+            </div>
+        </div>
+    </div>
+</script>
+
+@section Scripts{
+    <script type="text/javascript">
+        // ===== CONSTANTS =====
+        const MONTHS_IN_YEAR = 12;
+        const WEEKS_IN_MONTH = 4;
+        const DAYS_IN_WEEK = 7;
+        
+        // ===== GLOBAL STATE =====
+        var grandtotalace = 0;
+        const numberFormatter = new Intl.NumberFormat('en-MY');
+
+        // ===== SWEET ALERT CONFIG =====
+        const swalInit = swal.mixin({
+            buttonsStyling: false,
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-light',
+                denyButton: 'btn btn-light',
+                input: 'form-control'
+            }
+        });
+
+        // ===== UTILITY FUNCTIONS =====
+        
+        // Format number with commas for display
+        function formatNumber(number) {
+            if (!isValidNumber(number)) return '0.00';
+            const parts = number.toString().split(".");
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return parts.join(".");
+        }
+
+        // Parse number from string (removes commas)
+        function parseNumber(value) {
+            if (typeof value === 'number') return value;
+            if (!value) return 0;
+            const cleaned = value.toString().replace(/,/g, '');
+            const num = parseFloat(cleaned);
+            return isNaN(num) ? 0 : num;
+        }
+
+        // Round up to specified decimal places
+        function roundUp(value, decimals) {
+            const multiplier = Math.pow(10, decimals);
+            return Math.ceil(value * multiplier) / multiplier;
+        }
+
+        // Check if value is a valid number
+        function isValidNumber(value) {
+            return value !== null && value !== undefined && !isNaN(value) && isFinite(value);
+        }
+
+        // Safe division (returns 0 if divisor is 0)
+        function safeDivide(numerator, denominator) {
+            return denominator === 0 ? 0 : numerator / denominator;
+        }
+
+        // Get form field value as number
+        function getFieldNumber(selector) {
+            return parseNumber($(selector).val() || $(selector).text());
+        }
+
+        // Set field text with formatting
+        function setFieldText(selector, value, prefix = '') {
+            const formatted = formatNumber(value);
+            $(selector).text(prefix ? prefix + ' ' + formatted : formatted);
+        }
+
+        // Show success message
+        function showSuccess(message = 'Updated successfully!') {
+            swalInit.fire({
+                title: 'Success!',
+                text: message,
+                icon: 'success'
+            });
+        }
+
+        // Show error message
+        function showError(message = 'An error occurred') {
+            swalInit.fire({
+                title: 'Error!',
+                text: message,
+                icon: 'error'
+            });
+        }
+
+        // Show warning message
+        function showWarning(message) {
+            swalInit.fire({
+                text: message,
+                icon: 'warning'
+            });
+        }
+
+        // ===== INITIALIZATION =====
+        window.onload = function () {
+            IncomeMonthChange($('#incomeMonth').val());
+            StrategyYear();
+        }
+
+        // ===== SALES APPOINTMENT ESTIMATE =====
+        
+        function CalSalesApptEstimate() {
+            CalSalesApptEstimateClosingRatio();
+            CalSalesApptEstimateCallRatio();
+        }
+
+        function CalSalesApptEstimateClosingRatio() {
+            const ace = getFieldNumber('#strategyace');
+            const productPrice = getFieldNumber('#price');
+            const months = getFieldNumber('#incomeMonth');
+            const totalCases = getFieldNumber('#totalcase');
+            const closingRate = getFieldNumber('#salesApptEstimate_ClosingRatio');
+
+            // Calculate average ACE
+            const avgAce = productPrice * months;
+
+            // Display premium and cases
+            setFieldText('#salesApptEstimate_Premium', ace.toFixed(2));
+            setFieldText('#salesApptEstimate_AverageSize', avgAce.toFixed(2));
+            setFieldText('#salesApptEstimate_NoOfCases', totalCases.toFixed(0));
+
+            // Calculate appointments if closing rate is valid
+            if (closingRate > 0 && months > 0) {
+                const totalAppt = roundUp(safeDivide(totalCases, closingRate / 100), 0);
+                const totalPerMonth = roundUp(safeDivide(totalAppt, months), 0);
+                const totalPerWeek = roundUp(safeDivide(totalPerMonth, WEEKS_IN_MONTH), 0);
+                const totalPerDay = roundUp(safeDivide(totalPerWeek, DAYS_IN_WEEK), 0);
+
+                setFieldText('#salesApptEstimate_TotalAppt', totalAppt.toFixed(0));
+                setFieldText('#salesApptEstimate_ApptPerMonth', totalPerMonth.toFixed(0));
+                setFieldText('#salesApptEstimate_ApptPerWeek', totalPerWeek.toFixed(0));
+                setFieldText('#salesApptEstimate_ApptPerDay', totalPerDay.toFixed(0));
+            } else {
+                // Reset to zero if no valid closing rate
+                setFieldText('#salesApptEstimate_TotalAppt', '0');
+                setFieldText('#salesApptEstimate_ApptPerMonth', '0');
+                setFieldText('#salesApptEstimate_ApptPerWeek', '0');
+                setFieldText('#salesApptEstimate_ApptPerDay', '0');
+            }
+        }
+
+        function CalSalesApptEstimateCallRatio() {
+            const callRate = getFieldNumber('#salesApptEstimate_CallRatio');
+            const apptPerWeek = getFieldNumber('#salesApptEstimate_ApptPerWeek');
+            
+            const totalCalls = callRate > 0 ? roundUp(safeDivide(apptPerWeek, callRate / 100), 0) : 0;
+            setFieldText('#salesApptEstimate_CallsPerWeek', totalCalls.toFixed(0));
+        }
+
+        function UpdateTargetAppt() {
+            const form = $("#frmTargetAppt");
+            form.validate();
+
+            if (form.valid()) {
+                $.ajax({
+                    url: '@Url.Action("UpdateTargetAppt", "Budget")',
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: () => showSuccess('Target appointment updated successfully!')
+                });
+            }
+        }
+
+        function RefreshTargetAppt() {
+            $.ajax({
+                url: '@Url.Action("RefreshTargetAppt", "Budget")',
+                type: 'POST',
+                async: false,
+                data: { incomeYear: $('#incomeYear').val() },
+                success: function (response) {
+                    $('#justified-left-tab5').html(response);
+                    CalSalesApptEstimate();
+                }
+            });
+        }
+
+
+        // ===== INCOME SIMULATOR =====
+        
+        function IncomeYear() {
+            const incomeYear = $('#incomeYear').val();
+            BlockUIHelper.blockUI('body');
+            
+            $.ajax({
+                url: '@Url.Action("GetIncome", "Budget")',
+                type: 'POST',
+                data: { incomeYear: incomeYear },
+                success: function (response) {
+                    $('#frmincome').html(response);
+                    RefreshMonthBudget();
+                    RefreshPropotion();
+                    RefreshStrategy();
+                    RefreshTargetAppt();
+                    IncomeMonthChange($('#incomeMonth').val());
+                },
+                error: (ex) => console.error('Error loading income:', ex),
+                complete: () => BlockUIHelper.unblockUI('body')
+            });
+        }
+
+        function IncomeMonthChange(months) {
+            const displayMonths = parseInt(months);
+            
+            // Toggle quarter visibility based on selected months
+            const quartersToShow = Math.ceil(displayMonths / 3);
+            const quarters = ['quarter1', 'quarter2', 'quarter3', 'quarter4'];
+            
+            quarters.forEach((quarter, index) => {
+                const shouldShow = index < quartersToShow;
+                $("#tblincome").find('.' + quarter).toggle(shouldShow);
+                $(".strategy-" + quarter).toggle(shouldShow);
+            });
+
+            // Show/hide proportion rows
+            for (let i = 1; i <= MONTHS_IN_YEAR; i++) {
+                $('#trpropotion' + i).toggle(i <= displayMonths);
+            }
+            
+            CalIncome();
+        }
+
+        function CalIncome() {
+            const productPrice = getFieldNumber('#price');
+            const selectedMonths = parseInt($('#incomeMonth').val());
+            const commissionPercent = getFieldNumber('#commPercent-1') / 100;
+            
+            let quarterAceSum = 0;
+            let totalAce = 0;
+            let totalCases = 0;
+            let cumulativePrice = 0;
+
+            // Process each month
+            $("#tblincome").find('td .inputproducer').each(function (i) {
+                if (i >= selectedMonths) return;
+                
+                const monthNum = i + 1;
+                const producerCount = parseNumber($(this).val());
+                
+                // Calculate values for this month
+                totalCases += producerCount;
+                const monthPrice = productPrice * producerCount;
+                cumulativePrice += monthPrice;
+                const commission = cumulativePrice * commissionPercent;
+                const monthAce = monthPrice * MONTHS_IN_YEAR;
+                
+                // Update display
+                setFieldText('#incomePrice' + monthNum, monthPrice.toFixed(2));
+                setFieldText('#incomecomm' + monthNum, commission.toFixed(2));
+                setFieldText('#incomeace' + monthNum, monthAce.toFixed(2), 'RM');
+                
+                // Accumulate quarter totals
+                quarterAceSum += monthAce;
+                totalAce += monthAce;
+                
+                // Display quarter sum every 3 months
+                if (monthNum % 3 === 0) {
+                    setFieldText('#sumquarter' + monthNum, quarterAceSum.toFixed(2), 'RM');
+                    quarterAceSum = 0;
+                }
+            });
+
+            // Update summary fields
+            $('#totalcase').text(totalCases);
+            $('#commCase-1').text(totalCases).val(totalCases);
+            $('.commPrice').text(productPrice);
+            setFieldText('#acesumtotal', totalAce.toFixed(2), 'RM');
+            
+            grandtotalace = totalAce;
+            
+            CalComm();
+            CalPropotion();
+        }
+
+        function CalComm() {
+            const productPrice = getFieldNumber('#price');
+            const annualPremium = productPrice * MONTHS_IN_YEAR;
+            
+            let accumulatedCommission = 0;
+            let totalACE = 0;
+
+            $("#tblcommission").find('tr').each(function (i) {
+                const rowNum = i + 1;
+                
+                // Get values for this group
+                const groupCount = getFieldNumber('#commCount-' + rowNum);
+                const caseCount = getFieldNumber('#commCase-' + rowNum);
+                const commissionPercent = getFieldNumber('#commPercent-' + rowNum) / 100;
+                
+                // Calculate commission
+                const totalCommission = groupCount * caseCount * productPrice * commissionPercent;
+                accumulatedCommission += totalCommission;
+                
+                // Calculate ACE for this group
+                const groupAce = caseCount * groupCount * annualPremium;
+                totalACE += groupAce;
+                
+                // Update display
+                setFieldText('#ttlCom-' + rowNum, totalCommission.toFixed(2), 'RM');
+                setFieldText('#accCom-' + rowNum, accumulatedCommission.toFixed(2), 'RM');
+                setFieldText('#totalACECommission-' + rowNum, groupAce.toFixed(2), 'RM');
+            });
+
+            setFieldText('#totalAce', totalACE.toFixed(2), 'RM');
+        }
+
+        function RefreshStartMonth() {
+            UpdateIncome(null);
+            RefreshPropotion();
+            RefreshMonthBudget();
+        }
+
+        function UpdateAllIncomeStimulator() {
+            UpdateIncome(null);
+            CalPropotion();
+            UpdateGroup();
+        }
+
+        function UpdateIncomeSuccessAction() {
+            showSuccess('Budget updated successfully');
+            CalPropotion();
+        }
+
+        function UpdateIncome(callback) {
+            const form = $("#frmincome");
+            form.validate();
+
+            if (form.valid()) {
+                let formData = form.serialize();
+                formData += "&ProductStartMonth=" + $('#startMonth').val();
+                formData += "&BudgetMonth=" + $('#incomeMonth').val();
+                formData += "&BudgetYear=" + $('#incomeYear').val();
+
+                $.ajax({
+                    url: '@Url.Action("Simulator", "Budget")',
+                    type: 'POST',
+                    data: formData,
+                    async: false,
+                    success: () => callback && callback()
+                });
+            }
+        }
+
+        function UpdateStrategy() {
+            const form = $("#frmstrategy");
+            form.validate();
+
+            if (form.valid()) {
+                let formData = form.serialize();
+                formData += "&BudgetStrategyYear=" + $('#incomeYear').val();
+                
+                $.ajax({
+                    url: '@Url.Action("UpdateStrategy", "Budget")',
+                    type: 'POST',
+                    data: formData,
+                    success: () => showSuccess('Strategy updated successfully!')
+                });
+            }
+        }
+
+        // ===== GROUP MANAGEMENT =====
+        
+        function AddGroup() {
+            const form = $("#add-group");
+            form.validate();
+            
+            if (form.valid()) {
+                event.preventDefault();
+                $.ajax({
+                    url: '@Url.Action("AddGroup", "Budget")',
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function () {
+                        $('#modal_group').modal('hide');
+                        $('.modal-backdrop').remove();
+                        RefreshGroupCommission();
+                        showSuccess('Group added successfully!');
+                    }
+                });
+            }
+        }
+
+        function DeleteGroup(id) {
+            $.ajax({
+                url: '@Url.Action("DeleteGroup", "Budget")',
+                type: 'POST',
+                data: { id: id },
+                success: function () {
+                    showSuccess('Group deleted successfully!');
+                    RefreshGroupCommission();
+                }
+            });
+        }
+
+        function RefreshGroupCommission() {
+            const incomeYear = $('#incomeYear').val();
+            $('#commission-table').html($('#loading').html());
+            
+            $.ajax({
+                url: '@Url.Action("RefreshGroupCommission", "Budget")',
+                type: 'POST',
+                async: false,
+                data: { incomeYear: incomeYear },
+                success: function (response) {
+                    $('#commission-table').html(response);
+                    CalIncome();
+                }
+            });
+        }
+
+        function UpdateGroup() {
+            const list = ListHelper.getList('commission-group');
+            $.ajax({
+                url: '@Url.Action("UpdateGroup", "Budget")',
+                type: 'POST',
+                data: { list: list },
+                success: function () {
+                    RefreshGroupCommission();
+                    showSuccess('Groups updated successfully!');
+                },
+                error: function (response) {
+                    console.error('Error updating group:', response);
+                    showSuccess('Groups updated successfully!');
+                }
+            });
+        }
+
+        // ===== MONTHLY BUDGET MANAGEMENT =====
+        
+        function UpdateMonthlyBudget(id, noOfCases, type) {
+            const budget = {
+                BudgetMonthlyId: id,
+                NoOfCases: noOfCases,
+                ClientId: $('#' + id + 'ClientId').val(),
+                BudgetValue: $('#budgetvalue' + type + '-' + noOfCases).val(),
+                AchieveValue: $('#achievevalue' + type + '-' + noOfCases).val()
+            };
+
+            BlockUIHelper.blockUI('tblmonthly');
+            $.ajax({
+                url: '@Url.Action("UpdateMonthlyBudget", "Budget")',
+                type: 'POST',
+                data: { update: budget },
+                success: () => showSuccess('Budget data updated successfully!'),
+                error: (response) => {
+                    console.error('Update error:', response);
+                    showError('Failed to update budget. Please contact admin.');
+                },
+                complete: () => BlockUIHelper.unblockUI('tblmonthly')
+            });
+        }
+
+        // ===== PROPORTION MANAGEMENT =====
+        
+        function PropotionYear() {
+            $.ajax({
+                url: '@Url.Action("GetIncome", "Budget")',
+                type: 'POST',
+                data: { incomeYear: $('#incomeYear').val() },
+                success: () => CalPropotion()
+            });
+        }
+
+        function RefreshPropotion() {
+            $.ajax({
+                url: '@Url.Action("RefreshPropotionTab", "Budget")',
+                type: 'POST',
+                async: false,
+                data: { 
+                    incomeYear: $('#incomeYear').val(),
+                    startMonth: $('#startMonth').val()
+                },
+                success: function (response) {
+                    $('#frmpropotion').html(response);
+                    setFieldText('#propotiontotalace', grandtotalace.toFixed(2));
+                }
+            });
+        }
+
+        function RefreshStrategy() {
+            $.ajax({
+                url: '@Url.Action("RefreshStrategyTab", "Budget")',
+                type: 'POST',
+                async: false,
+                data: { incomeYear: $('#incomeYear').val() },
+                success: (response) => $('#frmstrategy').html(response)
+            });
+        }
+
+        function DeleteMonthlyBudget(id) {
+            BlockUIHelper.blockUI('tblmonthly');
+            $.ajax({
+                url: '@Url.Action("DeleteMonthlyBudget", "Budget")',
+                type: 'POST',
+                data: { id: id },
+                success: function () {
+                    showSuccess('Budget deleted successfully!');
+                    RefreshMonthlyBudgetTable();
+                },
+                complete: () => BlockUIHelper.unblockUI('tblmonthly')
+            });
+        }
+
+        function RefreshMonthBudget() {
+            const searchFilter = {
+                PageNumber: 1,
+                PageSize: $('#show-entries').val(),
+                BudgetYear: $('#incomeYear').val(),
+                BudgetMonth: $('#startMonth').val()
+            };
+
+            $.ajax({
+                url: '@Url.Action("RefreshMonthlyBudgetTab", "Budget")',
+                type: 'POST',
+                async: false,
+                data: { incomeYear: searchFilter.BudgetYear },
+                success: function (response) {
+                    $('#monthlybudgettab').html(response);
+                    $('.select-search').select2();
+                }
+            });
+        }
+
+        function PropotionPercentChange(ele) {
+            const incomeMonth = parseInt($('#incomeMonth').val());
+            let totalPercent = 0;
+
+            $("#tblpropotion").find('td input').each(function (i) {
+                if (i < incomeMonth) {
+                    totalPercent += parseNumber(this.value);
+                    
+                    if (totalPercent > 100) {
+                        showWarning('Total Proportion % should not exceed 100%');
+                        ele.value = 0.00;
+                        return false;
+                    }
+                }
+            });
+
+            CalPropotion();
+        }
+        function CalPropotion() {
+            setFieldText('#propotiontotalace', grandtotalace.toFixed(2));
+            
+            const incomeMonth = parseInt($('#incomeMonth').val());
+            let accumulatedShortfall = 0;
+            let totalPercent = 0;
+            let totalBudget = 0;
+            let totalAchieve = 0;
+            let totalVariance = 0;
+
+            // Process each month's proportion
+            $("#tblpropotion").find('td input').each(function (i, element) {
+                if (i >= incomeMonth) return;
+
+                const monthNum = i + 1;
+                const percent = parseNumber(this.value);
+                totalPercent += percent;
+
+                if (totalPercent > 100) {
+                    showWarning('Total Proportion % should not exceed 100%');
+                    return false;
+                }
+
+                // Extract month and year from data attribute
+                const monthId = element.getAttribute('data-monthid');
+                const [month, year] = monthId ? monthId.split('_').map(Number) : [0, 0];
+
+                // Calculate proportion budget
+                const propBudget = grandtotalace * (percent / 100);
+                setFieldText('#propobudget' + monthNum, propBudget.toFixed(2));
+                $('#hdnpropotion' + monthNum).val(propBudget);
+
+                // Get actual value and calculate variance
+                const propActual = getFieldNumber('#propoactual' + monthNum);
+                const propVariance = propActual - propBudget;
+                accumulatedShortfall += propVariance;
+
+                // Update display
+                setFieldText('#propovariance' + monthNum, propVariance.toFixed(2));
+                setFieldText('#propaccfall' + monthNum, accumulatedShortfall.toFixed(2));
+
+                // Accumulate totals
+                totalBudget += propBudget;
+                totalAchieve += propActual;
+                totalVariance += propVariance;
+            });
+
+            // Update summary row
+            const percentStyle = totalPercent > 100 ? 'color:red' : '';
+            $('#total_propobudget_percent').attr('style', percentStyle).text(totalPercent.toFixed(2));
+            setFieldText('#total_propobudget_budget', totalBudget.toFixed(2));
+            setFieldText('#total_propobudget_actual', totalAchieve.toFixed(2));
+            setFieldText('#total_propobudget_variant', totalVariance.toFixed(2));
+            setFieldText('#total_propobudget_accshortfall', accumulatedShortfall.toFixed(2));
+
+            // Refresh dependent components (only once after loop)
+            LoadCharts();
+            MonthlyBudget();
+            StrategyYear();
+        }
+
+        function GetMonthlyBudgetData(month, year) {
+            let budget = [];
+            $.ajax({
+                url: '@Url.Action("GetMonthlyBudget", "Budget")',
+                type: 'POST',
+                async: false,
+                data: { year: year, month: month },
+                success: (response) => budget = response
+            });
+            return budget;
+        }
+
+        // ===== CHART RENDERING =====
+        
+        function getMonthlyData(prefix) {
+            return Array.from({ length: MONTHS_IN_YEAR }, (_, i) => 
+                getFieldNumber(`#${prefix}${i + 1}`)
+            );
+        }
+
+        function createChartConfig(colors, legendData, seriesConfig) {
+            return {
+                color: colors,
+                animationDuration: 750,
+                grid: { left: 0, right: 40, top: 35, bottom: 0, containLabel: true },
+                legend: {
+                    data: legendData,
+                    itemHeight: 8,
+                    itemGap: 20,
+                    textStyle: { padding: [0, 5] }
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    backgroundColor: 'rgba(0,0,0,0.75)',
+                    padding: [10, 15],
+                    textStyle: { fontSize: 13, fontFamily: 'Roboto, sans-serif' }
+                },
+                xAxis: [{
+                    type: 'category',
+                    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    axisLabel: { color: '#333' },
+                    axisLine: { lineStyle: { color: '#999' } }
+                }],
+                yAxis: [{
+                    type: 'value',
+                    axisLabel: { color: '#333' },
+                    axisLine: { lineStyle: { color: '#999' } }
+                }],
+                series: seriesConfig
+            };
+        }
+
+        function LoadCharts() {
+            // Get data for all months
+            const budgetData = getMonthlyData('propobudget');
+            const actualData = getMonthlyData('propoactual');
+            const shortfallData = getMonthlyData('propaccfall');
+
+            // Budget vs Actual Chart
+            const budgetChart = echarts.init(document.getElementById('main'));
+            const budgetConfig = createChartConfig(
+                ['#ecc402', '#a77400eb'],
+                ['Budget', 'Actual'],
+                [
+                    { name: 'Budget', type: 'bar', data: budgetData },
+                    { name: 'Actual', type: 'bar', data: actualData }
+                ]
+            );
+            budgetChart.setOption(budgetConfig);
+
+            // Shortfall Chart
+            const shortfallChart = echarts.init(document.getElementById('shortfall-chart'));
+            const shortfallConfig = createChartConfig(
+                ['#ea7905f2', '#fcb127f2'],
+                ['Accumulated Shortfall', 'Actual'],
+                [
+                    { name: 'Accumulated Shortfall', type: 'bar', data: shortfallData },
+                    { name: 'Actual', type: 'bar', data: actualData }
+                ]
+            );
+            shortfallChart.setOption(shortfallConfig);
+        }
+
+        function UpdatePropotion() {
+            const form = $("#frmpropotion");
+            form.validate();
+            
+            if (form.valid()) {
+                $.ajax({
+                    url: '@Url.Action("UpdatePropotion", "Budget")',
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: () => showSuccess('Proportion updated successfully!')
+                });
+            }
+        }
+
+        function AddMonthlyDetail() {
+            const form = $("#add-monthlydetail");
+            form.validate();
+
+            if (form.valid()) {
+                event.preventDefault();
+                BlockUIHelper.blockUI('add-budget-modal-body');
+                
+                $.ajax({
+                    url: '@Url.Action("AddMonthlyDetail", "Budget")',
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function () {
+                        $('#modal_budget').modal('hide');
+                        $('.modal-backdrop').remove();
+                        RefreshMonthlyBudgetTable();
+                        CalPropotion();
+                        showSuccess('Budget added successfully!');
+                    },
+                    complete: () => BlockUIHelper.unblockUI('add-budget-modal-body')
+                });
+            }
+        }
+
+        function RefreshMonthlyBudgetTable() {
+            @{ var filter = new CaliphWeb.Models.API.Budget.MonthlyFilter(); }
+            const searchFilter = @Html.Raw(Json.Encode(filter));
+            const selectedMonthYear = $('#monthly-month').val();
+            const monthYear = selectedMonthYear.split('-');
+
+            if (monthYear.length < 2) {
+                console.error('Error: Invalid month-year format in monthly budget tab');
+                return;
+            }
+
+            searchFilter.PageNumber = 1;
+            searchFilter.PageSize = $('#show-entries').val();
+            searchFilter.BudgetYear = monthYear[1];
+            searchFilter.BudgetMonth = monthYear[0];
+
+            $.ajax({
+                url: '@Url.Action("RefreshMonthlyBudgetClientTable", "Budget")',
+                type: 'POST',
+                data: searchFilter,
+                success: function (response) {
+                    $('#monthly-budget-table').html(response);
+                    $('.select-search').select2();
+                    $('#AddMonthlyBudgetYear').val(searchFilter.BudgetYear);
+                    $('#AddMonthlyBudgetMonth').val(searchFilter.BudgetMonth);
+                    MonthlyBudget();
+                }
+            });
+        }
+
+        function MonthlyBudget() {
+            const year = $('#incomeYear').val();
+            const monthIndex = $('#monthly-month').prop('selectedIndex') + 1;
+            const month = $('#monthly-month').val().split('-')[0];
+
+            // Set form fields
+            $('#AddMonthlyBudgetYear').val(year);
+            $('#AddMonthlyBudgetMonth').val(month);
+
+            // Get budget percentages and monthly budget
+            const highEndPercent = getFieldNumber('#case115') / 100;
+            const lowEndPercent = getFieldNumber('#case116') / 100;
+            const monthlyBudget = getFieldNumber('#propobudget' + monthIndex);
+
+            // Calculate monthly allocations
+            const monthly115 = monthlyBudget * highEndPercent;
+            const monthly116 = monthlyBudget * lowEndPercent;
+            const monthlycase115 = safeDivide(monthly115, monthlyBudget);
+            const monthlycase116 = safeDivide(monthly116, monthlyBudget);
+
+            // Update monthly fall displays
+            $('#monthlyfall').text($('#propaccfall' + monthIndex).text());
+            setFieldText('#monthlyfall115', monthly115.toFixed(2));
+            setFieldText('#monthlyfall116', monthly116.toFixed(2));
+            setFieldText('#monthlycase115', monthlycase115.toFixed(2));
+            setFieldText('#monthlycase116', monthlycase116.toFixed(2));
+
+            // Sum budget and achieve values
+            let totals = {
+                budgetHigh: 0, achieveHigh: 0,
+                budgetLow: 0, achieveLow: 0
+            };
+
+            $("#tblmonthly").find('td .budgetvalue').each(function (i) {
+                const num = i + 1;
+                totals.budgetHigh += getFieldNumber('#budgetvalue115-' + num);
+                totals.achieveHigh += getFieldNumber('#achievevalue115-' + num);
+                totals.budgetLow += getFieldNumber('#budgetvalue116-' + num);
+                totals.achieveLow += getFieldNumber('#achievevalue116-' + num);
+            });
+
+            // Calculate percentages and totals
+            const highPercent = safeDivide(totals.budgetHigh, totals.achieveHigh) * 100;
+            const lowPercent = safeDivide(totals.budgetLow, totals.achieveLow) * 100;
+            const pledge = totals.budgetHigh + totals.budgetLow;
+            const totalAchieve = totals.achieveHigh + totals.achieveLow;
+
+            // Update high-end summary
+            setFieldText('#highendBudgetSum', totals.budgetHigh.toFixed(2));
+            setFieldText('#highendAchieveSum', totals.achieveHigh.toFixed(2));
+            setFieldText('#highendAchieved', highPercent.toFixed(2));
+
+            // Update low-end summary
+            setFieldText('#lowendBudgetSum', totals.budgetLow.toFixed(2));
+            setFieldText('#lowendAchieveSum', totals.achieveLow.toFixed(2));
+            setFieldText('#lowendAchieved', lowPercent.toFixed(2));
+
+            // Update pledge
+            setFieldText('#monthlypledge', pledge.toFixed(2));
+
+            // Calculate PVB (Pledge vs Budget) percentage
+            const pvb = safeDivide(pledge, monthlyBudget) * 100;
+            setFieldText('#pvb', pvb.toFixed(2));
+            $('#pvb').css('color', pvb < 250 ? 'red' : 'black');
+
+            // Calculate achievement percentage
+            const achievePercent = safeDivide(totalAchieve, monthlyBudget) * 100;
+            setFieldText('#monthlyAchieved', totalAchieve.toFixed(2));
+            setFieldText('#shortfallbudget', (totalAchieve - monthlyBudget).toFixed(2));
+            setFieldText('#monthlyAchievedPercent', achievePercent.toFixed(2));
+            $('#monthlyBudget').text($('#propobudget' + monthIndex).text());
+        }
+
+        // ===== STRATEGY CALCULATIONS =====
+        
+        function StrategyYear() {
+            CalStrategy();
+
+            // Calculate quarterly budgets
+            for (let i = 1; i <= MONTHS_IN_YEAR; i++) {
+                const budget = $('#propobudget' + i).text();
+                const actual = $('#propoactual' + i).text();
+                CalQuarter(budget, actual, i);
+
+                // Sum quarter totals every 3 months
+                if (i % 3 === 0) {
+                    const quarterEnd = i;
+                    const quarterStart = quarterEnd - 2;
+                    let quarterBudgetSum = 0;
+
+                    for (let j = quarterStart; j <= quarterEnd; j++) {
+                        quarterBudgetSum += getFieldNumber('#propobudget' + j);
+                    }
+
+                    setFieldText('#quartbudgetsum' + quarterEnd, quarterBudgetSum.toFixed(2));
+                }
+            }
+        }
+
+        function onStrategyPercentChange(type) {
+            let highPercent = getFieldNumber('#highendpercent');
+            let lowPercent = getFieldNumber('#lowendpercent');
+
+            if (type === 'high') {
+                highPercent = Math.min(highPercent, 100);
+                lowPercent = 100 - highPercent;
+            } else if (type === 'low') {
+                lowPercent = Math.min(lowPercent, 100);
+                highPercent = 100 - lowPercent;
+            }
+
+            $('#highendpercent').val(highPercent);
+            $('#lowendpercent').val(lowPercent);
+            CalStrategy();
+        }
+
+        function CalStrategy() {
+            // Update total cases and ACE
+            $('#strategytotalcase').text($('#totalcase').text());
+            const totalAce = getFieldNumber('#propotiontotalace');
+            setFieldText('#strategyace', totalAce.toFixed(2));
+
+            // Get strategy parameters
+            const highPercent = getFieldNumber('#highendpercent') / 100;
+            const lowPercent = getFieldNumber('#lowendpercent') / 100;
+            const highPremium = getFieldNumber('#highendpremium');
+            const lowPremium = getFieldNumber('#lowendpremium');
+
+            // Calculate high-end and low-end ACE
+            const highAce = totalAce * highPercent;
+            const lowAce = totalAce * lowPercent;
+
+            setFieldText('#strategyhighendace', highAce.toFixed(2));
+            setFieldText('#strategylowendace', lowAce.toFixed(2));
+
+            // Calculate case counts
+            const highCases = safeDivide(highAce, highPremium);
+            const lowCases = safeDivide(lowAce, lowPremium);
+
+            setFieldText('#highendcase', highCases.toFixed(0));
+            setFieldText('#lowendcase', lowCases.toFixed(0));
+        }
+
+        function onMonthlyBudgetPercentChange(type) {
+            let highPercent = getFieldNumber('#case115');
+            let lowPercent = getFieldNumber('#case116');
+
+            if (type === 'high') {
+                highPercent = Math.min(highPercent, 100);
+                lowPercent = 100 - highPercent;
+            } else if (type === 'low') {
+                lowPercent = Math.min(lowPercent, 100);
+                highPercent = 100 - lowPercent;
+            }
+
+            $('#case115').val(highPercent);
+            $('#case116').val(lowPercent);
+            MonthlyBudget();
+        }
+
+        function CalQuarter(budget, achieve, monthNum) {
+            $('#quartbudgetmonth' + monthNum).text(budget);
+            $('#quartachievemonth' + monthNum).text(achieve);
+            
+            const budgetNum = parseNumber(budget);
+            const achieveNum = parseNumber(achieve);
+            const percent = safeDivide(achieveNum, budgetNum) * 100;
+            
+            setFieldText('#quartachievepercent' + monthNum, percent.toFixed(2));
+        }
+
+    </script>
+
+}

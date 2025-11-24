@@ -43,7 +43,13 @@
                 <tr>
                     <th>Title</th>
                     <th>Date</th>
-                    <th>Actions</th>
+                    @{
+                        var user = CaliphWeb.Helper.UserHelper.GetLoginUserViewModel();
+                    }
+                    @if (user.IsAdmin)
+                    {
+                        <th>Actions</th>
+                    }
                 </tr>
             </thead>
             <tbody>
@@ -52,13 +58,16 @@
                     foreach (var item in Model)
                     {
                         <tr>
-                            <td>@item.Url</td>
+                             <td><a href="@item.Url" target="_blank" rel="noopener noreferrer">@item.Description</a></td>
 
                             <td>@item.CreatedDate</td>
-                            <td class="text-center">
-                                <a href="@Url.Action("Edit", "Resource", new { id = item.ResourceId })" data-popup="tooltip" title="Edit Resource" class="list-icons-item"><i class="icon-pencil7"></i></a>
-                                <a href="#" onclick="ConfirmDelete(@item.ResourceId)" data-popup="tooltip" title="Delete Resource" class="list-icons-item"><i class="icon-trash"></i></a>
-                            </td>
+                            @if (user.IsAdmin)
+                            {
+                                <td class="text-center">
+                                    <a href="@Url.Action("Edit", "Resource", new { id = item.ResourceId })" data-popup="tooltip" title="Edit Resource" class="list-icons-item"><i class="icon-pencil7"></i></a>
+                                    <a href="#" onclick="ConfirmDelete(@item.ResourceId)" data-popup="tooltip" title="Delete Resource" class="list-icons-item"><i class="icon-trash"></i></a>
+                                </td>
+                            }
                         </tr>
                     }
                 }

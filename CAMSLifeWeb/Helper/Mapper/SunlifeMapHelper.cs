@@ -42,6 +42,8 @@ namespace CaliphWeb.Helper.Mapper
             .ForMember(dest => dest.service_agent_name, opt => opt.MapFrom(src => src.serviceAdvisorName))
             .ForMember(dest => dest.spinoff_leader_code, opt => opt.MapFrom(src => src.spinOffAdvisorCode))
             .ForMember(dest => dest.spinoff_leader_name, opt => opt.MapFrom(src => src.spinOffAdvisorFullName))
+            .ForMember(dest => dest.life_assured, opt => opt.MapFrom(src => src.lifeAssured))
+            .ForMember(dest => dest.identification_number, opt => opt.MapFrom(src => src.identificationNumber))
             .ForMember(dest => dest.certificate_no, opt => opt.MapFrom(src => src.policyNumber))
             .ForMember(dest => dest.certificate_status, opt => opt.MapFrom(src => src.policyStatus))
             .ForMember(dest => dest.product_name, opt => opt.MapFrom(src => src.productCode))

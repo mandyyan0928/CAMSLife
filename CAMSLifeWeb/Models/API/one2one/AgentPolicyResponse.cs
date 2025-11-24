@@ -13,6 +13,7 @@ namespace CaliphWeb.Models.API.one2one
         public string service_agent_code { get; set; }
         public string service_agent_name { get; set; }
         public string life_assured { get; set; }
+        public string identification_number { get; set; }
         public string certificate_no { get; set; }
         public string certificate_status { get; set; }
         public string pay_mode { get; set; }
@@ -93,6 +94,7 @@ namespace CaliphWeb.Models.API.one2one
         public string service_agent_code { get; set; }
         public string service_agent_name { get; set; }
         public string life_assured { get; set; }
+        public string identification_number { get; set; }
         public string certificate_no { get; set; }
         public string certificate_status { get; set; }
         public string pay_mode { get; set; }

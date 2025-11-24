@@ -213,6 +213,29 @@
 
                             if (user.IsAdmin)
                             {
+                                <li class="nav-item nav-item-submenu @(isActiveResource ? "nav-item-open" : "")">
+                                    <a href="#" class="nav-link"><i class="icon-book"></i> <span>Resources</span></a>
+
+                                    <ul class="nav nav-group-sub" data-submenu-title="Resource" style="@(isActiveResource ? "display:block;" : "")">
+                                        <li class="nav-item"><a href="@Url.Action("List", "Resource")" class="nav-link @(currentController == "Resource" && currentAction == "List" ? "active" : "")">Resource List</a></li>
+                                        <li class="nav-item"><a href="@Url.Action("Add", "Resource")" class="nav-link @(currentController == "Resource" && currentAction == "Add" ? "active" : "")">Add Resource</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a href="@Url.Action("List", "Resource")" class="nav-link @(currentController == "Resource" && currentAction == "List" ? "active" : "")">
+                                        <i class="icon-book"></i>
+                                        <span>
+                                            Resources
+                                        </span>
+                                    </a>
+                                </li>
+                            }
+
+                            if (user.IsAdmin)
+                            {
 
 
                                 var actionAgentMenus = new List<string> { "AddAgent", "List" };
@@ -226,16 +249,6 @@
                                         <li class="nav-item"><a href="@Url.Action("Add", "Announcement")" class="nav-link @(currentController == "Announcement" && currentAction == "Add" ? "active" : "")">Add Announcement</a></li>
                                         <li class="nav-item"><a href="@Url.Action("List", "Announcement")" class="nav-link @(currentController == "Announcement" && currentAction == "List" ? "active" : "")">Announcement List</a></li>
 
-                                    </ul>
-                                </li>
-
-
-                                <li class="nav-item nav-item-submenu @(isActiveResource ? "nav-item-open" : "")">
-                                    <a href="#" class="nav-link"><i class="icon-megaphone"></i> <span>Resource</span></a>
-
-                                    <ul class="nav nav-group-sub" data-submenu-title="Announcement" style="@(isActiveResource ? "display:block;" : "")">
-                                        <li class="nav-item"><a href="@Url.Action("List", "Resource")" class="nav-link @(currentController == "Resource" && currentAction == "List" ? "active" : "")">Resource List</a></li>
-                                        <li class="nav-item"><a href="@Url.Action("Add", "Resource")" class="nav-link @(currentController == "Resource" && currentAction == "Add" ? "active" : "")">Add Resource</a></li>
                                     </ul>
                                 </li>
 

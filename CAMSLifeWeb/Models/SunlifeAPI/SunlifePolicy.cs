@@ -12,6 +12,8 @@ public class SunlifePolicyResponse
     public string serviceAdvisorName { get; set; }
     public string policyNumber { get; set; }
     public string policyStatus { get; set; }
+    public string lifeAssured { get; set; }
+    public string identificationNumber { get; set; }
     public DateTime issueDate { get; set; }
     public DateTime commencementDate { get; set; }
   
