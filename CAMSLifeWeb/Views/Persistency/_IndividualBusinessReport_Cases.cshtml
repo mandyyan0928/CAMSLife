@@ -25,14 +25,32 @@
 
             @foreach (var policy in Model.AgentPolicies)
             {
+                var displayProductName = policy.product_name;
+                
+                if (SunlifeProduct.SunHajj.Contains(policy.product_name))
+                {
+                    displayProductName = "Sun Hajj";
+                }
+                else if (SunlifeProduct.SunSecureSaver.Contains(policy.product_name))
+                {
+                    displayProductName = "Sun Secure Saver-i";
+                }
+                else if (SunlifeProduct.SunHeritage.Contains(policy.product_name))
+                {
+                    displayProductName = "Sun Heritage-i";
+                }
+                else if (SunlifeProduct.SunPrimeLink.Contains(policy.product_name))
+                {
+                    displayProductName = "Sun Prime Link-i";
+                }
                 <tr>
                     <td> @policy.life_assured</td>
                     <td>
                         @policy.certificate_no <br />
                         @policy.certificate_status
                     </td>
+                    <td> @displayProductName</td>
                     <td> @policy.pay_mode</td>
-                    <td> @policy.product_name</td>
                     <td> @policy.term</td>
                     <td> @policy.issue_date</td>
                     <td> @policy.summission_date</td>

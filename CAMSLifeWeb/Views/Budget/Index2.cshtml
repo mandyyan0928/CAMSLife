@@ -759,7 +759,7 @@
                 data: { incomeYear: propotionYear, startMonth: startMonth },
                 success: function (response) {
                     $('#frmpropotion').html(response);
-                    $("#propotiontotalace").text(grandtotalace);
+                    $("#propotiontotalace").text(ReplaceNumberWithCommas(grandtotalace.toFixed(2)));
                   //  CalPropotion();
                 }
                 });
@@ -859,7 +859,7 @@
             var m115 = @Html.Raw(JsonConvert.SerializeObject(Model.Monthly.BudgetMonthly.Where(p => p.MonthlyBudgetTypeId == 115)));
             var m116 = @Html.Raw(JsonConvert.SerializeObject(Model.Monthly.BudgetMonthly.Where(p => p.MonthlyBudgetTypeId == 116)));
             var propYear = $("#propotionYear").val();
-            $("#propotiontotalace").text(grandtotalace);
+            $("#propotiontotalace").text(ReplaceNumberWithCommas(grandtotalace.toFixed(2)));
             var accfall = 0;
             var totalPercent = 0;
             var totalBudget = 0;
@@ -1465,7 +1465,7 @@
 
 
             $("#strategytotalcase").text($("#totalcase").text());
-            var strategyace = my.format(parseFloat($("#propotiontotalace").text()).toFixed(2));
+            var strategyace = my.format(parseFloat($("#propotiontotalace").text().replace(/,/g, '')).toFixed(2));
             $("#strategyace").text(strategyace);
 
 

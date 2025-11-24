@@ -4,123 +4,213 @@
 }
 @model CaliphWeb.ViewModel.LoginViewModel
 <style>
-    .container {
-        position: relative;
+    /* Reset and base styles */
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+
+    .content {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .login-wrapper {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .login-container {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        justify-content: center;
+        gap: 0;
+        width: 100%;
+    }
+
+    .login-card-wrapper {
+        flex: 0 0 auto;
+        width: 100%;
+        max-width: 400px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .login-card {
+        width: 100%;
+        height: 100%;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        border-radius: 4px;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .login-card-body {
+        padding: 2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex: 1;
+    }
+
+    .login-image-wrapper {
+        flex: 0 0 auto;
+        width: 100%;
+        max-width: 600px;
+        display: none;
+        align-items: stretch;
+        justify-content: flex-start;
+        overflow: hidden;
+    }
+
+    .login-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .text-center {
         text-align: center;
-        color: white;
     }
 
-    /* Bottom left text */
-    .bottom-left {
-        position: absolute;
-        bottom: 8px;
-        left: 16px;
+    .mb-3 {
+        margin-bottom: 1rem;
     }
 
-    /* Top left text */
-    .top-left {
-        position: absolute;
-        top: 8px;
-        left: 16px;
+    .mb-0 {
+        margin-bottom: 0;
     }
 
-    /* Top right text */
-    .top-right {
-        position: absolute;
-        top: 8px;
-        right: 16px;
+    .mt-1 {
+        margin-top: 0.25rem;
     }
 
-    /* Bottom right text */
-    .bottom-right {
-        position: absolute;
-        bottom: 8px;
-        right: 16px;
+    /* Responsive breakpoints */
+    @@media (min-width: 992px) {
+        .login-image-wrapper {
+            display: flex;
+        }
+        
+        .login-card-wrapper {
+            max-width: 380px;
+        }
     }
 
-    /* Centered text */
-    .centered {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+    @@media (min-width: 768px) and (max-width: 991px) {
+        .login-card-wrapper {
+            max-width: 500px;
+        }
+        
+        .login-card-body {
+            padding: 2.5rem 2rem;
+        }
     }
 
-        .centered h2 {
-            color: white;
-            font-weight: 800;
+    @@media (max-width: 767px) {
+        .content {
+            padding: 15px;
         }
 
-    .mh-80 {
-        max-height: 80vh !important;
+        .login-card-wrapper {
+            max-width: 100%;
+        }
+
+        .login-card-body {
+            padding: 1.5rem 1.25rem;
+            min-height: auto;
+        }
+
+        .login-container {
+            min-height: auto;
+        }
     }
 
+    @@media (max-width: 480px) {
+        .login-card-body {
+            padding: 1.25rem 1rem;
+        }
 
-    @@media screen and (max-width: 900px) {
-        #imgBackground {
-            visibility: hidden;
-            clear: both;
-            float: left;
-            margin: 10px auto 5px 20px;
-            width: 28%;
-            display: none;
+        .icon-reading {
+            font-size: 1.5rem !important;
+            padding: 0.75rem !important;
+        }
+
+        h5 {
+            font-size: 1.1rem;
+        }
+    }
+
+    /* Safari specific fixes */
+    @@supports (-webkit-appearance: none) {
+        .login-container {
+            display: -webkit-flex;
+            -webkit-align-items: stretch;
+            -webkit-justify-content: center;
+        }
+
+        .login-card-wrapper,
+        .login-image-wrapper {
+            -webkit-flex: 0 0 auto;
         }
     }
 </style>
 <!-- Content area -->
-<div class="content justify-content-center align-items-center">
+<div class="content">
+    <div class="login-wrapper">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="login-container">
+                <div class="login-card-wrapper">
+                    <div class="login-card">
+                        <div class="login-card-body">
+                            <div class="text-center mb-3">
+                                <i class="icon-reading icon-2x text-secondary border-secondary border-3 rounded-pill p-3 mb-3 mt-1"></i>
+                                <h5 class="mb-0">Login to your account</h5>
+                                <span class="d-block text-muted">Enter your credentials below</span>
+                            </div>
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="form-group form-group-feedback form-group-feedback-left">
+                                @Html.TextBoxFor(l => l.Username, new { @class = "form-control", @placeholder = "Username" })
+                                @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                                <div class="form-control-feedback">
+                                    <i class="icon-user text-muted"></i>
+                                </div>
+                            </div>
 
-    <!-- Login form -->
-
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-    <form>
-        <div class="row align-content-center justify-content-center" style="margin-top:15%">
-            <div class="col-md-0 col-lg-2 m-0 p-0 d-flex">
-            </div>
-            <div class="col-md-4 col-lg-2 m-0 p-0 d-flex">
-                <div class="card w-100 m-0">
-                    <div class="card-body flex-1">
-                        <div class="text-center mb-3">
-                            <i class="icon-reading icon-2x text-secondary border-secondary border-3 rounded-pill p-3 mb-3 mt-1"></i>
-                            <h5 class="mb-0">Login to your account</h5>
-                            <span class="d-block text-muted">Enter your credentials below</span>
-                        </div>
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                        <div class="form-group form-group-feedback form-group-feedback-left">
-                            @*<input type="text" class="form-control" placeholder="Username">*@
-                            @Html.TextBoxFor(l => l.Username, new { @class = "form-control", @placeholder = "Username" })
-                            @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
-                            <div class="form-control-feedback">
-                                <i class="icon-user text-muted"></i>
+                            <div class="form-group form-group-feedback form-group-feedback-left">
+                                @Html.PasswordFor(l => l.Password, new { @class = "form-control", @placeholder = "Password" })
+                                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                                <div class="form-control-feedback">
+                                    <i class="icon-lock2 text-muted"></i>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary btn-block">Sign in</button>
                             </div>
                         </div>
-
-                        <div class="form-group form-group-feedback form-group-feedback-left">
-                            @*<input type="password" class="form-control" placeholder="Password">*@
-                            @Html.PasswordFor(l => l.Password, new { @class = "form-control", @placeholder = "Password" })
-                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-                            <div class="form-control-feedback">
-                                <i class="icon-lock2 text-muted"></i>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary btn-block">Sign in</button>
-                        </div>
-                        @*<div class="text-center">
-                        <a href="login_password_recover.html">Forgot password?</a>
-                    </div>*@
                     </div>
                 </div>
+                <div class="login-image-wrapper">
+                    <img src="~/global_assets/images/login_side_new.png" class="login-image" alt="Login illustration">
+                </div>
             </div>
-            <div class="col-lg-6 col-md-0 d-none d-lg-block m-0 p-0">
-                <img src="~/global_assets/images/login_side_new.png" id="imgBackground" alt="Snow" style="max-width: 70%;object-fit: cover; flex:1;height:100%">
-            </div>
-        </div>
-</form>
-    }
-    <!-- /login form -->s
-
+        }
+    </div>
 </div>
 <!-- /content area -->
